@@ -1,38 +1,25 @@
 {
-  "name": "crowdsourced-classification",
-  "version": "0.1.0",
-  "private": true,
-  "engines": {
-    "npm": "6.4.1",
-    "node": "10.15.3"
-  },
+  "name": "cs24-capstone-crowdsourced-video-classification",
+  "version": "1.0.0",
+  "author": "Jared Beale, Sam Young, Conner Maddalozzo",
+  "description": "",
+  "main": "index.js",
+  "license": "ISC",
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.4.0",
-    "@testing-library/user-event": "^7.2.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-scripts": "3.3.0"
+    "express": "^4.17.1"
   },
+  "devDependencies": {},
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "node index.js",
+    "heroku-postbuild": "cd client && npm install && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaredBeale/CS24-Capstone-Crowdsourced-Video-Classification.git"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "bugs": {
+    "url": "https://github.com/JaredBeale/CS24-Capstone-Crowdsourced-Video-Classification/issues"
+  },
+  "homepage": "https://github.com/JaredBeale/CS24-Capstone-Crowdsourced-Video-Classification#readme"
 }
