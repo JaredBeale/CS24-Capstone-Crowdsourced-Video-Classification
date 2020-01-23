@@ -10,14 +10,14 @@ const app = express();
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
-    extended: true,
-  });
+    extended: true
+  })
 );
 
 // Connect to db
 const db = new Client({
-  connectionString: procces.env.DATABASE_URL,
-  ssl: true,
+  connectionString: process.env.DATABASE_URL,
+  ssl: true
 });
 db.connect();
 
@@ -55,7 +55,7 @@ app.post('/api/create/vote', (req, res) => {
 app.get('/api/names/users', (req, res) => {
   db.query('SELECT username FROM Users;', (err, result) => {
     if (err) throw err;
-    res.status(200).json(result.rows);
+    res.status(200).json(result.rows.map(entry => entry.username));
   });
 });
 
@@ -63,8 +63,13 @@ app.get('/api/names/users', (req, res) => {
 app.get('/api/names/labels', (req, res) => {
   db.query('SELECT labelTitle FROM Labels;', (err, result) => {
     if (err) throw err;
-    res.status(200).json(result.rows);
+    res.status(200).json(result.rows.map(entry => entry.labeltitle));
   });
+});
+
+// Endpoint - Select next video
+app.get('/api/videos/select', (req, res) => {
+  res.end(); // replace with db query(ies) and api logic
 });
 
 /************ Client Endpoints *************/
