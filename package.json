@@ -6,7 +6,8 @@
   "main": "index.js",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "pg": "^7.17.1"
   },
   "devDependencies": {},
   "scripts": {
