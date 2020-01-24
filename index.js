@@ -21,9 +21,6 @@ const db = new Client({
 });
 db.connect();
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '/client/build')));
-
 /************ API Endpoints ****************/
 // Use prefix "/api/" on api endpoints
   // Hello World example endpoint
@@ -33,9 +30,12 @@ app.get('/api/helloworld', (req, res) => {
   res.json(message);
 });
 
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '/client/build')));
+
 // Endpoint - Create new user
 app.post('/api/create/user', (req, res) => {
-  const { name } = request.body;  
+  const { name } = request.body;
   db.query('INSERT INTO Users (username) VALUES ($1)', [name], (err, result) => {
     if (err) throw err;
     res.status(201).send(`User added with username: ${reqUsername}`);
@@ -73,14 +73,20 @@ app.get('/api/videos/select', (req, res) => {
 });
 
 
-// express static does this for us.
-
-
 // /************ Client Endpoints *************/
-// // Catch-all to serve React's index.html
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname+'/client/build/index.html'));
-// });
+// // Catch-all to serve React's public files.
+
+
+// express is used to connect .css and .js files
+app.use(express.static(path.join(__dirname, '/client/build')));
+
+// if the client wanted to quickly go to one page they can.
+// but the app will redirect them to the index page. and then react Router will render
+// the correct page.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+  // res.status(304).send();
+});
 
 
 // Listen
