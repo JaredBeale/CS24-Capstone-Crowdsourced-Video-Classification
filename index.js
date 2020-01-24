@@ -35,7 +35,7 @@ app.get('/api/helloworld', (req, res) => {
 
 // Endpoint - Create new user
 app.post('/api/create/user', (req, res) => {
-  const { name } = request.body;
+  const { name } = request.body;  
   db.query('INSERT INTO Users (username) VALUES ($1)', [name], (err, result) => {
     if (err) throw err;
     res.status(201).send(`User added with username: ${reqUsername}`);
@@ -72,11 +72,15 @@ app.get('/api/videos/select', (req, res) => {
   res.end(); // replace with db query(ies) and api logic
 });
 
-/************ Client Endpoints *************/
-// Catch-all to serve React's index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
+
+// express static does this for us.
+
+
+// /************ Client Endpoints *************/
+// // Catch-all to serve React's index.html
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname+'/client/build/index.html'));
+// });
 
 
 // Listen

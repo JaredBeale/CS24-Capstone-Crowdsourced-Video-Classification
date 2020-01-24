@@ -11,3 +11,26 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+#video-controls{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  margin: 50px;
+}
+
+#video-page-container{
+  width:80%;
+  display:flex;
+  padding:50px;
+}
+
+#video-player-widget{
+ margin:50px;
+}
+
+
+button {
+  margin: 20px;
+}
