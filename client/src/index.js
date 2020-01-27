@@ -5,6 +5,7 @@ import './index.css';
 import VideoPage from './components/VideoPage';
 import * as serviceWorker from './serviceWorker';
 
+import "../node_modules/lucid-ui/dist/lucid.css";
 
 
 
