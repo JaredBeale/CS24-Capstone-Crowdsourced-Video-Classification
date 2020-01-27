@@ -36,19 +36,26 @@ app.use(express.static(path.join(__dirname, '/client/build')));
 // Endpoint - Create new user
 app.post('/api/create/user', (req, res) => {
   const { name } = req.body;
-  console.log(name);
-  db.query('INSERT INTO Users (username) VALUES ($1)', [name], (err, result) => {
+
+
+    console.log(req.body.name);
+  db.query('INSERT INTO Users (username) VALUES ($1)', [name], (err, result) => {//changed this to result from res
     if (err) throw err;
-    res.status(201).send(`User added with username: ${reqUsername}`);
+    else{
+
+    res.status(200).json({success:`User added with username: ${name}`});
+  }
   });
 });
 
 // Endpoint - Create new vote
 app.post('/api/create/vote', (req, res) => {
-  const { user, video, label } = request.body;
+  const { user, video, label } = req.body; //it was orginally request.body needs to be req.body
   db.query('INSERT INTO Votes (labelId, userId, videoId) VALUES ((SELECT id FROM Labels WHERE labelTitle = $1), (SELECT id FROM Users WHERE username = $2), (SELECT id FROM Videos WHERE fileTitle = $3));', [label, user, video], (err, result) => {
     if (err) throw err;
-    res.status(201).send(`Vote added with username ${user} video title ${video} and label ${label}`);
+        else{
+      res.status(200).json({success:`Vote added with username ${user} video title ${video} and label ${label}`});
+}
   });
 });
 

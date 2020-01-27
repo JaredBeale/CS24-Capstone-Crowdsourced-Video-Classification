@@ -1,16 +1,12 @@
 import React, { Component} from 'react';
 import { LoadingIndicator, LoadingIcon,  SearchableSingleSelect } from 'lucid-ui';
-import { Tabs, Button, Panel,CheckIcon,TextField } from 'lucid-ui';
+import {DataTable, Tabs, Button, Panel,CheckIcon,TextField } from 'lucid-ui';
 
 
-const {
-  LoadingMessage,
-} = LoadingIndicator;
+
 const style = {
   marginBottom: '10px',
 };
-const { Option } = SearchableSingleSelect;
-
 
 class LoginPage extends Component{
   constructor(props){
@@ -18,13 +14,37 @@ class LoginPage extends Component{
     this.state = {
       username: '',
       createdUsername: '',
+      listUsername: []
     }
   }
   componentDidMount(){
+this.getUsernames();
   }
 
-  SignUp(){
-    var data = {username: this.state.username};
+getUsernames(){
+  fetch('/api/names/users', {
+method: 'GET',
+headers: {
+  'Content-Type': 'application/json',
+},
+
+}).then((response) => response.json())
+.then((data) => {
+var listedUsernames = []
+for(var i = 0; i < data.length; i++){
+  listedUsernames.push({"username":data[i]});
+}
+console.log(listedUsernames);
+this.setState({listUsername:listedUsernames});
+})
+.catch((error) => {
+console.error('Error:', error);
+});
+}
+
+
+  signUp(){
+    var data = {name: this.state.username};
     console.log(data);
     fetch('/api/create/user', {
   method: 'POST',
@@ -36,7 +56,9 @@ class LoginPage extends Component{
   )
 }).then((response) => response.json())
 .then((data) => {
-  console.log('Success:', data);
+  console.log(data);
+  this.getUsernames();
+
 })
 .catch((error) => {
   console.error('Error:', error);
@@ -49,7 +71,7 @@ class LoginPage extends Component{
       <div>
       <Panel>
             <Panel.Header>
-              <strong>Please Create a Username or Log In {this.state.createdUsername} </strong>
+              <strong>Please Create a Username or Log In </strong>
             </Panel.Header>
             <TextField
                 style={style}
@@ -61,9 +83,14 @@ class LoginPage extends Component{
               <Button>Log in</Button>
               <div/>
 
-                <Button onClick={()=>this.SignUp()}>Sign Up</Button>
+                <Button onClick={()=>this.signUp()}>Sign Up</Button>
             </Panel.Footer>
           </Panel>
+          <DataTable data={this.state.listUsername}>
+               <DataTable.Column field='username' align='left'>
+                 Usernames
+               </DataTable.Column>
+               </DataTable>
           </div>
       )
   }

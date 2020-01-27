@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component} from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
 import './index.css';
@@ -10,26 +10,28 @@ import {withRouter} from 'react-router-dom';
 import "../node_modules/lucid-ui/dist/lucid.css";
 
 
+import { createBrowserHistory } from 'history';
 
+export default createBrowserHistory();
 
-class App extends React.Component {
-  nextPath(path) {
-    this.props.history.push(path);
-  }
+class App extends Component {
 
+  goLogin() {
+     this.props.history.push('/login')
+   }
   render(){
     return(
     <Router>
       <div>
       <Tabs >
-          <Tabs.Tab  Title='Home' className='one' >
+          <Tabs.Tab   Title='Home' className='one' >
 
           </Tabs.Tab>
 
           <Tabs.Tab Title='Watch' >
 
           </Tabs.Tab>
-          <Tabs.Tab Title='Login'>
+          <Tabs.Tab  onSelect={this.goLogin} Title='Login'>
 
           </Tabs.Tab>
 
@@ -42,10 +44,7 @@ class App extends React.Component {
         </Route>
         <Route exact path="/">
         <div>
-          <Link to="/watch">WatchVideo</Link>
-        </div>
-        <div>
-          <Link to="/login">Login</Link>
+      This will be the home page. Click on one of the Tabs to navigate.
         </div>
 
         </Route>
@@ -55,6 +54,7 @@ class App extends React.Component {
   }
 
 }
+export default withRouter(App)
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
