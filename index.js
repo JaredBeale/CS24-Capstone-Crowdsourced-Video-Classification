@@ -35,7 +35,8 @@ app.use(express.static(path.join(__dirname, '/client/build')));
 
 // Endpoint - Create new user
 app.post('/api/create/user', (req, res) => {
-  const { name } = request.body;
+  const { name } = req.body;
+  console.log(name);
   db.query('INSERT INTO Users (username) VALUES ($1)', [name], (err, result) => {
     if (err) throw err;
     res.status(201).send(`User added with username: ${reqUsername}`);
