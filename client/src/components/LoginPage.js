@@ -7,14 +7,24 @@ import {DataTable, Tabs, Button, Panel,CheckIcon,TextField } from 'lucid-ui';
 const style = {
   marginBottom: '10px',
 };
+const property = {
+  hasFixedHeader: true,
+     isSelectable: false,
+     hasLightHeader: false,
+     fixedColumnCount: 1,
+     fixedRowHeight: 40,
+     isActionable: false,
 
+
+  }
 class LoginPage extends Component{
   constructor(props){
     super(props);
     this.state = {
       username: '',
       createdUsername: '',
-      listUsername: []
+      listUsername: [],
+      status:'',
     }
   }
   componentDidMount(){
@@ -34,8 +44,10 @@ var listedUsernames = []
 for(var i = 0; i < data.length; i++){
   listedUsernames.push({"username":data[i]});
 }
+
 console.log(listedUsernames);
-this.setState({listUsername:listedUsernames});
+
+this.setState({listUsername:listedUsernames.reverse()});
 })
 .catch((error) => {
 console.error('Error:', error);
@@ -57,11 +69,14 @@ console.error('Error:', error);
 }).then((response) => response.json())
 .then((data) => {
   console.log(data);
+  this.setState({status:data.success})
   this.getUsernames();
 
 })
 .catch((error) => {
   console.error('Error:', error);
+  this.setState({status:error})
+
 });
 }
 
@@ -86,11 +101,15 @@ console.error('Error:', error);
                 <Button onClick={()=>this.signUp()}>Sign Up</Button>
             </Panel.Footer>
           </Panel>
-          <DataTable data={this.state.listUsername}>
-               <DataTable.Column field='username' align='left'>
+          <h3 style={{color: 'green'}}>{this.state.status} </h3>
+  <Panel style={{height:'500px'}}>
+
+          <DataTable {...property}  className="UserTable"  data={this.state.listUsername}>
+               <DataTable.Column field='username' align='left' width={100}>
                  Usernames
                </DataTable.Column>
                </DataTable>
+  </Panel>
           </div>
       )
   }

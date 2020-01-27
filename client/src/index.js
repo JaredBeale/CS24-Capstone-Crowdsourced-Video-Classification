@@ -10,32 +10,22 @@ import {withRouter} from 'react-router-dom';
 import "../node_modules/lucid-ui/dist/lucid.css";
 
 
-import { createBrowserHistory } from 'history';
-
-export default createBrowserHistory();
 
 class App extends Component {
 
-  goLogin() {
-     this.props.history.push('/login')
-   }
+
   render(){
     return(
     <Router>
       <div>
-      <Tabs >
-          <Tabs.Tab   Title='Home' className='one' >
 
-          </Tabs.Tab>
 
-          <Tabs.Tab Title='Watch' >
+      <div class="tab">
+  <Link className="tablinks" to="/">Home</Link>
+  <Link className="tablinks"  to="/watch">Watch</Link>
+  <Link className="tablinks"  to="/login">Login</Link>
 
-          </Tabs.Tab>
-          <Tabs.Tab  onSelect={this.goLogin} Title='Login'>
-
-          </Tabs.Tab>
-
-        </Tabs>
+      </div>
         <Route path="/watch">
           <VideoPage />
         </Route>
