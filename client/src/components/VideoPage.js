@@ -87,8 +87,6 @@ class VideoPage extends Component{
                   {this.state.videoChosen && <Player 
                                           commonName={this.state.video.fname} 
                                           url={this.state.video.url} />}
-                {!this.state.videoChosen && <div><img style={{width: "300px",height:"150px"}} src="https://media.giphy.com/media/cBQBqW7OJblba/giphy.gif" alt="sample" /></div>}
-                {!this.state.labelsLoaded && <div>This is a form</div>}
                 {this.state.labelsLoaded && this.renderSelect()}
               <div>
 
