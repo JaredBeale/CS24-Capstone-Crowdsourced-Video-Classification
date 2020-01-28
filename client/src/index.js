@@ -10,7 +10,20 @@ import {withRouter} from 'react-router-dom';
 
 
 
-class App extends React.Component {
+class CCTV extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      username: null
+    }
+    this.setUsername = this.setUsername.bind(this);
+  }
+
+  setUsername(name){
+    this.setState({
+      username: name
+    });
+  }
   render(){
     return(
       <Router>
@@ -23,10 +36,10 @@ class App extends React.Component {
           <Link className="tablinks"  to="/login">Login</Link>
         </div>
           <Route path="/watch">
-            <VideoPage/>
+            <VideoPage user={this.state.username} />
           </Route>
           <Route path="/login">
-            <LoginPage/>
+            <LoginPage saveUsername={this.setUsername}/>
           </Route>
           <Route exact path="/">
             <div>
@@ -39,9 +52,9 @@ class App extends React.Component {
   }
 }
 
-export default withRouter(App)
+export default withRouter(CCTV)
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<CCTV />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

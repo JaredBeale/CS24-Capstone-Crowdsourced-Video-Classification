@@ -46,6 +46,11 @@ body {
   margin: 50px;
 }
 
+#submit-label-button{
+  margin-top:25px;
+}
+
+
 #video-page-container{
   width:80%;
   display:flex;

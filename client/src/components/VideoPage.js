@@ -1,14 +1,12 @@
 import React, { Component} from 'react';
 import Player from "./VideoPlayer";
-import { LoadingIndicator, LoadingIcon,  SearchableSingleSelect } from 'lucid-ui';
+import { LoadingIndicator, LoadingIcon } from 'lucid-ui';
 import { Button, CheckIcon } from 'lucid-ui';
-     
+import LabelSelect from "./LabelSelect.js"
 
 const {
   LoadingMessage,
 } = LoadingIndicator;
-
-const { Option } = SearchableSingleSelect;
 
 
 // const AWS_FILE_NAME ="sticky-bottom.mp4";
@@ -29,41 +27,44 @@ class VideoPage extends Component{
       },
       labelsLoaded: false,
       labels: ["optiona","optionb","optionc","optiond","optione",],
-    }
+      chosenLabel: null
+    };
+
+    this.onSelectChange = this.onSelectChange.bind(this);
+    this.submitLabel = this.submitLabel.bind(this);
   }
   componentDidMount(){
+    this.loadLabels();
+    this.askForClip();
     // url GET to api to choose a video based on name.
-    const self = this;
-    window.setTimeout(function(){
-      self.setState({
-        videoChosen:true
-      })
-    },1250);
-    window.setTimeout(function(){
-      self.setState({
-        labelsLoaded:true
-      })
-    },500);
+    // const self = this;
+    // window.setTimeout(function(){
+    //   self.setState({
+    //     videoChosen:true
+    //   })
+    // },1250);
+    // window.setTimeout(function(){
+    //   self.setState({
+    //     labelsLoaded:true
+    //   })
+    // },500);
+  }
+  onSelectChange(value){
+    this.setState({
+      chosenLabel: this.state.labels[value]
+    });
   }
 
   renderSelect(){
-    
+
     return(
       <div id="select-div">
-        <SearchableSingleSelect
-                    SearchField={{ placeholder: 'Label' }}
-                    style={{ maxWidth: '500px' }}
-                    size="large"
-                  >
-                    {this.state.labels.map(function(value){
-                      return (<Option key={`label-${value}`}>
-                                {value}
-                              </Option>)
-                      
-                    })}
-                  
-                  </SearchableSingleSelect>
-          <Button id="submit-label-button" size="large"><CheckIcon />Save and Refresh</Button>
+        <LabelSelect
+          labels={this.state.labels}
+          onchange={this.onSelectChange}
+          />
+
+          <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
       </div>
     )
   }
@@ -72,25 +73,24 @@ class VideoPage extends Component{
     <div className="outer">
       <div className="middle">
             <div id="video-page-container" className="inner">
-              
+
                 <LoadingIndicator isLoading={!this.state.videoChosen}>
                   <LoadingMessage
                       Icon={<LoadingIcon speed='fast' />}
                       Title='Selecting data from DB...'
                       Body='Please wait'
                     />
-                  
 
-                    
-                    
+
+
+
                   </LoadingIndicator>
-                  {this.state.videoChosen && <Player 
-                                          commonName={this.state.video.fname} 
-                                          url={this.state.video.url} />}
+                  {this.state.videoChosen && <Player
+                                          url={this.state.video} />}
                 {this.state.labelsLoaded && this.renderSelect()}
               <div>
 
-              
+
 
                 </div>
               </div>
@@ -98,9 +98,110 @@ class VideoPage extends Component{
       </div>
       )
   }
+
+  submitLabel(){
+    // in this case we need self.
+    const self=this;
+    console.log(this.state.chosenLabel)
+    if(this.state.chosenLabel){
+      console.log(this.state.chosenLabel);
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", `/api/create/vote`, true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+
+      xhr.onreadystatechange = function() { // Call a function when the state changes.
+          if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+              // Request finished. Do processing here.
+              // this is not THIS in t
+              self.setState({
+                videoChosen: false,
+                video: null
+              })
+              self.askForClip();
+          }
+          else if (this.readyState === XMLHttpRequest.DONE) {
+            alert("post failed, try again later when you are logged in or something.");
+          }
+
+      }
+      // brings the user from the props
+      // and the other stuff from the current site.
+      const data = {
+        user: this.props.user,
+        label: this.state.chosenLabel,
+        video: this.state.videoid
+      }
+      xhr.send(JSON.stringify(data));
+    }
+
+  }
+
+  askForClip(){
+    const self = this;
+    fetch('/api/videos/select', {
+      method: 'GET',
+      headers: {
+      'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      if (!response.ok) {
+        self.setState({
+          video: "https://www.youtube.com/watch?v=G7RgN9ijwE4&list=PLysK5kM8r78sJFo--opGDHCdTgNJTIb-o",
+          videoid: null,
+          videoChosen: true
+        });
+      }
+      return response.json();
+    }).then((data) => {
+      self.setState({
+        video: data.url,
+        videoid: data.fileid,
+        videoChosen: true
+      })
+      return;
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      // default video
+      self.setState({
+        video: "https://www.youtube.com/watch?v=G7RgN9ijwE4&list=PLysK5kM8r78sJFo--opGDHCdTgNJTIb-o",
+        videoid: null,
+        videoChosen: true
+      });
+    });
+  }
+
+
+  loadLabels(){
+    const self = this;
+    fetch('/api/names/labels', {
+      method: 'GET',
+      headers: {
+      'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      if (!response.ok) {
+          self.setState({
+            labels: ["Server Error.","Try","again","later","optiona",],
+            labelsLoaded: true
+          })
+      }
+      return response.json();
+    }).then((data) => {
+      console.log("we are fine:",data);
+      self.setState({
+        labels: data,
+        labelsLoaded: true
+      })
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      this.setState({
+        labels: ["other error client reach","Try","again","later","optiona"],
+        labelsLoaded: true
+      });
+    });
+  }
+
 }
 export default VideoPage;
-
-
-          
-         
