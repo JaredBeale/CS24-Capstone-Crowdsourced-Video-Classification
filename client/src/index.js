@@ -3,35 +3,62 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
 import './index.css';
 import VideoPage from './components/VideoPage';
-import LoginPage from './components/LoginPage';
+import SignUpPage from './components/SignUpPage';
 import * as serviceWorker from './serviceWorker';
-import { Tabs } from 'lucid-ui';
+import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
+
 import {withRouter} from 'react-router-dom';
 
+const style = {
+  marginBottom: '10px',
+};
 
 
 class App extends React.Component {
+  constructor(props){
+    var storedUsername = localStorage.getItem("username");
+if (storedUsername === null) {
+  console.log("was null setting to blank for init");
+  storedUsername = '';
+  localStorage.setItem("username", storedUsername);
+} else {
+
+  localStorage.setItem("username", storedUsername);
+}
+    super(props);
+    this.state = {
+      globalUsername: storedUsername,
+    }
+  }
+
+  setGlobalUsername = (username) => {
+    this.setState({globalUsername:username});
+  }
+
+
   render(){
     return(
       <Router>
         <div>
 
 
-        <div class="tab">
-          <Link className="tablinks" to="/">Home</Link>
-          <Link className="tablinks"  to="/watch">Watch</Link>
-          <Link className="tablinks"  to="/login">Login</Link>
-        </div>
+
           <Route path="/watch">
-            <VideoPage/>
+            <VideoPage globalUsername={this.state.globalUsername}/>
           </Route>
-          <Route path="/login">
-            <LoginPage/>
+          <Route path="/signup">
+            <SignUpPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
           </Route>
           <Route exact path="/">
-            <div>
-              This will be the home page. Click on one of the Tabs to navigate.
-            </div>
+          <Panel>
+            <Panel.Header>
+              <strong>Are you a New or Returning user?</strong>
+            </Panel.Header>
+            <Panel.Footer>
+              <Link to='/signup'><Button>New</Button></Link>
+              <Link to='/login'><Button>Returning</Button></Link>
+            </Panel.Footer>
+          </Panel>
           </Route>
         </div>
       </Router>

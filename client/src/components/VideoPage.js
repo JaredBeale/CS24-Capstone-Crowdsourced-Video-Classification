@@ -2,7 +2,7 @@ import React, { Component} from 'react';
 import Player from "./VideoPlayer";
 import { LoadingIndicator, LoadingIcon,  SearchableSingleSelect } from 'lucid-ui';
 import { Button, CheckIcon } from 'lucid-ui';
-     
+
 
 const {
   LoadingMessage,
@@ -20,6 +20,8 @@ const { Option } = SearchableSingleSelect;
 
 class VideoPage extends Component{
   constructor(props){
+
+
     super(props);
     this.state = {
       videoChosen: false,
@@ -47,7 +49,7 @@ class VideoPage extends Component{
   }
 
   renderSelect(){
-    
+
     return(
       <div id="select-div">
         <SearchableSingleSelect
@@ -59,9 +61,9 @@ class VideoPage extends Component{
                       return (<Option key={`label-${value}`}>
                                 {value}
                               </Option>)
-                      
+
                     })}
-                  
+
                   </SearchableSingleSelect>
           <Button id="submit-label-button" size="large"><CheckIcon />Save and Refresh</Button>
       </div>
@@ -72,25 +74,25 @@ class VideoPage extends Component{
     <div className="outer">
       <div className="middle">
             <div id="video-page-container" className="inner">
-              
+
                 <LoadingIndicator isLoading={!this.state.videoChosen}>
                   <LoadingMessage
                       Icon={<LoadingIcon speed='fast' />}
                       Title='Selecting data from DB...'
                       Body='Please wait'
                     />
-                  
+                  <div>current user:{this.props.globalUsername}</div>
 
-                    
-                    
+
+
                   </LoadingIndicator>
-                  {this.state.videoChosen && <Player 
-                                          commonName={this.state.video.fname} 
+                  {this.state.videoChosen && <Player
+                                          commonName={this.state.video.fname}
                                           url={this.state.video.url} />}
                 {this.state.labelsLoaded && this.renderSelect()}
               <div>
 
-              
+
 
                 </div>
               </div>
@@ -102,5 +104,4 @@ class VideoPage extends Component{
 export default VideoPage;
 
 
-          
-         
+

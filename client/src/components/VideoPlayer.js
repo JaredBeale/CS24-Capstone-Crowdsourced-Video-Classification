@@ -5,6 +5,7 @@ import { Button} from 'lucid-ui';
 
 
 class App extends React.Component {
+
   constructor(props){
     super(props);
     this.state = {
@@ -59,7 +60,7 @@ class App extends React.Component {
      window.setTimeout(function(){
       self.setDurration();
 
-     },999) 
+     },999)
     }
     else{
       self.setState({
@@ -67,8 +68,8 @@ class App extends React.Component {
       })
       // window.setTimeout(function(){
       //   self.setDurration();
-  
-      //  },999) 
+
+      //  },999)
     }
   }
 
@@ -83,7 +84,7 @@ class App extends React.Component {
 
             <div id="video" >
               <span><h1>{this.props.commonName} ---- Seconds: {this.state.duration}</h1></span>
-            
+
               <ReactPlayer
                 ref={this.ref}
                 onProgress={this.handleProgress}

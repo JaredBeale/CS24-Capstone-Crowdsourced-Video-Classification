@@ -1,5 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom'
+
 import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
 
 
@@ -16,7 +18,9 @@ const property = {
   isActionable: false,
 }
 
-class LogInPage extends Component{
+class SignUpPage extends Component{
+
+
   constructor(props){
     super(props);
     this.state = {
@@ -56,7 +60,7 @@ class LogInPage extends Component{
     })
     .catch((error) => {
       console.error('Error:', error);
-      this.setState({status:error})
+      this.setState({status:error.toString()})
     });
   }
 
@@ -78,11 +82,17 @@ class LogInPage extends Component{
           console.log('success');
           this.setState({status:data.success})
           this.getUsernames();
+
+          this.props.setGlobalUsername(data.name);
+              localStorage.setItem("username", data.name);
+            console.log("did we get here")
+          this.props.history.push('/watch')
         }
       })
       .catch((error) => {
         console.log(error);
-        this.setState({status:'Error'});
+        this.setState({status:error.toString()});
+
       });
   }
 
@@ -127,4 +137,4 @@ class LogInPage extends Component{
   }
 }
 
-export default LogInPage;
+export default withRouter(SignUpPage);
