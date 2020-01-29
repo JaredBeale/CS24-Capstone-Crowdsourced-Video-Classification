@@ -5,7 +5,7 @@ import VideoPage from './components/VideoPage';
 import SignUpPage from './components/SignUpPage';
 import * as serviceWorker from './serviceWorker';
 import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
-import LogInPage from './components/LogInPage';
+import LogInPage from './components/LoginPage';
 import { createBrowserHistory } from "history";
 
 import {withRouter} from 'react-router-dom';
