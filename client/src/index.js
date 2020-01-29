@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
-import './index.css';
 import VideoPage from './components/VideoPage';
 import LoginPage from './components/LoginPage';
 import * as serviceWorker from './serviceWorker';
 import { Tabs } from 'lucid-ui';
 import {withRouter} from 'react-router-dom';
+
+
+import './index.css';
+import './lucid-ui.css';
 
 
 
