@@ -6,6 +6,7 @@ import VideoPage from './components/VideoPage';
 import SignUpPage from './components/SignUpPage';
 import * as serviceWorker from './serviceWorker';
 import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
+import LogInPage from './components/LogInPage';
 
 import {withRouter} from 'react-router-dom';
 
@@ -49,7 +50,11 @@ if (storedUsername === null) {
           <Route path="/signup">
             <SignUpPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
           </Route>
+          <Route path="/login">
+            <LogInPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+          </Route>
           <Route exact path="/">
+
           <Panel>
             <Panel.Header>
               <strong>Are you a New or Returning user?</strong>

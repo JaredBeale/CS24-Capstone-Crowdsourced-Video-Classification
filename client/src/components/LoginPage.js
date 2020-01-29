@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
+import { withRouter } from 'react-router-dom'
 
 
 const style = {
@@ -61,29 +62,23 @@ class LogInPage extends Component{
   }
 
 
-  signUp(){
-    var data = {name: this.state.username};
-    fetch('/api/create/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    }).then((response) => {
-        if (response.status === 400) {
-          console.log('failure');
-          response.json().then(info => this.setState({ errorMessage: info.content}));
-        }
-        else if (response.ok) {
-          console.log('success');
-          this.setState({status:data.success})
-          this.getUsernames();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        this.setState({status:'Error'});
-      });
+  logIn(){
+    var currentUsername = this.state.username;
+    var listedUsernames = this.state.listUsername;
+console.log(listedUsernames);
+    for(var i = 0; i < listedUsernames.length; i++){
+      if(currentUsername===listedUsernames[i].username){
+        console.log("Name Found! Logging in...")
+        this.props.setGlobalUsername(currentUsername);
+            localStorage.setItem("username", currentUsername);
+
+        this.props.history.push('/watch')
+      }
+
+    }
+    console.log("name not found")
+ this.setState({ errorMessage: "Username "+currentUsername +" does not exist in the Database."});
+
   }
 
   render() {
@@ -91,7 +86,7 @@ class LogInPage extends Component{
       <div>
         <Panel>
           <Panel.Header>
-            <strong>Please Create a Username</strong>
+            <strong>Please Enter your Username Below to Log In</strong>
           </Panel.Header>
           <TextField
             style={style}
@@ -100,10 +95,10 @@ class LogInPage extends Component{
             onChange={username => this.setState({ username })}
           />
           <Panel.Footer>
-            <Button onClick={()=>this.signUp()}>Sign Up</Button>
+            <Button onClick={()=>this.logIn()}>Log In</Button>
           </Panel.Footer>
         </Panel>
-        <h3 style={{color: 'green'}}>{this.state.status}</h3>
+        <h3 style={{color: 'red'}}>{this.state.status}</h3>
         <Panel style={{height:'500px'}}>
           <DataTable {...property}  className="UserTable"  data={this.state.listUsername}>
             <DataTable.Column field='username' align='left' width={100}>
@@ -127,4 +122,4 @@ class LogInPage extends Component{
   }
 }
 
-export default LogInPage;
+export default withRouter(LogInPage)
