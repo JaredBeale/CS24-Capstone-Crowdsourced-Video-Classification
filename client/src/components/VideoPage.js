@@ -122,7 +122,7 @@ class VideoPage extends Component{
       )
   }
 
-}
+
 
 
 
@@ -156,7 +156,7 @@ class VideoPage extends Component{
       // brings the user from the props
       // and the other stuff from the current site.
       const data = {
-        user: this.props.user,
+        user: this.props.globalUsername,
         label: this.state.chosenLabel,
         video: this.state.videoid
       }

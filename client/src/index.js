@@ -19,9 +19,6 @@ const style = {
 
 const history = createBrowserHistory();
 
-class App extends React.Component {
-
-
 
 
 
