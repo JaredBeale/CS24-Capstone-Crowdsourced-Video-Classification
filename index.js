@@ -21,6 +21,11 @@ const db = new Client({
 });
 db.connect();
 
+
+// express is used to connect .css and .js files
+app.use(express.static(path.join(__dirname, '/client/build')));
+
+
 /************ API Endpoints ****************/
 // Use prefix "/api/" on api endpoints
   // Hello World example endpoint
@@ -49,14 +54,19 @@ app.post('/api/create/user', (req, res) => {
 // Endpoint - Create new vote
 app.post('/api/create/vote', (req, res) => {
   const { user, video, label } = req.body;
-  db.query('INSERT INTO Votes (labelId, userId, videoId) VALUES ((SELECT id FROM Labels WHERE labelTitle = $1), (SELECT id FROM Users WHERE username = $2), (SELECT id FROM Videos WHERE fileTitle = $3));', [label, user, video], (err, result) => {
-    if (err) {
-      res.status(500).json({content: "SQL Error while attempting to create vote in database."});
-      console.log(err);
-    }
-    else
-      res.status(200).json({success:`Vote added with username ${user} video title ${video} and label ${label}`});
-  });
+  console.log(user,video,label);
+  res.status(200).json({success:`Vote added with username ${user} video title ${video} and label ${label}`});
+
+  // when we know the api is correctly getting votes and the
+  // select video route is working then we will have these uncomments
+  // db.query('INSERT INTO Votes (labelId, userId, videoId) VALUES ((SELECT id FROM Labels WHERE labelTitle = $1), (SELECT id FROM Users WHERE username = $2), (SELECT id FROM Videos WHERE fileTitle = $3));', [label, user, video], (err, result) => {
+  //   if (err) {
+  //     res.status(500).json({content: "SQL Error while attempting to create vote in database."});
+  //     console.log(err);
+  //   }
+  //   else
+  //     res.status(200).json({success:`Vote added with username ${user} video title ${video} and label ${label}`});
+  // });
 });
 
 // Endpoint - Read users
@@ -83,18 +93,51 @@ app.get('/api/names/labels', (req, res) => {
   });
 });
 
+
+// const google = `http://drive.google.com/uc?export=download&id=${DRIVE_FILE_ID}`;
+// maybe for performance we can host it as a CDN
+var VIDEO_SERVER_ID = -1; //intially its -1 becaus the very first call itbecomes 0;
+const NUMBER_SERVERS = 2;
+//to be honest i think the cctv link is the more reliable, i did a folder upload and it was
+// about and hour faster than uploading 1112 files
+const SERVERS=[
+  "https://quick-start-xandr-videohost.s3-us-west-2.amazonaws.com/",
+  "https://crowd-source-circuit-tv.s3-us-west-1.amazonaws.com/dev_splits_complete/"
+]
+
+const dummylist = [
+ "dia0_utt0.mp4",
+ "dia103_utt1.mp4",
+ "dia104_utt1.mp4",
+ "dia104_utt14.mp4",
+ "dia104_utt2.mp4",
+ "dia104_utt7.mp4",
+]
+
+// round robin load balancer
+function getServerIndex(){
+// global yes indeed
+  VIDEO_SERVER_ID = (VIDEO_SERVER_ID+1)%NUMBER_SERVERS;
+  return VIDEO_SERVER_ID;
+
+}
 // Endpoint - Select next video
 app.get('/api/videos/select', (req, res) => {
-  res.end(); // replace with db query(ies) and api logic
-});
+    const server =SERVERS[getServerIndex()];
+    const fileid =dummylist[Math.floor(100*Math.random()%dummylist.length)];
 
+    const resp = {
+      url: server+fileid,
+      fileid
+    }
+    console.log("==Serving CDN: ", server)
+  // its a string
+  res.status(200).json(resp); // replace with db query(ies) and api logic
+});
 
 // /************ Client Endpoints *************/
 // // Catch-all to serve React's public files.
 
-
-// express is used to connect .css and .js files
-app.use(express.static(path.join(__dirname, '/client/build')));
 
 // if the client wanted to quickly go to one page they can.
 // but the app will redirect them to the index page. and then react Router will render

@@ -1,4 +1,3 @@
-@import "../node_modules/lucid-ui/dist/lucid.css";
 
 body {
   margin: 0;
@@ -16,6 +15,11 @@ body {
   justify-content: space-around;
   margin: 50px;
 }
+
+#submit-label-button{
+  margin-top:25px;
+}
+
 
 #video-page-container{
   width:80%;

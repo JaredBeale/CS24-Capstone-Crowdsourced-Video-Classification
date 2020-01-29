@@ -55,7 +55,6 @@ class App extends React.Component {
   setDurration(){
     const self = this;
     const time = this.player.getDuration();
-    console.log(time)
     if(!time){
      window.setTimeout(function(){
       self.setDurration();
@@ -63,6 +62,7 @@ class App extends React.Component {
      },999)
     }
     else{
+      console.log("Video length: ",time)
       self.setState({
         duration: time
       })
@@ -83,7 +83,9 @@ class App extends React.Component {
         <div id="video-player-widget">
 
             <div id="video" >
-              <span><h1>{this.props.commonName} ---- Seconds: {this.state.duration}</h1></span>
+
+              <span><h1>-- Seconds: {this.state.duration}</h1></span>
+
 
               <ReactPlayer
                 ref={this.ref}

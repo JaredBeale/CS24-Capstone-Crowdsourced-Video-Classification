@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
-import './index.css';
 import VideoPage from './components/VideoPage';
 import SignUpPage from './components/SignUpPage';
 import * as serviceWorker from './serviceWorker';
@@ -10,15 +9,24 @@ import LogInPage from './components/LogInPage';
 import { createBrowserHistory } from "history";
 
 import {withRouter} from 'react-router-dom';
+import './index.css';
+import './lucid-ui.css';
 
 const style = {
   marginBottom: '10px',
 };
 
+
 const history = createBrowserHistory();
 
 class App extends React.Component {
-  constructor(props){
+
+
+
+
+
+class CCTV extends React.Component {
+   constructor(props){
     var storedUsername = localStorage.getItem("username");
 if (storedUsername === null) {
   console.log("was null setting to blank for init");
@@ -38,7 +46,6 @@ if (storedUsername === null) {
     this.setState({globalUsername:username});
   }
 
-
   render(){
     if(localStorage.getItem("username")!== "" ){
         history.push('/watch')
@@ -52,6 +59,7 @@ if (storedUsername === null) {
 
 
           <Route path="/watch">
+
             <VideoPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
           </Route>
           <Route path="/signup">
@@ -59,6 +67,7 @@ if (storedUsername === null) {
           </Route>
           <Route path="/login">
             <LogInPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+
           </Route>
           <Route exact path="/">
 
@@ -78,9 +87,9 @@ if (storedUsername === null) {
   }
 }
 
-export default withRouter(App)
+export default withRouter(CCTV)
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<CCTV />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
