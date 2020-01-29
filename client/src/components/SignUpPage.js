@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
 import { withRouter } from 'react-router-dom'
+
+import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
 
 
 const style = {
@@ -17,7 +18,9 @@ const property = {
   isActionable: false,
 }
 
-class LogInPage extends Component{
+class SignUpPage extends Component{
+
+
   constructor(props){
     super(props);
     this.state = {
@@ -57,34 +60,46 @@ class LogInPage extends Component{
     })
     .catch((error) => {
       console.error('Error:', error);
-      this.setState({status:error})
+      this.setState({status:error.toString()})
     });
   }
 
 
-  logIn(){
-    var currentUsername = this.state.username;
-    var listedUsernames = this.state.listUsername;
-console.log(listedUsernames);
-    for(var i = 0; i < listedUsernames.length; i++){
-      if(currentUsername===listedUsernames[i].username){
-        console.log("Name Found! Logging in...")
-        this.props.setGlobalUsername(currentUsername);
-            localStorage.setItem("username", currentUsername);
+  signUp(){
+    var data = {name: this.state.username};
+    fetch('/api/create/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    }).then((response) => {
+        if (response.status === 400) {
+          console.log('failure');
+          response.json().then(info => this.setState({ errorMessage: info.content}));
+        }
+        else if (response.ok) {
+          console.log('success');
+          this.setState({status:data.success})
+          this.getUsernames();
 
-        this.props.history.push('/watch')
-      }
+          this.props.setGlobalUsername(data.name);
+              localStorage.setItem("username", data.name);
+            console.log("did we get here")
+          this.props.history.push('/watch')
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({status:error.toString()});
 
-    }
-    console.log("name not found")
- this.setState({ errorMessage: "Username "+currentUsername +" does not exist in the Database."});
-
+      });
   }
-  returnHome(){
-    this.props.history.push("/");
-  }
+returnHome(){
+  this.props.history.push("/");
+}
   render() {
-    if(localStorage.getItem("username")!== "" ){
+    if(localStorage.getItem("username") !== "" ){
         this.props.history.push('/watch')
     }
 
@@ -95,7 +110,7 @@ console.log(listedUsernames);
 </Panel>
         <Panel>
           <Panel.Header>
-            <strong>Please Enter your Username Below to Log In</strong>
+            <strong>Please Create a Username</strong>
           </Panel.Header>
           <TextField
             style={style}
@@ -104,10 +119,10 @@ console.log(listedUsernames);
             onChange={username => this.setState({ username })}
           />
           <Panel.Footer>
-            <Button onClick={()=>this.logIn()}>Log In</Button>
+            <Button onClick={()=>this.signUp()}>Sign Up</Button>
           </Panel.Footer>
         </Panel>
-        <h3 style={{color: 'red'}}>{this.state.status}</h3>
+        <h3 style={{color: 'green'}}>{this.state.status}</h3>
         <Panel style={{height:'500px'}}>
           <DataTable {...property}  className="UserTable"  data={this.state.listUsername}>
             <DataTable.Column field='username' align='left' width={100}>
@@ -131,4 +146,4 @@ console.log(listedUsernames);
   }
 }
 
-export default withRouter(LogInPage)
+export default withRouter(SignUpPage);

@@ -2,52 +2,81 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
 import VideoPage from './components/VideoPage';
-import LoginPage from './components/LoginPage';
+import SignUpPage from './components/SignUpPage';
 import * as serviceWorker from './serviceWorker';
-import { Tabs } from 'lucid-ui';
+import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
+import LogInPage from './components/LoginPage';
+import { createBrowserHistory } from "history";
+
 import {withRouter} from 'react-router-dom';
-
-
 import './index.css';
 import './lucid-ui.css';
+
+const style = {
+  marginBottom: '10px',
+};
+
+
+const history = createBrowserHistory();
+
 
 
 
 class CCTV extends React.Component {
-  constructor(props){
+   constructor(props){
+    var storedUsername = localStorage.getItem("username");
+if (storedUsername === null) {
+  console.log("was null setting to blank for init");
+  storedUsername = "";
+  localStorage.setItem("username", storedUsername);
+} else {
+
+  localStorage.setItem("username", storedUsername);
+}
     super(props);
     this.state = {
-      username: null
+      globalUsername: storedUsername,
     }
-    this.setUsername = this.setUsername.bind(this);
   }
 
-  setUsername(name){
-    this.setState({
-      username: name
-    });
+  setGlobalUsername = (username) => {
+    this.setState({globalUsername:username});
   }
+
   render(){
+    if(localStorage.getItem("username")!== "" ){
+        history.push('/watch')
+    }
+
+
     return(
-      <Router>
+      <Router history={history}>
         <div>
 
 
-        <div class="tab">
-          <Link className="tablinks" to="/">Home</Link>
-          <Link className="tablinks"  to="/watch">Watch</Link>
-          <Link className="tablinks"  to="/login">Login</Link>
-        </div>
+
           <Route path="/watch">
-            <VideoPage user={this.state.username} />
+
+            <VideoPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+          </Route>
+          <Route path="/signup">
+            <SignUpPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
           </Route>
           <Route path="/login">
-            <LoginPage saveUsername={this.setUsername}/>
+            <LogInPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+
           </Route>
           <Route exact path="/">
-            <div>
-              This will be the home page. Click on one of the Tabs to navigate.
-            </div>
+
+          <Panel>
+            <Panel.Header>
+              <strong>Are you a New or Returning user?</strong>
+            </Panel.Header>
+            <Panel.Footer>
+              <Link to='/signup'><Button>New</Button></Link>
+              <Link to='/login'><Button>Returning</Button></Link>
+            </Panel.Footer>
+          </Panel>
           </Route>
         </div>
       </Router>

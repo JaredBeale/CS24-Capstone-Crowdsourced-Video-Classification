@@ -7,35 +7,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-/* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-}
-
-/* Style the buttons that are used to open the tab content */
-.tab .tablinks {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-}
-.tablinks{
-  text-decoration: none;
-}
-/* Change background color of buttons on hover */
-.tab Link:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab Link.active {
-  background-color: #ccc;
-}
 
 
 #video-controls{

@@ -2,7 +2,11 @@ import React, { Component} from 'react';
 import Player from "./VideoPlayer";
 import { LoadingIndicator, LoadingIcon } from 'lucid-ui';
 import { Button, CheckIcon } from 'lucid-ui';
+
+import { withRouter } from 'react-router-dom'
+
 import LabelSelect from "./LabelSelect.js"
+
 
 const {
   LoadingMessage,
@@ -18,6 +22,8 @@ const {
 
 class VideoPage extends Component{
   constructor(props){
+
+
     super(props);
     this.state = {
       videoChosen: false,
@@ -54,21 +60,33 @@ class VideoPage extends Component{
       chosenLabel: this.state.labels[value]
     });
   }
+  signOut(){
+    this.props.setGlobalUsername("");
 
+    localStorage.setItem("username", "");
+    this.props.history.push('/')
+
+  }
   renderSelect(){
 
     return(
       <div id="select-div">
+
         <LabelSelect
           labels={this.state.labels}
           onchange={this.onSelectChange}
           />
 
           <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
+
       </div>
     )
   }
   render(){
+    if(localStorage.getItem("username")=== "" ){
+        this.props.history.push('/')
+    }
+
     return (
     <div className="outer">
       <div className="middle">
@@ -80,6 +98,11 @@ class VideoPage extends Component{
                       Title='Selecting data from DB...'
                       Body='Please wait'
                     />
+
+                  <div>current user:{this.props.globalUsername}</div>
+                  <Button onClick={()=>this.signOut()}>Sign Out</Button>
+
+
 
 
 
@@ -99,6 +122,11 @@ class VideoPage extends Component{
       )
   }
 
+
+
+
+
+
   submitLabel(){
     // in this case we need self.
     const self=this;
@@ -108,6 +136,7 @@ class VideoPage extends Component{
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `/api/create/vote`, true);
       xhr.setRequestHeader("Content-Type", "application/json");
+
 
       xhr.onreadystatechange = function() { // Call a function when the state changes.
           if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
@@ -127,7 +156,7 @@ class VideoPage extends Component{
       // brings the user from the props
       // and the other stuff from the current site.
       const data = {
-        user: this.props.user,
+        user: this.props.globalUsername,
         label: this.state.chosenLabel,
         video: this.state.videoid
       }
@@ -204,4 +233,5 @@ class VideoPage extends Component{
   }
 
 }
-export default VideoPage;
+export default withRouter(VideoPage);
+
