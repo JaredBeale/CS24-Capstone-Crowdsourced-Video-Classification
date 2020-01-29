@@ -2,6 +2,7 @@ import React, { Component} from 'react';
 import Player from "./VideoPlayer";
 import { LoadingIndicator, LoadingIcon,  SearchableSingleSelect } from 'lucid-ui';
 import { Button, CheckIcon } from 'lucid-ui';
+import { withRouter } from 'react-router-dom'
 
 
 const {
@@ -47,7 +48,13 @@ class VideoPage extends Component{
       })
     },500);
   }
+  signOut(){
+    this.props.setGlobalUsername("");
 
+    localStorage.setItem("username", "");
+    this.props.history.push('/')
+
+  }
   renderSelect(){
 
     return(
@@ -70,6 +77,10 @@ class VideoPage extends Component{
     )
   }
   render(){
+    if(localStorage.getItem("username")=== "" ){
+        this.props.history.push('/')
+    }
+
     return (
     <div className="outer">
       <div className="middle">
@@ -82,7 +93,7 @@ class VideoPage extends Component{
                       Body='Please wait'
                     />
                   <div>current user:{this.props.globalUsername}</div>
-
+                  <Button onClick={()=>this.signOut()}>Sign Out</Button>
 
 
                   </LoadingIndicator>
@@ -101,7 +112,7 @@ class VideoPage extends Component{
       )
   }
 }
-export default VideoPage;
+export default withRouter(VideoPage);
 
 
 

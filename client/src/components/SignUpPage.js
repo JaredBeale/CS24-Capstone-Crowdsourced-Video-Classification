@@ -95,10 +95,19 @@ class SignUpPage extends Component{
 
       });
   }
-
+returnHome(){
+  this.props.history.push("/");
+}
   render() {
+    if(localStorage.getItem("username") !== "" ){
+        this.props.history.push('/watch')
+    }
+
     return (
       <div>
+      <Panel>
+      <Button kind={'primary'}   onClick={()=>this.returnHome()}>Return to Home</Button>
+</Panel>
         <Panel>
           <Panel.Header>
             <strong>Please Create a Username</strong>
