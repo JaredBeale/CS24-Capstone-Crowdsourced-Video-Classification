@@ -4,7 +4,7 @@ import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
 import VideoPage from './components/VideoPage';
 import * as serviceWorker from './serviceWorker';
 import { Button, Panel} from 'lucid-ui';
-import LogInPage from './components/LogInPage';
+import LoginPage from './components/LoginPage';
 import { createBrowserHistory } from "history";
 
 import {withRouter} from 'react-router-dom';
@@ -61,11 +61,11 @@ if (storedUsername === null) {
             <VideoPage hasSeenTutorial={this.state.hasSeenTutorial} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
           </Route>
           <Route path="/login">
-            <LogInPage setHasSeenTutorial={this.setHasSeenTutorial} isNewUser={false} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+            <LoginPage setHasSeenTutorial={this.setHasSeenTutorial} isNewUser={false} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
 
           </Route>
           <Route path="/signup">
-            <LogInPage setHasSeenTutorial={this.setHasSeenTutorial} isNewUser={true} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+            <LoginPage setHasSeenTutorial={this.setHasSeenTutorial} isNewUser={true} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
 
           </Route>
           <Route exact path="/">
