@@ -2,7 +2,6 @@ import React, { Component} from 'react';
 import Player from "./VideoPlayer";
 import { LoadingIndicator, LoadingIcon } from 'lucid-ui';
 import {Dialog, Button, CheckIcon } from 'lucid-ui';
-import _ from 'lodash';
 import { withRouter } from 'react-router-dom'
 
 import LabelSelect from "./LabelSelect.js"

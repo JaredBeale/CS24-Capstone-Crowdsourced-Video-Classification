@@ -1,6 +1,5 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
-import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
+import { Button, Panel, TextField, Dialog } from 'lucid-ui';
 import { withRouter } from 'react-router-dom'
 
 
@@ -8,14 +7,6 @@ const style = {
   marginBottom: '10px',
 };
 
-const property = {
-  hasFixedHeader: true,
-  isSelectable: false,
-  hasLightHeader: false,
-  fixedColumnCount: 1,
-  fixedRowHeight: 40,
-  isActionable: false,
-}
 
 class LogInPage extends Component{
   constructor(props){

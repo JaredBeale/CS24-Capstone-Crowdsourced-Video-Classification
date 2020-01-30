@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
 import VideoPage from './components/VideoPage';
 import * as serviceWorker from './serviceWorker';
-import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
+import { Button, Panel} from 'lucid-ui';
 import LogInPage from './components/LogInPage';
 import { createBrowserHistory } from "history";
 
@@ -11,9 +11,7 @@ import {withRouter} from 'react-router-dom';
 import './index.css';
 import './lucid-ui.css';
 
-const style = {
-  marginBottom: '10px',
-};
+
 
 
 const history = createBrowserHistory();
