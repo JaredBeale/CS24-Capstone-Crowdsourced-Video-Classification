@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
 import VideoPage from './components/VideoPage';
-import SignUpPage from './components/SignUpPage';
 import * as serviceWorker from './serviceWorker';
 import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
 import LogInPage from './components/LogInPage';
@@ -36,6 +35,7 @@ if (storedUsername === null) {
     super(props);
     this.state = {
       globalUsername: storedUsername,
+
     }
   }
 
@@ -59,11 +59,12 @@ if (storedUsername === null) {
 
             <VideoPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
           </Route>
-          <Route path="/signup">
-            <SignUpPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
-          </Route>
           <Route path="/login">
-            <LogInPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+            <LogInPage isNewUser={false} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+
+          </Route>
+          <Route path="/signup">
+            <LogInPage isNewUser={true} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
 
           </Route>
           <Route exact path="/">
@@ -73,8 +74,8 @@ if (storedUsername === null) {
               <strong>Are you a New or Returning user?</strong>
             </Panel.Header>
             <Panel.Footer>
-              <Link to='/signup'><Button>New</Button></Link>
-              <Link to='/login'><Button>Returning</Button></Link>
+              <Link to='/signup'><Button >New</Button></Link>
+              <Link to='/login'><Button >Returning</Button></Link>
             </Panel.Footer>
           </Panel>
           </Route>

@@ -43,7 +43,7 @@ app.use(express.static(path.join(__dirname, '/client/build')));
 // Endpoint - Create new user
 app.post('/api/create/user', (req, res) => {
   const { name } = req.body;
-  db.query("INSERT INTO Users (username) VALUES ('$1')", [name], (err, result) => {
+  db.query("INSERT INTO Users (username) VALUES ($1)", [name], (err, result) => {
     if (err) {
       res.status(400).json({content: `User already exists with username: ${name}`});
       console.log(err);
@@ -150,7 +150,7 @@ app.get('/api/videos/select/username/:username', (req, res) => {
           else {
             usableFileList = result.rows.map(entry => entry.filetitle);
 
-            // There are at least one unseen videos, select one and send it 
+            // There are at least one unseen videos, select one and send it
             if (usableFileList.length > 0) {
 
               const server = SERVERS[getServerIndex()];
