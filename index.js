@@ -25,6 +25,8 @@ db.connect();
 // express is used to connect .css and .js files
 app.use(express.static(path.join(__dirname, '/client/build')));
 
+// Label max is the number of labels a video needs to be considered fully labeled
+const LABEL_MAX = 5;
 
 /************ API Endpoints ****************/
 // Use prefix "/api/" on api endpoints
@@ -41,7 +43,7 @@ app.use(express.static(path.join(__dirname, '/client/build')));
 // Endpoint - Create new user
 app.post('/api/create/user', (req, res) => {
   const { name } = req.body;
-  db.query('INSERT INTO Users (username) VALUES ($1)', [name], (err, result) => {
+  db.query("INSERT INTO Users (username) VALUES ('$1')", [name], (err, result) => {
     if (err) {
       res.status(400).json({content: `User already exists with username: ${name}`});
       console.log(err);
@@ -54,19 +56,15 @@ app.post('/api/create/user', (req, res) => {
 // Endpoint - Create new vote
 app.post('/api/create/vote', (req, res) => {
   const { user, video, label } = req.body;
-  console.log(user,video,label);
-  res.status(200).json({success:`Vote added with username ${user} video title ${video} and label ${label}`});
 
-  // when we know the api is correctly getting votes and the
-  // select video route is working then we will have these uncomments
-  // db.query('INSERT INTO Votes (labelId, userId, videoId) VALUES ((SELECT id FROM Labels WHERE labelTitle = $1), (SELECT id FROM Users WHERE username = $2), (SELECT id FROM Videos WHERE fileTitle = $3));', [label, user, video], (err, result) => {
-  //   if (err) {
-  //     res.status(500).json({content: "SQL Error while attempting to create vote in database."});
-  //     console.log(err);
-  //   }
-  //   else
-  //     res.status(200).json({success:`Vote added with username ${user} video title ${video} and label ${label}`});
-  // });
+  db.query("INSERT INTO Votes (labelId, userId, videoId) VALUES ((SELECT id FROM Labels WHERE labelTitle = $1), (SELECT id FROM Users WHERE username = $2), (SELECT id FROM Videos WHERE fileTitle = $3));", [label, user, video], (err, result) => {
+    if (err) {
+      res.status(500).json({content: "SQL Error while attempting to create vote in database."});
+      console.log(err);
+    }
+    else
+      res.status(200).json({success:`Vote added with username ${user} video title ${video} and label ${label}`});
+  });
 });
 
 // Endpoint - Read users
@@ -105,15 +103,6 @@ const SERVERS=[
   "https://crowd-source-circuit-tv.s3-us-west-1.amazonaws.com/dev_splits_complete/"
 ]
 
-const dummylist = [
- "dia0_utt0.mp4",
- "dia103_utt1.mp4",
- "dia104_utt1.mp4",
- "dia104_utt14.mp4",
- "dia104_utt2.mp4",
- "dia104_utt7.mp4",
-]
-
 // round robin load balancer
 function getServerIndex(){
 // global yes indeed
@@ -122,17 +111,68 @@ function getServerIndex(){
 
 }
 // Endpoint - Select next video
-app.get('/api/videos/select', (req, res) => {
-    const server =SERVERS[getServerIndex()];
-    const fileid =dummylist[Math.floor(100*Math.random()%dummylist.length)];
+app.get('/api/videos/select/username/:username', (req, res) => {
+  // Declare helping variable
+  var usableFileList = [];
 
-    const resp = {
-      url: server+fileid,
-      fileid
+  // Find partially completed videos not seen be user
+  db.query("SELECT fileTitle FROM Videos WHERE id IN (SELECT videoid FROM Votes WHERE videoid NOT IN (SELECT videoid FROM Votes WHERE userid = (SELECT id FROM Users WHERE username = $1)) GROUP BY videoid HAVING COUNT(*) < $2);", [req.params.username, LABEL_MAX], (err, result) => {
+    if (err) {
+      res.status(500).json({content: `Error selecting partially voted video for user: ${req.params.username}`});
+      console.log(err);
+      return;
     }
-    console.log("==Serving CDN: ", server)
-  // its a string
-  res.status(200).json(resp); // replace with db query(ies) and api logic
+    else {
+      usableFileList = result.rows.map(entry => entry.filetitle);
+
+      // There are at least one partially complete videos unseen by the user, select one and send it
+      if (usableFileList.length > 0) {
+        const server = SERVERS[getServerIndex()];
+        const fileid = usableFileList[Math.floor(100*Math.random() % usableFileList.length)];
+
+        const resp = {
+          url: server + fileid,
+          fileid
+        }
+
+        console.log("==Serving CDN: ", server)
+        res.status(200).json(resp);
+      }
+      // There are no partially completed videos unseen by the user
+      else {
+        // Find unseen videos
+        db.query("SELECT fileTitle FROM Videos WHERE id NOT IN (SELECT videoid FROM Votes);", (err, result) => {
+          if (err) {
+            res.status(500).json({content: `Error selecting unseen video given user: ${req.params.username}`});
+            console.log(err);
+            return;
+          }
+          else {
+            usableFileList = result.rows.map(entry => entry.filetitle);
+
+            // There are at least one unseen videos, select one and send it 
+            if (usableFileList.length > 0) {
+
+              const server = SERVERS[getServerIndex()];
+              const fileid = usableFileList[Math.floor(100*Math.random() % usableFileList.length)];
+
+              const resp = {
+                url: server + fileid,
+                fileid
+              }
+
+              console.log("==Serving CDN: ", server)
+              res.status(200).json(resp);
+            }
+            // There are no unseen videos, the labeling task is done
+            else {
+              res.status(500).json({content: 'This labeling task has no more videos to watch.'});
+            }
+          }
+        });
+      }
+    }
+  });
 });
 
 // /************ Client Endpoints *************/
