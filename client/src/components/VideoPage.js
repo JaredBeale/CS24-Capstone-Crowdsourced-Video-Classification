@@ -167,7 +167,7 @@ class VideoPage extends Component{
 
   askForClip(){
     const self = this;
-    fetch('/api/videos/select', {
+    fetch('/api/videos/select/username/' + this.props.globalUsername, {
       method: 'GET',
       headers: {
       'Content-Type': 'application/json',
