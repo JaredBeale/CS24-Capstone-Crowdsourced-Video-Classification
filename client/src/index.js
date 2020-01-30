@@ -34,6 +34,7 @@ if (storedUsername === null) {
 }
     super(props);
     this.state = {
+      hasSeenTutorial: false,
       globalUsername: storedUsername,
 
     }
@@ -42,7 +43,9 @@ if (storedUsername === null) {
   setGlobalUsername = (username) => {
     this.setState({globalUsername:username});
   }
-
+  setHasSeenTutorial= (seen) => {
+    this.setState({hasSeenTutorial:seen});
+  }
   render(){
     if(localStorage.getItem("username")!== "" ){
         history.push('/watch')
@@ -57,14 +60,14 @@ if (storedUsername === null) {
 
           <Route path="/watch">
 
-            <VideoPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+            <VideoPage hasSeenTutorial={this.state.hasSeenTutorial} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
           </Route>
           <Route path="/login">
-            <LogInPage isNewUser={false} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+            <LogInPage setHasSeenTutorial={this.setHasSeenTutorial} isNewUser={false} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
 
           </Route>
           <Route path="/signup">
-            <LogInPage isNewUser={true} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+            <LogInPage setHasSeenTutorial={this.setHasSeenTutorial} isNewUser={true} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
 
           </Route>
           <Route exact path="/">

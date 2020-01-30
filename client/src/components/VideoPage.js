@@ -23,10 +23,11 @@ const {
 class VideoPage extends Component{
   constructor(props){
 
-
     super(props);
+
+
     this.state = {
-      isShown: true,
+      isShown: !this.props.hasSeenTutorial,
       videoChosen: false,
       video: {
         fname:"LukeRaisesxwing.mp4",

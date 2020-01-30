@@ -81,6 +81,8 @@ class LogInPage extends Component{
           this.props.setGlobalUsername(data.name);
               localStorage.setItem("username", data.name);
             console.log("did we get here")
+            this.props.setHasSeenTutorial(false);
+
           this.props.history.push('/watch')
         }
       })
@@ -100,6 +102,7 @@ console.log(listedUsernames);
         console.log("Name Found! Logging in...")
         this.props.setGlobalUsername(currentUsername);
             localStorage.setItem("username", currentUsername);
+            this.props.setHasSeenTutorial(true);
 
         this.props.history.push('/watch')
       }
@@ -121,14 +124,22 @@ console.log(listedUsernames);
       return "Please Enter your Username Below to Log In"
     }
   }
+  checkNewUserEnter(){
+    if(this.props.isNewUser===true){
+      return this.signUp()
+    }
+    else{
+      return this.logIn()
+    }
+  }
 
   checkNewUserButton(){
     if(this.props.isNewUser===true){
-      return   <Button kind='primary' onClick={()=>this.signUp()}>Sign Up</Button>
+      return   <Button kind='primary'  onClick={()=>this.signUp()}>Sign Up</Button>
 
     }
     else{
-      return    <Button kind='primary' onClick={()=>this.logIn()}>Log In</Button>
+      return    <Button kind='primary'  onClick={()=>this.logIn()}>Log In</Button>
 
     }
   }
@@ -150,6 +161,7 @@ console.log(listedUsernames);
             style={style}
             placeholder='Username...'
             value={this.state.username}
+            onSubmit={()=>this.checkNewUserEnter()}
             onChange={username => this.setState({ username })}
           />
           <Panel.Footer>
