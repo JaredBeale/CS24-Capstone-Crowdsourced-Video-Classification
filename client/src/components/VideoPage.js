@@ -1,8 +1,7 @@
 import React, { Component} from 'react';
 import Player from "./VideoPlayer";
 import { LoadingIndicator, LoadingIcon } from 'lucid-ui';
-import { Button, CheckIcon } from 'lucid-ui';
-
+import {Dialog, Button, CheckIcon } from 'lucid-ui';
 import { withRouter } from 'react-router-dom'
 
 import LabelSelect from "./LabelSelect.js"
@@ -23,9 +22,11 @@ const {
 class VideoPage extends Component{
   constructor(props){
 
-
     super(props);
+
+
     this.state = {
+      isShown: !this.props.hasSeenTutorial,
       videoChosen: false,
       video: {
         fname:"LukeRaisesxwing.mp4",
@@ -67,6 +68,9 @@ class VideoPage extends Component{
     this.props.history.push('/')
 
   }
+  handleShow(){
+    this.setState({isShown: !this.state.isShown})
+  }
   renderSelect(){
 
     return(
@@ -82,6 +86,7 @@ class VideoPage extends Component{
       </div>
     )
   }
+
   render(){
     if(localStorage.getItem("username")=== "" ){
         this.props.history.push('/')
@@ -99,8 +104,38 @@ class VideoPage extends Component{
                       Body='Please wait'
                     />
 
-                  <div>current user:{this.props.globalUsername}</div>
-                  <Button onClick={()=>this.signOut()}>Sign Out</Button>
+                  <div>current user:  {" "+this.props.globalUsername}</div>
+                  <Button style={{marginRight:'15px'}} kind='primary' onClick={()=>this.handleShow()}>
+                           Help
+                         </Button>
+
+                         <Dialog
+                           isShown={this.state.isShown}
+                           onEscape={()=>this.handleShow()}
+                           onBackgroundClick={()=>this.handleShow()}
+                           handleClose={()=>this.handleShow()}
+                           Header='Tutorial'
+                           size='small'
+                         >
+                           <div key={'info'}>
+                              <h3>  Video Watching Page Instructions</h3>
+                              <li>  Please select the most appropriate emotion label based
+                                      on what you think the emotion
+                                      the video is conveying and if you can’t decide select neutral.</li>
+                              <li>  Click ‘save & refresh’ to submit
+                                      your answer and view another video.</li>
+                              <li>    View and vote on as many videos you desire.</li>
+                              <li>    You may exit or log out at any time.</li>
+                           </div>
+
+                           <Dialog.Footer>
+
+                             <Button
+                                onClick={()=>this.handleShow()}
+                                kind='primary'>Got it!</Button>
+                           </Dialog.Footer>
+                         </Dialog>
+                  <Button  kind='danger' onClick={()=>this.signOut()}>Sign Out</Button>
 
 
 

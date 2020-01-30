@@ -1,6 +1,5 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
-import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
+import { Button, Panel, TextField, Dialog } from 'lucid-ui';
 import { withRouter } from 'react-router-dom'
 
 
@@ -8,14 +7,6 @@ const style = {
   marginBottom: '10px',
 };
 
-const property = {
-  hasFixedHeader: true,
-  isSelectable: false,
-  hasLightHeader: false,
-  fixedColumnCount: 1,
-  fixedRowHeight: 40,
-  isActionable: false,
-}
 
 class LogInPage extends Component{
   constructor(props){
@@ -60,7 +51,38 @@ class LogInPage extends Component{
       this.setState({status:error})
     });
   }
+  signUp(){
+    var data = {name: this.state.username};
+    fetch('/api/create/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    }).then((response) => {
+        if (response.status === 400) {
+          console.log('failure');
+          response.json().then(info => this.setState({ errorMessage: info.content}));
+        }
+        else if (response.ok) {
+          console.log('success');
+          this.setState({status:data.success})
+          this.getUsernames();
 
+          this.props.setGlobalUsername(data.name);
+              localStorage.setItem("username", data.name);
+            console.log("did we get here")
+            this.props.setHasSeenTutorial(false);
+
+          this.props.history.push('/watch')
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({status:error.toString()});
+
+      });
+  }
 
   logIn(){
     var currentUsername = this.state.username;
@@ -71,6 +93,7 @@ console.log(listedUsernames);
         console.log("Name Found! Logging in...")
         this.props.setGlobalUsername(currentUsername);
             localStorage.setItem("username", currentUsername);
+            this.props.setHasSeenTutorial(true);
 
         this.props.history.push('/watch')
       }
@@ -83,6 +106,34 @@ console.log(listedUsernames);
   returnHome(){
     this.props.history.push("/");
   }
+
+  checkNewUserHeader(){
+    if(this.props.isNewUser===true){
+      return "Please Create a Username";
+    }
+    else{
+      return "Please Enter your Username Below to Log In"
+    }
+  }
+  checkNewUserEnter(){
+    if(this.props.isNewUser===true){
+      return this.signUp()
+    }
+    else{
+      return this.logIn()
+    }
+  }
+
+  checkNewUserButton(){
+    if(this.props.isNewUser===true){
+      return   <Button kind='primary'  onClick={()=>this.signUp()}>Sign Up</Button>
+
+    }
+    else{
+      return    <Button kind='primary'  onClick={()=>this.logIn()}>Log In</Button>
+
+    }
+  }
   render() {
     if(localStorage.getItem("username")!== "" ){
         this.props.history.push('/watch')
@@ -91,30 +142,24 @@ console.log(listedUsernames);
     return (
       <div>
       <Panel>
-      <Button kind={'primary'}   onClick={()=>this.returnHome()}>Return to Home</Button>
+      <Button  onClick={()=>this.returnHome()}>Return to Home</Button>
 </Panel>
         <Panel>
           <Panel.Header>
-            <strong>Please Enter your Username Below to Log In</strong>
+            <strong>{this.checkNewUserHeader()}</strong>
           </Panel.Header>
           <TextField
             style={style}
             placeholder='Username...'
             value={this.state.username}
+            onSubmit={()=>this.checkNewUserEnter()}
             onChange={username => this.setState({ username })}
           />
           <Panel.Footer>
-            <Button onClick={()=>this.logIn()}>Log In</Button>
+            {this.checkNewUserButton()}
           </Panel.Footer>
         </Panel>
-        <h3 style={{color: 'red'}}>{this.state.status}</h3>
-        <Panel style={{height:'500px'}}>
-          <DataTable {...property}  className="UserTable"  data={this.state.listUsername}>
-            <DataTable.Column field='username' align='left' width={100}>
-              Usernames
-            </DataTable.Column>
-          </DataTable>
-        </Panel>
+
         {this.state.errorMessage &&
           <Dialog
             isShown='true'
