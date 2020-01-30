@@ -5082,7 +5082,7 @@ created by team in Xander, APPNEXUS to create this "lucid" ui component lib
 }
 .lucid-SidePanel .lucid-SidePanel-pane .lucid-SidePanel-header .lucid-SidePanel-header-inner-wrapper {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
 }
 .lucid-SidePanel .lucid-SidePanel-pane .lucid-SidePanel-header .lucid-SidePanel-header-inner-wrapper .lucid-SidePanel-header-content {
   flex: 1;
