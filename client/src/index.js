@@ -2,19 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
 import VideoPage from './components/VideoPage';
-import SignUpPage from './components/SignUpPage';
 import * as serviceWorker from './serviceWorker';
-import { DataTable, Button, Panel, TextField, Dialog } from 'lucid-ui';
-import LogInPage from './components/LoginPage';
+
+
+import { Button, Panel} from 'lucid-ui';
+import LoginPage from './components/LoginPage';
+
 import { createBrowserHistory } from "history";
 
 import {withRouter} from 'react-router-dom';
 import './index.css';
 import './lucid-ui.css';
 
-const style = {
-  marginBottom: '10px',
-};
+
 
 
 const history = createBrowserHistory();
@@ -35,14 +35,18 @@ if (storedUsername === null) {
 }
     super(props);
     this.state = {
+      hasSeenTutorial: false,
       globalUsername: storedUsername,
+
     }
   }
 
   setGlobalUsername = (username) => {
     this.setState({globalUsername:username});
   }
-
+  setHasSeenTutorial= (seen) => {
+    this.setState({hasSeenTutorial:seen});
+  }
   render(){
     if(localStorage.getItem("username")!== "" ){
         history.push('/watch')
@@ -57,13 +61,14 @@ if (storedUsername === null) {
 
           <Route path="/watch">
 
-            <VideoPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
-          </Route>
-          <Route path="/signup">
-            <SignUpPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+            <VideoPage hasSeenTutorial={this.state.hasSeenTutorial} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
           </Route>
           <Route path="/login">
-            <LogInPage setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+            <LoginPage setHasSeenTutorial={this.setHasSeenTutorial} isNewUser={false} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+
+          </Route>
+          <Route path="/signup">
+            <LoginPage setHasSeenTutorial={this.setHasSeenTutorial} isNewUser={true} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
 
           </Route>
           <Route exact path="/">
@@ -73,8 +78,8 @@ if (storedUsername === null) {
               <strong>Are you a New or Returning user?</strong>
             </Panel.Header>
             <Panel.Footer>
-              <Link to='/signup'><Button>New</Button></Link>
-              <Link to='/login'><Button>Returning</Button></Link>
+              <Link to='/signup'><Button >New</Button></Link>
+              <Link to='/login'><Button >Returning</Button></Link>
             </Panel.Footer>
           </Panel>
           </Route>
