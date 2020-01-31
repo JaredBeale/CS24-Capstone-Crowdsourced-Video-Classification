@@ -8,7 +8,7 @@ const style = {
 };
 
 
-class LogInPage extends Component{
+class LoginPage extends Component{
   constructor(props){
     super(props);
     this.state = {
@@ -176,4 +176,4 @@ console.log(listedUsernames);
   }
 }
 
-export default withRouter(LogInPage)
+export default withRouter(LoginPage)
