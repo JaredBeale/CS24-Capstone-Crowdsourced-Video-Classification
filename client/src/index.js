@@ -3,8 +3,11 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
 import VideoPage from './components/VideoPage';
 import * as serviceWorker from './serviceWorker';
+
+
 import { Button, Panel} from 'lucid-ui';
 import LoginPage from './components/LoginPage';
+
 import { createBrowserHistory } from "history";
 
 import {withRouter} from 'react-router-dom';

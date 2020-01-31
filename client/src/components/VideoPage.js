@@ -104,6 +104,7 @@ class VideoPage extends Component{
                       Body='Please wait'
                     />
 
+
                   <div>current user:  {" "+this.props.globalUsername}</div>
                   <Button style={{marginRight:'15px'}} kind='primary' onClick={()=>this.handleShow()}>
                            Help
@@ -143,9 +144,10 @@ class VideoPage extends Component{
 
 
                   </LoadingIndicator>
+
                   {this.state.videoChosen && <Player
                                           url={this.state.video} />}
-                {this.state.labelsLoaded && this.renderSelect()}
+                {this.state.labelsLoaded && this.state.labels && this.renderSelect()}
               <div>
 
 
@@ -165,7 +167,8 @@ class VideoPage extends Component{
   submitLabel(){
     // in this case we need self.
     const self=this;
-    console.log(this.state.chosenLabel)
+    const pastLabels = self.state.labels;
+
     if(this.state.chosenLabel){
       console.log(this.state.chosenLabel);
       var xhr = new XMLHttpRequest();
@@ -179,7 +182,8 @@ class VideoPage extends Component{
               // this is not THIS in t
               self.setState({
                 videoChosen: false,
-                video: null
+                video: null,
+                labels: pastLabels
               })
               self.askForClip();
           }
@@ -188,6 +192,9 @@ class VideoPage extends Component{
           }
 
       }
+      self.setState({
+        labels: null
+      })
       // brings the user from the props
       // and the other stuff from the current site.
       const data = {
@@ -269,4 +276,3 @@ class VideoPage extends Component{
 
 }
 export default withRouter(VideoPage);
-
