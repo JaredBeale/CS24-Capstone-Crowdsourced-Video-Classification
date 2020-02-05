@@ -1,6 +1,6 @@
 {
-  "short_name": "CCTV",
-  "name": "Crowdsource Circuit TV",
+  "short_name": "CVDC",
+  "name": "Crowdsourced Video-Dataset Classification",
   "icons": [
     {
       "src": "favicon.ico",

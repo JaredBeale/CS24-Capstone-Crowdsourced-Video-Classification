@@ -52,10 +52,13 @@ class CCTV extends React.Component {
     return(
       <Router history={history}>
         <div>
-          <Banner user={this.state.globalUsername} />
+          <Banner setGlobalUsername={this.setGlobalUsername}
+                  user={this.state.globalUsername} />
 
           <Route path="/watch">
-            <VideoPage hasSeenTutorial={this.state.hasSeenTutorial} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
+            <VideoPage hasSeenTutorial={this.state.hasSeenTutorial}
+                        setGlobalUsername={this.setGlobalUsername}
+                        globalUsername={this.state.globalUsername}/>
           </Route>
           <Route path="/login">
             <LoginPage

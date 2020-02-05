@@ -4,13 +4,10 @@ import {Link} from "react-router-dom";
 
 
 
-function signOut(){
-  localStorage.setItem("username", "");
-  window.location.href= "/login";
-}
 
 
 export default function Banner(props){
+  var {history} = props;
   return (
     <div id="banner">
       <div className="text-cell" id="banner-app-name">
@@ -19,7 +16,10 @@ export default function Banner(props){
       {props.user && (
       <div id="user-pane-banner">
         <div className="text-cell" >Welcome, {props.user}</div>
-        <Button  className="text-cell" kind='danger' onClick={()=>signOut()}>
+        <Button  className="text-cell" kind='danger' onClick={()=>{
+                                                      localStorage.setItem("username", "");
+                                                      props.setGlobalUsername("");
+                                                     }}>
             Sign Out
           </Button>
       </div>)}
