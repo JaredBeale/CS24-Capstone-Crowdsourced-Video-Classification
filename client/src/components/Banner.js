@@ -11,7 +11,7 @@ export default function Banner(props){
   return (
     <div id="banner">
       <div className="text-cell" id="banner-app-name">
-        <Link to="/">CCTV</Link>
+    Crowdsource Video Classification
       </div>
       {props.user && (
       <div id="user-pane-banner">
@@ -23,7 +23,7 @@ export default function Banner(props){
             Sign Out
           </Button>
       </div>)}
-      {!props.user && <Link to="/login">Login</Link>}
+      {!props.user && <Link style={{marginTop:"auto",marginBottom:"auto"}}to="/login">Please Log in</Link>}
     </div>
   )
 
