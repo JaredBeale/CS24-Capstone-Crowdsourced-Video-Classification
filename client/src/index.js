@@ -1,20 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
-import VideoPage from './components/VideoPage';
 import * as serviceWorker from './serviceWorker';
+import {withRouter} from 'react-router-dom';
+import { createBrowserHistory } from "history";
+
 
 
 import { Button, Panel} from 'lucid-ui';
-import LoginPage from './components/LoginPage';
 
-import { createBrowserHistory } from "history";
-
-import {withRouter} from 'react-router-dom';
 import './index.css';
 import './lucid-ui.css';
 
-
+import VideoPage from './components/VideoPage';
+import LoginPage from './components/LoginPage';
+import Banner from "./components/Banner"
 
 
 const history = createBrowserHistory();
@@ -25,14 +25,12 @@ const history = createBrowserHistory();
 class CCTV extends React.Component {
    constructor(props){
     var storedUsername = localStorage.getItem("username");
-if (storedUsername === null) {
-  console.log("was null setting to blank for init");
-  storedUsername = "";
-  localStorage.setItem("username", storedUsername);
-} else {
-
-  localStorage.setItem("username", storedUsername);
-}
+    if (storedUsername === null) {
+      storedUsername = "";
+      localStorage.setItem("username", storedUsername);
+    } else {
+      localStorage.setItem("username", storedUsername);
+    }
     super(props);
     this.state = {
       hasSeenTutorial: false,
@@ -51,28 +49,43 @@ if (storedUsername === null) {
     if(localStorage.getItem("username")!== "" ){
         history.push('/watch')
     }
-
-
     return(
       <Router history={history}>
         <div>
-
-
+          <Banner user={this.state.globalUsername} />
 
           <Route path="/watch">
-
             <VideoPage hasSeenTutorial={this.state.hasSeenTutorial} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
           </Route>
           <Route path="/login">
-            <LoginPage setHasSeenTutorial={this.setHasSeenTutorial} isNewUser={false} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
-
+            <LoginPage
+              setHasSeenTutorial={this.setHasSeenTutorial}
+              isNewUser={false}
+              setGlobalUsername={this.setGlobalUsername}
+              globalUsername={this.state.globalUsername}/>
           </Route>
           <Route path="/signup">
-            <LoginPage setHasSeenTutorial={this.setHasSeenTutorial} isNewUser={true} setGlobalUsername={this.setGlobalUsername} globalUsername={this.state.globalUsername}/>
-
+            <LoginPage
+              setHasSeenTutorial={this.setHasSeenTutorial}
+              isNewUser={true}
+              setGlobalUsername={this.setGlobalUsername}
+              globalUsername={this.state.globalUsername} />
           </Route>
           <Route exact path="/">
+            <Dashboard />
+          </Route>
+        </div>
+      </Router>
+    );
+  }
+}
 
+
+function Dashboard(props){
+  return (
+      <div id="dashboard">
+        <div id="dashbord-welcome">Welcome user!</div>
+        <div>
           <Panel>
             <Panel.Header>
               <strong>Are you a New or Returning user?</strong>
@@ -82,12 +95,11 @@ if (storedUsername === null) {
               <Link to='/login'><Button >Returning</Button></Link>
             </Panel.Footer>
           </Panel>
-          </Route>
         </div>
-      </Router>
-    );
-  }
+      </div>
+  )
 }
+
 
 export default withRouter(CCTV)
 

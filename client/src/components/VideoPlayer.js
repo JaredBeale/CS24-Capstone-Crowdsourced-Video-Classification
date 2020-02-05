@@ -84,7 +84,7 @@ class App extends React.Component {
 
             <div id="video" >
 
-              <span><h1>-- Seconds: {this.state.duration}</h1></span>
+              <span><h1>-- Seconds: {this.state.duration.toFixed(2)}</h1></span>
 
 
               <ReactPlayer

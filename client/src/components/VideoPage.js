@@ -61,13 +61,7 @@ class VideoPage extends Component{
       chosenLabel: this.state.labels[value]
     });
   }
-  signOut(){
-    this.props.setGlobalUsername("");
-
-    localStorage.setItem("username", "");
-    this.props.history.push('/')
-
-  }
+  
   handleShow(){
     this.setState({isShown: !this.state.isShown})
   }
@@ -105,7 +99,6 @@ class VideoPage extends Component{
                     />
 
 
-                  <div>current user:  {" "+this.props.globalUsername}</div>
                   <Button style={{marginRight:'15px'}} kind='primary' onClick={()=>this.handleShow()}>
                            Help
                          </Button>
@@ -136,7 +129,6 @@ class VideoPage extends Component{
                                 kind='primary'>Got it!</Button>
                            </Dialog.Footer>
                          </Dialog>
-                  <Button  kind='danger' onClick={()=>this.signOut()}>Sign Out</Button>
 
 
 

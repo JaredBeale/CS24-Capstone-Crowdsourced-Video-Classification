@@ -14,6 +14,8 @@ body {
   flex-wrap: nowrap;
   justify-content: space-around;
   margin: 50px;
+  background-color: #83a7e1;
+  padding: 25px;
 }
 
 #submit-label-button{
@@ -39,25 +41,34 @@ button {
   margin: 20px;
 }
 
-
-.outer {
-  display: table;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
+#banner{
+  background-color: #587eba;
+  height:15%;
+  font-size: 1.25em;
   width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+.text-cell{
+  padding: 10px;
+  margin: 15px;
 }
 
-.middle {
-  display: table-cell;
-  vertical-align: middle;
+#user-pane-banner{
+  display: flex;
+
 }
 
-.inner {
-  margin-left: auto;
-  margin-right: auto;
+#dashboard{
+  display:flex;
 
-  padding: 20px;
-  /*whatever width you want*/
+}
+#dashboard-welcome{
+  width: 50%;
+
+}
+
+a{
+  text-decoration: none;
+  font-size: 1.5em;
 }
