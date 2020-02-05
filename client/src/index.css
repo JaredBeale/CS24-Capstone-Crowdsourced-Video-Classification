@@ -60,11 +60,13 @@ button {
 }
 
 #dashboard{
-  display:flex;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 #dashboard-welcome{
-  width: 50%;
+  
 
 }
 

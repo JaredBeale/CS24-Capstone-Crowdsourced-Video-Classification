@@ -87,11 +87,11 @@ class CCTV extends React.Component {
 function Dashboard(props){
   return (
       <div id="dashboard">
-        <div id="dashbord-welcome">Welcome user!</div>
+
         <div>
           <Panel>
             <Panel.Header>
-              <strong>Are you a New or Returning user?</strong>
+              <strong>Welcome! Are you a New or Returning user?</strong>
             </Panel.Header>
             <Panel.Footer>
               <Link to='/signup'><Button >New</Button></Link>
@@ -99,6 +99,7 @@ function Dashboard(props){
             </Panel.Footer>
           </Panel>
         </div>
+
       </div>
   )
 }
