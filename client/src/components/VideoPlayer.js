@@ -3,8 +3,7 @@ import ReactPlayer from "react-player";
 import { Button} from 'lucid-ui';
 
 
-
-class App extends React.Component {
+class VideoPlayer extends React.Component {
 
   constructor(props){
     super(props);
@@ -18,7 +17,7 @@ class App extends React.Component {
       muted: false,
       played: 0,
       loaded: 0,
-      duration: Infinity,
+      duration: 0,
       playbackRate: 1.0,
       loop: false,
 
@@ -71,10 +70,7 @@ class App extends React.Component {
       self.setState({
         duration: time
       })
-      // window.setTimeout(function(){
-      //   self.setDurration();
 
-      //  },999)
     }
   }
 
@@ -90,8 +86,7 @@ class App extends React.Component {
 
             <div id="video" >
 
-              <span><h1>-- Seconds: {this.state.duration.toFixed(2)}</h1></span>
-
+              <span><h1>Duration: {this.state.duration.toFixed(2)}</h1></span>
 
               <ReactPlayer
                 ref={this.ref}
@@ -99,15 +94,13 @@ class App extends React.Component {
                 onStart={() => console.log('onStart')}
                 playing={playing}
                 url={url}
+                controls
+                width	={832}
+                height	={468}
+
+
               />
             </div>
-            <div id="video-controls">
-              <Button size="large" onClick={this.handlePlayPause}>{playing ? 'Pause' : 'Play'}</Button>
-              <Button size="large" onClick={this.restartVideo}>Restart</Button>
-
-            </div>
-
-
 
         </div>
       );
@@ -118,4 +111,4 @@ class App extends React.Component {
 }
 
 
-export default App
+export default VideoPlayer

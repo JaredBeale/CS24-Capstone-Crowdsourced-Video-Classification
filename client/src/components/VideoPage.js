@@ -26,14 +26,9 @@ class VideoPage extends Component{
 
 
     this.state = {
-      isShown: !this.props.hasSeenTutorial,
       videoChosen: false,
-      video: {
-        fname:"LukeRaisesxwing.mp4",
-        url: "https://www.youtube.com/watch?v=to3OFgBcQvg"
-      },
+
       labelsLoaded: false,
-      labels: ["optiona","optionb","optionc","optiond","optione",],
       chosenLabel: null
     };
 
@@ -43,28 +38,15 @@ class VideoPage extends Component{
   componentDidMount(){
     this.loadLabels();
     this.askForClip();
-    // url GET to api to choose a video based on name.
-    // const self = this;
-    // window.setTimeout(function(){
-    //   self.setState({
-    //     videoChosen:true
-    //   })
-    // },1250);
-    // window.setTimeout(function(){
-    //   self.setState({
-    //     labelsLoaded:true
-    //   })
-    // },500);
+
   }
   onSelectChange(value){
     this.setState({
       chosenLabel: this.state.labels[value]
     });
   }
-  
-  handleShow(){
-    this.setState({isShown: !this.state.isShown})
-  }
+
+
   renderSelect(){
 
     return(
@@ -83,7 +65,7 @@ class VideoPage extends Component{
 
   render(){
     if(localStorage.getItem("username")=== "" ){
-        this.props.history.push('/')
+        this.props.history.push('/login')
     }
 
     return (
@@ -91,51 +73,43 @@ class VideoPage extends Component{
       <div className="middle">
             <div id="video-page-container" className="inner">
 
-                <LoadingIndicator isLoading={!this.state.videoChosen}>
+              {!this.state.videoChosen && <LoadingIndicator style={{marginLeft:"150px"}} isLoading={!this.state.videoChosen}>
                   <LoadingMessage
+                  style={{marginLeft:"150px"}}
                       Icon={<LoadingIcon speed='fast' />}
                       Title='Selecting data from DB...'
                       Body='Please wait'
                     />
 
+                  </LoadingIndicator>}
 
-                  <Button style={{marginRight:'15px'}} kind='primary' onClick={()=>this.handleShow()}>
-                           Help
-                         </Button>
+                                           <Dialog
+                                             isShown={this.props.isShown}
+                                             onEscape={()=>this.props.handleShow()}
+                                             onBackgroundClick={()=>this.props.handleShow()}
+                                             handleClose={()=>this.props.handleShow()}
+                                             Header='Tutorial'
+                                             size='small'
+                                           >
+                                             <div key={'info'}>
+                                                <h3>  Video Watching Page Instructions</h3>
+                                                <li>  Please select the most appropriate emotion label based
+                                                        on what you think the emotion
+                                                        the video is conveying and if you can’t decide select neutral.</li>
+                                                <li>  Click ‘save & refresh’ to submit
+                                                        your answer and view another video.</li>
+                                                <li>    View and vote on as many videos you desire.</li>
+                                                <li>    You may exit or log out at any time.</li>
+                                             </div>
 
-                         <Dialog
-                           isShown={this.state.isShown}
-                           onEscape={()=>this.handleShow()}
-                           onBackgroundClick={()=>this.handleShow()}
-                           handleClose={()=>this.handleShow()}
-                           Header='Tutorial'
-                           size='small'
-                         >
-                           <div key={'info'}>
-                              <h3>  Video Watching Page Instructions</h3>
-                              <li>  Please select the most appropriate emotion label based
-                                      on what you think the emotion
-                                      the video is conveying and if you can’t decide select neutral.</li>
-                              <li>  Click ‘save & refresh’ to submit
-                                      your answer and view another video.</li>
-                              <li>    View and vote on as many videos you desire.</li>
-                              <li>    You may exit or log out at any time.</li>
-                           </div>
+                                             <Dialog.Footer>
 
-                           <Dialog.Footer>
+                                               <Button
+                                                  onClick={()=>this.props.handleShow()}
+                                                  kind='primary'>Got it!</Button>
+                                             </Dialog.Footer>
+                                           </Dialog>
 
-                             <Button
-                                onClick={()=>this.handleShow()}
-                                kind='primary'>Got it!</Button>
-                           </Dialog.Footer>
-                         </Dialog>
-
-
-
-
-
-
-                  </LoadingIndicator>
 
                   {this.state.videoChosen && <Player
                                           url={this.state.video} />}
