@@ -8,17 +8,25 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-
+#color-button{
+  background-color: lightgreen;
+  border: lightgreen;
+}
+#color-button:hover{
+  background-color: green;
+  border: green;
+}
 #video-controls{
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-around;
-  margin: 50px;
+
   background-color: #83a7e1;
-  padding: 25px;
+  padding: 10px;
 }
 
 #submit-label-button{
+  display: flex;
   margin-top:25px;
 }
 
@@ -31,17 +39,28 @@ body {
 
 #video-player-widget{
  margin:50px;
+
+ margin-top: -59px;
+
 }
 
 #select-div{
-  margin-top:25%;
+  margin-top: 35px;
+  margin-left: -30px;
+
 }
 
 button {
   margin: 20px;
 }
-
+#banner-app-name{
+  font-size: 30px;
+  font-style: italic;
+  font-family: cursive;
+  margin:auto;
+}
 #banner{
+
   background-color: #587eba;
   height:15%;
   font-size: 1.25em;
@@ -66,7 +85,7 @@ button {
 }
 
 #dashboard-welcome{
-  
+
 
 }
 

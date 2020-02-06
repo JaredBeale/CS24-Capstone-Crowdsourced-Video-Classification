@@ -25,15 +25,24 @@ const history = createBrowserHistory();
 class CCTV extends React.Component {
    constructor(props){
     var storedUsername = localStorage.getItem("username");
+    var storedTutorial = localStorage.getItem("seenTutorial");
+
     if (storedUsername === null) {
       storedUsername = "";
       localStorage.setItem("username", storedUsername);
     } else {
       localStorage.setItem("username", storedUsername);
     }
+    if (storedTutorial === null) {
+      storedTutorial = false;
+      localStorage.setItem("seenTutorial", storedTutorial);
+    } else {
+      localStorage.setItem("seenTutorial", storedTutorial);
+    }
     super(props);
     this.state = {
-      hasSeenTutorial: false,
+
+      isShown: JSON.parse(storedTutorial),
       globalUsername: storedUsername,
 
     }
@@ -42,9 +51,15 @@ class CCTV extends React.Component {
   setGlobalUsername = (username) => {
     this.setState({globalUsername:username});
   }
-  setHasSeenTutorial= (seen) => {
-    this.setState({hasSeenTutorial:seen});
+  setIsShown=(shown)=>{
+
+   this.setState({isShown: shown})
+ }
+   handleShow=()=>{
+     console.log(this.state.isShown)
+    this.setState({isShown: !this.state.isShown})
   }
+
   render(){
     if(localStorage.getItem("username")!== "" ){
         history.push('/watch')
@@ -52,25 +67,30 @@ class CCTV extends React.Component {
     return(
       <Router history={history}>
         <div>
-          <Banner setGlobalUsername={this.setGlobalUsername}
+          <Banner isShown={this.state.isShown}
+          handleShow={this.handleShow}
+
+                  setGlobalUsername={this.setGlobalUsername}
                   user={this.state.globalUsername} />
 
           <Route path="/watch">
-            <VideoPage hasSeenTutorial={this.state.hasSeenTutorial}
+            <VideoPage
+            handleShow={this.handleShow}
+                      isShown={this.state.isShown}
                         setGlobalUsername={this.setGlobalUsername}
                         globalUsername={this.state.globalUsername}/>
           </Route>
           <Route path="/login">
             <LoginPage
-              setHasSeenTutorial={this.setHasSeenTutorial}
               isNewUser={false}
+              setIsShown={this.setIsShown}
               setGlobalUsername={this.setGlobalUsername}
               globalUsername={this.state.globalUsername}/>
           </Route>
           <Route path="/signup">
             <LoginPage
-              setHasSeenTutorial={this.setHasSeenTutorial}
               isNewUser={true}
+              setIsShown={this.setIsShown}
               setGlobalUsername={this.setGlobalUsername}
               globalUsername={this.state.globalUsername} />
           </Route>

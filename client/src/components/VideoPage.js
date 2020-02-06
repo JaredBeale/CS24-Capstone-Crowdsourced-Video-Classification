@@ -1,21 +1,17 @@
 import React, { Component} from 'react';
 import Player from "./VideoPlayer";
-import { LoadingIndicator, LoadingIcon } from 'lucid-ui';
-import {Dialog, Button, CheckIcon } from 'lucid-ui';
+import { LoadingIndicator, LoadingIcon,RadioGroup  } from 'lucid-ui';
+import {Dialog,Button, CheckIcon } from 'lucid-ui';
 import { withRouter } from 'react-router-dom'
 
-import LabelSelect from "./LabelSelect.js"
-
+const style = {
+  marginRight: '13px',
+};
 
 const {
   LoadingMessage,
 } = LoadingIndicator;
 
-
-// const AWS_FILE_NAME ="sticky-bottom.mp4";
-
-// var gdrive_uri = `http://drive.google.com/uc?export=download&id=${DRIVE_FILE_ID}`;
-// var aws_uri =`https://quick-start-xandr-videohost.s3.amazonaws.com/${AWS_FILE_NAME}`;
 
 
 
@@ -26,15 +22,11 @@ class VideoPage extends Component{
 
 
     this.state = {
-      isShown: !this.props.hasSeenTutorial,
       videoChosen: false,
-      video: {
-        fname:"LukeRaisesxwing.mp4",
-        url: "https://www.youtube.com/watch?v=to3OFgBcQvg"
-      },
+
       labelsLoaded: false,
-      labels: ["optiona","optionb","optionc","optiond","optione",],
-      chosenLabel: null
+      LabelIndex: -1,
+  labels: [],
     };
 
     this.onSelectChange = this.onSelectChange.bind(this);
@@ -43,47 +35,46 @@ class VideoPage extends Component{
   componentDidMount(){
     this.loadLabels();
     this.askForClip();
-    // url GET to api to choose a video based on name.
-    // const self = this;
-    // window.setTimeout(function(){
-    //   self.setState({
-    //     videoChosen:true
-    //   })
-    // },1250);
-    // window.setTimeout(function(){
-    //   self.setState({
-    //     labelsLoaded:true
-    //   })
-    // },500);
+
   }
-  onSelectChange(value){
+  onSelectChange(e){
+    console.log(e)
     this.setState({
-      chosenLabel: this.state.labels[value]
+      LabelIndex: e
     });
   }
-  
-  handleShow(){
-    this.setState({isShown: !this.state.isShown})
-  }
-  renderSelect(){
 
+
+  renderSelect(){
+    const listLabels = this.state.labels.map((label)=>
+    <RadioGroup.RadioButton  style={style}>
+   <RadioGroup.Label>{label}</RadioGroup.Label>
+   </RadioGroup.RadioButton>
+   )
     return(
       <div id="select-div">
+      <RadioGroup
+             name='name'
+             selectedIndex={this.state.LabelIndex}
+             onSelect={this.onSelectChange}
+             style={{
+               display: 'inline-flex',
+               flexDirection: 'column',
+             }}
+           >
 
-        <LabelSelect
-          labels={this.state.labels}
-          onchange={this.onSelectChange}
-          />
+        {listLabels}
+        </RadioGroup>
 
-          <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
-
+        {this.state.LabelIndex===-1 ? <Button id="submit-label-button" isDisabled={true} size="large"><CheckIcon />Save and Refresh</Button>: <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
+}
       </div>
     )
   }
 
   render(){
     if(localStorage.getItem("username")=== "" ){
-        this.props.history.push('/')
+        this.props.history.push('/login')
     }
 
     return (
@@ -91,55 +82,50 @@ class VideoPage extends Component{
       <div className="middle">
             <div id="video-page-container" className="inner">
 
-                <LoadingIndicator isLoading={!this.state.videoChosen}>
+              {!this.state.videoChosen && <LoadingIndicator style={{marginLeft:"150px"}} isLoading={!this.state.videoChosen}>
                   <LoadingMessage
+                  style={{marginLeft:"150px"}}
                       Icon={<LoadingIcon speed='fast' />}
                       Title='Selecting data from DB...'
                       Body='Please wait'
                     />
 
+                  </LoadingIndicator>}
 
-                  <Button style={{marginRight:'15px'}} kind='primary' onClick={()=>this.handleShow()}>
-                           Help
-                         </Button>
+                                           <Dialog
+                                             isShown={this.props.isShown}
+                                             onEscape={()=>this.props.handleShow()}
+                                             onBackgroundClick={()=>this.props.handleShow()}
+                                             handleClose={()=>this.props.handleShow()}
+                                             Header='Tutorial'
+                                             size='small'
+                                           >
+                                             <div key={'info'}>
+                                                <h3>  Video Watching Page Instructions</h3>
+                                                <li>  Please select the most appropriate emotion label based
+                                                        on what you think the emotion
+                                                        the video is conveying and if you can’t decide select neutral.</li>
+                                                <li>  Click ‘save & refresh’ to submit
+                                                        your answer and view another video.</li>
+                                                <li>    View and vote on as many videos you desire.</li>
+                                                <li>    You may exit or log out at any time.</li>
+                                             </div>
 
-                         <Dialog
-                           isShown={this.state.isShown}
-                           onEscape={()=>this.handleShow()}
-                           onBackgroundClick={()=>this.handleShow()}
-                           handleClose={()=>this.handleShow()}
-                           Header='Tutorial'
-                           size='small'
-                         >
-                           <div key={'info'}>
-                              <h3>  Video Watching Page Instructions</h3>
-                              <li>  Please select the most appropriate emotion label based
-                                      on what you think the emotion
-                                      the video is conveying and if you can’t decide select neutral.</li>
-                              <li>  Click ‘save & refresh’ to submit
-                                      your answer and view another video.</li>
-                              <li>    View and vote on as many videos you desire.</li>
-                              <li>    You may exit or log out at any time.</li>
-                           </div>
+                                             <Dialog.Footer>
 
-                           <Dialog.Footer>
+                                               <Button
+                                                  onClick={()=>this.props.handleShow()}
+                                                  kind='primary'>Got it!</Button>
+                                             </Dialog.Footer>
+                                           </Dialog>
 
-                             <Button
-                                onClick={()=>this.handleShow()}
-                                kind='primary'>Got it!</Button>
-                           </Dialog.Footer>
-                         </Dialog>
-
-
-
-
-
-
-                  </LoadingIndicator>
 
                   {this.state.videoChosen && <Player
                                           url={this.state.video} />}
-                {this.state.labelsLoaded && this.state.labels && this.renderSelect()}
+
+
+                {this.state.videoChosen && this.state.labelsLoaded && this.state.labels && this.renderSelect()}
+
               <div>
 
 
@@ -159,10 +145,9 @@ class VideoPage extends Component{
   submitLabel(){
     // in this case we need self.
     const self=this;
-    const pastLabels = self.state.labels;
 
-    if(this.state.chosenLabel){
-      console.log(this.state.chosenLabel);
+    if(this.state.labels[self.state.LabelIndex]){
+      console.log(self.state.labels[self.state.LabelIndex]);
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `/api/create/vote`, true);
       xhr.setRequestHeader("Content-Type", "application/json");
@@ -175,7 +160,7 @@ class VideoPage extends Component{
               self.setState({
                 videoChosen: false,
                 video: null,
-                labels: pastLabels
+                LabelIndex: -1,
               })
               self.askForClip();
           }
@@ -184,14 +169,12 @@ class VideoPage extends Component{
           }
 
       }
-      self.setState({
-        labels: null
-      })
+
       // brings the user from the props
       // and the other stuff from the current site.
       const data = {
         user: this.props.globalUsername,
-        label: this.state.chosenLabel,
+        label: self.state.labels[self.state.LabelIndex],
         video: this.state.videoid
       }
       xhr.send(JSON.stringify(data));

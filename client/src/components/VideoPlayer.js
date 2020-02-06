@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactPlayer from "react-player";
-import { Button} from 'lucid-ui';
+import {LoadingMessage,LoadingIcon} from 'lucid-ui';
 
 
-
-class App extends React.Component {
+class VideoPlayer extends React.Component {
 
   constructor(props){
     super(props);
@@ -23,9 +22,7 @@ class App extends React.Component {
       loop: false,
 
     }
-    this.handlePlayPause = this.handlePlayPause.bind(this);
-    // this.handleProgress = this.handleProgress.bind(this);
-    this.restartVideo = this.restartVideo.bind(this);
+
     this.url = props.url;
   }
   load = url => {
@@ -44,13 +41,7 @@ class App extends React.Component {
     this.load(this.url);
     this.setDurration();
   }
-  handlePlayPause(){
-    this.setState({ playing: !this.state.playing })
-  }
 
-  restartVideo(){
-     this.player.seekTo(0)
-  }
 
 
   setDurration(){
@@ -68,13 +59,11 @@ class App extends React.Component {
     }
     else{
       console.log("Video length: ",time)
+
       self.setState({
         duration: time
       })
-      // window.setTimeout(function(){
-      //   self.setDurration();
 
-      //  },999)
     }
   }
 
@@ -90,8 +79,14 @@ class App extends React.Component {
 
             <div id="video" >
 
-              <span><h1>-- Seconds: {this.state.duration.toFixed(2)}</h1></span>
+              <span><h1>Duration: {this.state.duration === Infinity ?   <LoadingMessage
 
+                    Icon={<LoadingIcon speed='slow' />}
+                    Title='Loading...'
+
+                  />
+
+                : this.state.duration.toFixed(2)}</h1></span>
 
               <ReactPlayer
                 ref={this.ref}
@@ -99,15 +94,13 @@ class App extends React.Component {
                 onStart={() => console.log('onStart')}
                 playing={playing}
                 url={url}
+                controls
+                width	={832}
+                height	={468}
+
+
               />
             </div>
-            <div id="video-controls">
-              <Button size="large" onClick={this.handlePlayPause}>{playing ? 'Pause' : 'Play'}</Button>
-              <Button size="large" onClick={this.restartVideo}>Restart</Button>
-
-            </div>
-
-
 
         </div>
       );
@@ -118,4 +111,4 @@ class App extends React.Component {
 }
 
 
-export default App
+export default VideoPlayer

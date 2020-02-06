@@ -52,7 +52,17 @@ class LoginPage extends Component{
     });
   }
   signUp(){
+    var letters = /^[A-Za-z0-9]+$/;
+
+    if( !this.state.username.match(letters)|| this.state.username.length < 3||this.state.username.length >12 ){
+    this.setState({ errorMessage: "Username does not meet requirements. Please try again!"})
+      return
+    }
+
+    else{
+
     var data = {name: this.state.username};
+
     fetch('/api/create/user', {
       method: 'POST',
       headers: {
@@ -72,7 +82,8 @@ class LoginPage extends Component{
           this.props.setGlobalUsername(data.name);
               localStorage.setItem("username", data.name);
             console.log("did we get here")
-            this.props.setHasSeenTutorial(false);
+            localStorage.setItem("seenTutorial", true);
+            this.props.setIsShown(true);
 
           this.props.history.push('/watch')
         }
@@ -83,7 +94,7 @@ class LoginPage extends Component{
 
       });
   }
-
+}
   logIn(){
     var currentUsername = this.state.username;
     var listedUsernames = this.state.listUsername;
@@ -93,7 +104,8 @@ console.log(listedUsernames);
         console.log("Name Found! Logging in...")
         this.props.setGlobalUsername(currentUsername);
             localStorage.setItem("username", currentUsername);
-            this.props.setHasSeenTutorial(true);
+            localStorage.setItem("seenTutorial", false);
+            this.props.setIsShown(false);
 
         this.props.history.push('/watch')
       }
@@ -103,9 +115,7 @@ console.log(listedUsernames);
  this.setState({ errorMessage: "Username "+currentUsername +" does not exist in the Database."});
 
   }
-  returnHome(){
-    this.props.history.push("/");
-  }
+
 
   checkNewUserHeader(){
     if(this.props.isNewUser===true){
@@ -113,6 +123,20 @@ console.log(listedUsernames);
     }
     else{
       return "Please Enter your Username Below to Log In"
+    }
+  }
+  checkNewUserHelper(){
+    if(this.props.isNewUser===true){
+      return (<ul style={{float:'left',textAlign:'left'}}> <strong>Username requirements:</strong>
+        <li>Only use letters and numbers (No special characters or spaces eg: !@#$% etc...).</li>
+        <li>Minimum length of three characters and maximum of 12 characters.</li>
+        <li>No password needed but please remember your username as it will be used to remember who voted for what video.</li>
+      </ul>
+
+    )
+    }
+    else{
+      return
     }
   }
   checkNewUserEnter(){
@@ -141,9 +165,7 @@ console.log(listedUsernames);
 
     return (
       <div>
-      <Panel>
-      <Button  onClick={()=>this.returnHome()}>Return to Home</Button>
-</Panel>
+
         <Panel>
           <Panel.Header>
             <strong>{this.checkNewUserHeader()}</strong>
@@ -156,7 +178,9 @@ console.log(listedUsernames);
             onChange={username => this.setState({ username })}
           />
           <Panel.Footer>
+
             {this.checkNewUserButton()}
+          {this.checkNewUserHelper()}
           </Panel.Footer>
         </Panel>
 
