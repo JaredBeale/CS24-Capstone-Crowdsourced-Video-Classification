@@ -1,11 +1,13 @@
 import React, { Component} from 'react';
 import Player from "./VideoPlayer";
-import { LoadingIndicator, LoadingIcon } from 'lucid-ui';
+import { LoadingIndicator, LoadingIcon,RadioGroup  } from 'lucid-ui';
 import {Dialog, Panel,Button, CheckIcon } from 'lucid-ui';
 import { withRouter } from 'react-router-dom'
 
 import LabelSelect from "./LabelSelect.js"
-
+const style = {
+  marginRight: '13px',
+};
 
 const {
   LoadingMessage,
@@ -24,7 +26,8 @@ class VideoPage extends Component{
       videoChosen: false,
 
       labelsLoaded: false,
-      chosenLabel: null
+      LabelIndex: 0,
+  labels: [],
     };
 
     this.onSelectChange = this.onSelectChange.bind(this);
@@ -35,22 +38,34 @@ class VideoPage extends Component{
     this.askForClip();
 
   }
-  onSelectChange(value){
+  onSelectChange(e){
+    console.log(e)
     this.setState({
-      chosenLabel: this.state.labels[value]
+      LabelIndex: e
     });
   }
 
 
   renderSelect(){
-
+    const listLabels = this.state.labels.map((label)=>
+    <RadioGroup.RadioButton  style={style}>
+   <RadioGroup.Label>{label}</RadioGroup.Label>
+   </RadioGroup.RadioButton>
+   )
     return(
       <div id="select-div">
+      <RadioGroup
+             name='name'
+             selectedIndex={this.state.LabelIndex}
+             onSelect={this.onSelectChange}
+             style={{
+               display: 'inline-flex',
+               flexDirection: 'column',
+             }}
+           >
 
-        <LabelSelect
-          labels={this.state.labels}
-          onchange={this.onSelectChange}
-          />
+        {listLabels}
+        </RadioGroup>
 
           <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
 
@@ -131,10 +146,10 @@ class VideoPage extends Component{
   submitLabel(){
     // in this case we need self.
     const self=this;
-    const pastLabels = self.state.labels;
+    const pastLabels = self.state.labels[self.state.LabelIndex];
 
-    if(this.state.chosenLabel){
-      console.log(this.state.chosenLabel);
+    if(this.state.labels[self.state.LabelIndex]){
+      console.log(self.state.labels[self.state.LabelIndex]);
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `/api/create/vote`, true);
       xhr.setRequestHeader("Content-Type", "application/json");
@@ -147,7 +162,6 @@ class VideoPage extends Component{
               self.setState({
                 videoChosen: false,
                 video: null,
-                labels: pastLabels
               })
               self.askForClip();
           }
@@ -156,14 +170,12 @@ class VideoPage extends Component{
           }
 
       }
-      self.setState({
-        labels: null
-      })
+    
       // brings the user from the props
       // and the other stuff from the current site.
       const data = {
         user: this.props.globalUsername,
-        label: this.state.chosenLabel,
+        label: self.state.labels[self.state.LabelIndex],
         video: this.state.videoid
       }
       xhr.send(JSON.stringify(data));

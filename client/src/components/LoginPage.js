@@ -52,7 +52,7 @@ class LoginPage extends Component{
     });
   }
   signUp(){
-    var letters = /^[A-Za-z1-9]+$/;
+    var letters = /^[A-Za-z0-9]+$/;
 
     if( !this.state.username.match(letters)){
     this.setState({ errorMessage: "Username contains special character or space! Please remove it and try again."})
@@ -174,7 +174,7 @@ console.log(listedUsernames);
 
     return (
       <div>
-    
+
         <Panel>
           <Panel.Header>
             <strong>{this.checkNewUserHeader()}</strong>

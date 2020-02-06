@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactPlayer from "react-player";
-import { Button} from 'lucid-ui';
+import {LoadingMessage,LoadingIcon, Button} from 'lucid-ui';
 
 
 class VideoPlayer extends React.Component {
@@ -17,7 +17,7 @@ class VideoPlayer extends React.Component {
       muted: false,
       played: 0,
       loaded: 0,
-      duration: 0,
+      duration: Infinity,
       playbackRate: 1.0,
       loop: false,
 
@@ -59,6 +59,7 @@ class VideoPlayer extends React.Component {
     }
     else{
       console.log("Video length: ",time)
+
       self.setState({
         duration: time
       })
@@ -78,7 +79,14 @@ class VideoPlayer extends React.Component {
 
             <div id="video" >
 
-              <span><h1>Duration: {this.state.duration.toFixed(2)}</h1></span>
+              <span><h1>Duration: {this.state.duration === Infinity ?   <LoadingMessage
+
+                    Icon={<LoadingIcon speed='slow' />}
+                    Title='Loading...'
+
+                  />
+
+                : this.state.duration.toFixed(2)}</h1></span>
 
               <ReactPlayer
                 ref={this.ref}

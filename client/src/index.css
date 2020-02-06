@@ -19,6 +19,7 @@ body {
 }
 
 #submit-label-button{
+  display: flex;
   margin-top:25px;
 }
 
@@ -31,13 +32,13 @@ body {
 
 #video-player-widget{
  margin:50px;
- margin-left: -30px;
+
  margin-top: -59px;
 
 }
 
 #select-div{
-  margin-top:25%;
+  margin-top: 35px;
   margin-left: -30px;
 
 }
@@ -45,7 +46,12 @@ body {
 button {
   margin: 20px;
 }
-
+#banner-app-name{
+  font-size: 30px;
+  font-style: italic;
+  font-family: cursive;
+  margin:auto;
+}
 #banner{
 
   background-color: #587eba;
