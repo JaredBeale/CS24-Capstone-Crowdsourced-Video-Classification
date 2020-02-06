@@ -31,13 +31,15 @@ body {
 
 #video-player-widget{
  margin:50px;
- margin-left: auto;
- margin-top: -55px;
+ margin-left: -30px;
+ margin-top: -59px;
 
 }
 
 #select-div{
   margin-top:25%;
+  margin-left: -30px;
+
 }
 
 button {
@@ -45,6 +47,7 @@ button {
 }
 
 #banner{
+
   background-color: #587eba;
   height:15%;
   font-size: 1.25em;

@@ -1,7 +1,7 @@
 import React, { Component} from 'react';
 import Player from "./VideoPlayer";
 import { LoadingIndicator, LoadingIcon } from 'lucid-ui';
-import {Dialog, Button, CheckIcon } from 'lucid-ui';
+import {Dialog, Panel,Button, CheckIcon } from 'lucid-ui';
 import { withRouter } from 'react-router-dom'
 
 import LabelSelect from "./LabelSelect.js"
@@ -108,7 +108,10 @@ class VideoPage extends Component{
 
                   {this.state.videoChosen && <Player
                                           url={this.state.video} />}
+
+
                 {this.state.labelsLoaded && this.state.labels && this.renderSelect()}
+
               <div>
 
 
