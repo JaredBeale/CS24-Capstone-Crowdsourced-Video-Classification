@@ -1,10 +1,9 @@
 import React, { Component} from 'react';
 import Player from "./VideoPlayer";
 import { LoadingIndicator, LoadingIcon,RadioGroup  } from 'lucid-ui';
-import {Dialog, Panel,Button, CheckIcon } from 'lucid-ui';
+import {Dialog,Button, CheckIcon } from 'lucid-ui';
 import { withRouter } from 'react-router-dom'
 
-import LabelSelect from "./LabelSelect.js"
 const style = {
   marginRight: '13px',
 };
@@ -146,7 +145,6 @@ class VideoPage extends Component{
   submitLabel(){
     // in this case we need self.
     const self=this;
-    const pastLabels = self.state.labels[self.state.LabelIndex];
 
     if(this.state.labels[self.state.LabelIndex]){
       console.log(self.state.labels[self.state.LabelIndex]);
@@ -170,7 +168,7 @@ class VideoPage extends Component{
           }
 
       }
-    
+
       // brings the user from the props
       // and the other stuff from the current site.
       const data = {
