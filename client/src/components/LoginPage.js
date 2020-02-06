@@ -54,18 +54,9 @@ class LoginPage extends Component{
   signUp(){
     var letters = /^[A-Za-z0-9]+$/;
 
-    if( !this.state.username.match(letters)){
-    this.setState({ errorMessage: "Username contains special character or space! Please remove it and try again."})
+    if( !this.state.username.match(letters)|| this.state.username.length < 3||this.state.username.length >12 ){
+    this.setState({ errorMessage: "Username does not meet requirements. Please try again!"})
       return
-    }
-    else if(  this.state.username.length < 3){
-      this.setState({ errorMessage: "Username too short! Please make your name three characters or longer."})
-        return
-    }
-
-    else if(this.state.username.length >12 ){
-      this.setState({ errorMessage: "Username too long! Please make your name twelve characters or shorter."})
-        return
     }
 
     else{

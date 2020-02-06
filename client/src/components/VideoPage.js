@@ -25,7 +25,7 @@ class VideoPage extends Component{
       videoChosen: false,
 
       labelsLoaded: false,
-      LabelIndex: 0,
+      LabelIndex: -1,
   labels: [],
     };
 
@@ -66,8 +66,8 @@ class VideoPage extends Component{
         {listLabels}
         </RadioGroup>
 
-          <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
-
+        {this.state.LabelIndex===-1 ? <Button id="submit-label-button" isDisabled={true} size="large"><CheckIcon />Save and Refresh</Button>: <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
+}
       </div>
     )
   }
@@ -124,7 +124,7 @@ class VideoPage extends Component{
                                           url={this.state.video} />}
 
 
-                {this.state.labelsLoaded && this.state.labels && this.renderSelect()}
+                {this.state.videoChosen && this.state.labelsLoaded && this.state.labels && this.renderSelect()}
 
               <div>
 
@@ -160,6 +160,7 @@ class VideoPage extends Component{
               self.setState({
                 videoChosen: false,
                 video: null,
+                LabelIndex: -1,
               })
               self.askForClip();
           }
