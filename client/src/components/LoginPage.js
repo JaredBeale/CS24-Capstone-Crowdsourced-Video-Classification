@@ -174,8 +174,7 @@ console.log(listedUsernames);
 
     return (
       <div>
-      <Panel>
-</Panel>
+    
         <Panel>
           <Panel.Header>
             <strong>{this.checkNewUserHeader()}</strong>

@@ -12,11 +12,6 @@ const {
 } = LoadingIndicator;
 
 
-// const AWS_FILE_NAME ="sticky-bottom.mp4";
-
-// var gdrive_uri = `http://drive.google.com/uc?export=download&id=${DRIVE_FILE_ID}`;
-// var aws_uri =`https://quick-start-xandr-videohost.s3.amazonaws.com/${AWS_FILE_NAME}`;
-
 
 
 class VideoPage extends Component{

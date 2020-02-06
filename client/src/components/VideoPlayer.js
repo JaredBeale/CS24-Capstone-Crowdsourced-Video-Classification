@@ -22,9 +22,7 @@ class VideoPlayer extends React.Component {
       loop: false,
 
     }
-    this.handlePlayPause = this.handlePlayPause.bind(this);
-    // this.handleProgress = this.handleProgress.bind(this);
-    this.restartVideo = this.restartVideo.bind(this);
+
     this.url = props.url;
   }
   load = url => {
@@ -43,13 +41,7 @@ class VideoPlayer extends React.Component {
     this.load(this.url);
     this.setDurration();
   }
-  handlePlayPause(){
-    this.setState({ playing: !this.state.playing })
-  }
 
-  restartVideo(){
-     this.player.seekTo(0)
-  }
 
 
   setDurration(){
