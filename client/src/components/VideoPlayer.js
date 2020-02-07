@@ -97,11 +97,16 @@ class VideoPlayer extends React.Component {
                 controls
                 width	={832}
                 height	={468}
+                config={{file:{
+                  attributes:{
+                    controlsList: "nodownload",
+                    disablePictureInPicture: true,
+                  }
+                }}}
 
 
               />
-                <Button id="video-controls" kind='primary' className="playpause" size="large"
-                onClick={this.props.handlePlayPause}>{this.props.playpauseString}</Button>
+            
 
             </div>
 
