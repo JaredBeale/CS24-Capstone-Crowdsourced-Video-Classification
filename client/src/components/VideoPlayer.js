@@ -20,16 +20,17 @@ class VideoPlayer extends React.Component {
       duration: Infinity,
       playbackRate: 1.0,
       loop: false,
+      playpauseString: "Play",
 
     }
-
     this.url = props.url;
   }
+
+
   load = url => {
     this.setState({
       url,
       played: 0,
-      loaded: 0,
       pip: false
     })
   }
@@ -40,7 +41,9 @@ class VideoPlayer extends React.Component {
   componentDidMount(){
     this.load(this.url);
     this.setDurration();
+    this.props.liftUpRef(this.player);
   }
+
 
 
 
@@ -58,19 +61,16 @@ class VideoPlayer extends React.Component {
      },999)
     }
     else{
-      console.log("Video length: ",time)
-
       self.setState({
         duration: time
       })
-
     }
   }
 
 }
 
   render(){
-    var { playing , url,} = this.state
+    var {  url} = this.state
 
 
 
@@ -79,20 +79,20 @@ class VideoPlayer extends React.Component {
 
             <div id="video" >
 
-              <span><h1>Duration: {this.state.duration === Infinity ?   <LoadingMessage
+              <span><h1>Duration: {this.state.duration === Infinity ?  <LoadingMessage
 
                     Icon={<LoadingIcon speed='slow' />}
                     Title='Loading...'
 
                   />
 
-                : this.state.duration.toFixed(2)}</h1></span>
+                : this.state.duration.toFixed(2)} {this.state.duration === Infinity ? "": "sec"}</h1></span>
 
               <ReactPlayer
                 ref={this.ref}
-                onProgress={this.handleProgress}
+                onProgress={this.props.handleProgress}
                 onStart={() => console.log('onStart')}
-                playing={playing}
+                playing={this.props.playing}
                 url={url}
                 controls
                 width	={832}
