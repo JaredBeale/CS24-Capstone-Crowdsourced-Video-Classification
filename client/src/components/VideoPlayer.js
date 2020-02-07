@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactPlayer from "react-player";
-import {LoadingMessage,LoadingIcon} from 'lucid-ui';
+import {LoadingMessage,LoadingIcon,Button} from 'lucid-ui';
 
 
 class VideoPlayer extends React.Component {
@@ -100,6 +100,9 @@ class VideoPlayer extends React.Component {
 
 
               />
+                <Button id="video-controls" kind='primary' className="playpause" size="large"
+                onClick={this.props.handlePlayPause}>{this.props.playpauseString}</Button>
+
             </div>
 
         </div>

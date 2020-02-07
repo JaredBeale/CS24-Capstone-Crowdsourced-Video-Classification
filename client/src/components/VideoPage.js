@@ -70,8 +70,6 @@ class VideoPage extends Component{
         {listLabels}
 
         </RadioGroup>
-        <Button className="playpause" size="large"
-        onClick={this.handlePlayPause}>{this.state.playpauseString}</Button>
 
         {this.state.LabelIndex===-1 ? <Button id="submit-label-button" isDisabled={true} size="large"><CheckIcon />Save and Refresh</Button>: <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
 }
@@ -127,12 +125,15 @@ class VideoPage extends Component{
                      </Dialog>
 
 
+
+
                     {this.state.videoChosen && <Player
+                      playpauseString={this.state.playpauseString}
+                      handlePlayPause={this.handlePlayPause}
                       url={this.state.video}
                       liftUpRef={(val) => {console.log(val);this.setState({player: val});}}
                       handleProgress={this.handleProgress}
                       playing={this.state.playing}/>}
-
 
                     {this.state.videoChosen &&
                       this.state.labelsLoaded &&
