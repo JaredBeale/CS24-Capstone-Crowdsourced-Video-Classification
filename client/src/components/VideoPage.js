@@ -23,12 +23,16 @@ class VideoPage extends Component{
 
     this.state = {
       videoChosen: false,
-
       labelsLoaded: false,
       LabelIndex: -1,
-  labels: [],
+      labels: [],
+      playing: false,
+      playpauseString: "Play",
+      player: null
     };
 
+    this.handlePlayPause = this.handlePlayPause.bind(this);
+    this.handleProgress = this.handleProgress.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.submitLabel = this.submitLabel.bind(this);
   }
@@ -47,7 +51,7 @@ class VideoPage extends Component{
 
   renderSelect(){
     const listLabels = this.state.labels.map((label)=>
-    <RadioGroup.RadioButton  style={style}>
+    <RadioGroup.RadioButton  key={"label-"+label} style={style}>
    <RadioGroup.Label>{label}</RadioGroup.Label>
    </RadioGroup.RadioButton>
    )
@@ -64,6 +68,7 @@ class VideoPage extends Component{
            >
 
         {listLabels}
+
         </RadioGroup>
 
         {this.state.LabelIndex===-1 ? <Button id="submit-label-button" isDisabled={true} size="large"><CheckIcon />Save and Refresh</Button>: <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
@@ -92,39 +97,47 @@ class VideoPage extends Component{
 
                   </LoadingIndicator>}
 
-                                           <Dialog
-                                             isShown={this.props.isShown}
-                                             onEscape={()=>this.props.handleShow()}
-                                             onBackgroundClick={()=>this.props.handleShow()}
-                                             handleClose={()=>this.props.handleShow()}
-                                             Header='Tutorial'
-                                             size='small'
-                                           >
-                                             <div key={'info'}>
-                                                <h3>  Video Watching Page Instructions</h3>
-                                                <li>  Please select the most appropriate emotion label based
-                                                        on what you think the emotion
-                                                        the video is conveying and if you can’t decide select neutral.</li>
-                                                <li>  Click ‘save & refresh’ to submit
-                                                        your answer and view another video.</li>
-                                                <li>    View and vote on as many videos you desire.</li>
-                                                <li>    You may exit or log out at any time.</li>
-                                             </div>
+                     <Dialog
+                       isShown={this.props.isShown}
+                       onEscape={()=>this.props.handleShow()}
+                       onBackgroundClick={()=>this.props.handleShow()}
+                       handleClose={()=>this.props.handleShow()}
+                       Header='Tutorial'
+                       size='small'
+                     >
+                       <div key={'info'}>
+                          <h3>  Video Watching Page Instructions</h3>
+                          <li>  Click ‘save & refresh’ to submit
+                                  your answer and view another video.</li>
+                          <li>    You may exit or log out at any time.</li>
+                          <li>  Please select the most appropriate emotion label based
+                          on what you think the emotion
+                          the video is conveying and if you can’t decide select neutral.</li>
+                          <li>    View and vote on as many videos you desire.</li>
+                       </div>
 
-                                             <Dialog.Footer>
+                       <Dialog.Footer>
 
-                                               <Button
-                                                  onClick={()=>this.props.handleShow()}
-                                                  kind='primary'>Got it!</Button>
-                                             </Dialog.Footer>
-                                           </Dialog>
-
-
-                  {this.state.videoChosen && <Player
-                                          url={this.state.video} />}
+                         <Button
+                            onClick={()=>this.props.handleShow()}
+                            kind='primary'>Got it!</Button>
+                       </Dialog.Footer>
+                     </Dialog>
 
 
-                {this.state.videoChosen && this.state.labelsLoaded && this.state.labels && this.renderSelect()}
+
+
+                    {this.state.videoChosen && <Player
+                      playpauseString={this.state.playpauseString}
+                      handlePlayPause={this.handlePlayPause}
+                      url={this.state.video}
+                      liftUpRef={(val) => {console.log(val);this.setState({player: val});}}
+                      handleProgress={this.handleProgress}
+                      playing={this.state.playing}/>}
+
+                    {this.state.videoChosen &&
+                      this.state.labelsLoaded &&
+                        this.state.labels && this.renderSelect()}
 
               <div>
 
@@ -136,7 +149,6 @@ class VideoPage extends Component{
       </div>
       )
   }
-
 
 
 
@@ -181,6 +193,42 @@ class VideoPage extends Component{
     }
 
   }
+  handlePlayPause(){
+    if(this.state.played!== 1){
+      const nextStr = this.state.playing ? "Play" : "Pause";
+      this.setState(function(prev){
+        return {
+          playing: !prev.playing,
+          playpauseString: nextStr
+        }
+      })
+    }
+    else{
+      this.setState({
+        playing: true,
+        playpauseString: "Pause"
+      });
+      this.state.player.seekTo(0)
+
+    }
+  }
+  handleProgress(stuff){
+    console.log(stuff.played);
+    if(stuff.played === 1 ){
+      this.setState({
+        played: stuff.played,
+        playpauseString: "Restart"
+      })
+    }
+    else{
+      this.setState({
+        played: stuff.played,
+      })
+
+    }
+  }
+
+
 
   askForClip(){
     const self = this;
@@ -234,7 +282,6 @@ class VideoPage extends Component{
       }
       return response.json();
     }).then((data) => {
-      console.log("we are fine:",data);
       self.setState({
         labels: data,
         labelsLoaded: true
