@@ -190,7 +190,7 @@ app.get('/api/videos/select/username/:username', (req, res) => {
           fileid
         }
 
-        console.log("==Serving CDN: ", server)
+        // console.log("==Serving CDN: ", server)
         res.status(200).json(resp);
       }
       // There are no partially completed videos unseen by the user
