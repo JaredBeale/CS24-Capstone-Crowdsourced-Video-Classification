@@ -165,9 +165,14 @@ class VideoPage extends Component{
               self.askForClip();
           }
           else if (this.readyState === XMLHttpRequest.DONE) {
-            alert("post failed, try again later when you are logged in or something.");
+            self.setState({
+              videoChosen: false,
+              video: null,
+              LabelIndex: -1
+            });
+            self.askForClip();
+            console.log("Asking for clip after something went wrong");
           }
-
       }
 
       // brings the user from the props
