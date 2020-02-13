@@ -102,18 +102,20 @@ class VideoPage extends Component{
                        onEscape={()=>this.props.handleShow()}
                        onBackgroundClick={()=>this.props.handleShow()}
                        handleClose={()=>this.props.handleShow()}
-                       Header='Tutorial'
+                       Header='Video Watching Page Instructions'
                        size='small'
                      >
                        <div key={'info'}>
-                          <h3>  Video Watching Page Instructions</h3>
-                          <li>  Click ‘save & refresh’ to submit
-                                  your answer and view another video.</li>
-                          <li>    You may exit or log out at any time.</li>
-                          <li>  Please select the most appropriate emotion label based
-                          on what you think the emotion
-                          the video is conveying and if you can’t decide select neutral.</li>
-                          <li>    View and vote on as many videos you desire.</li>
+
+                    <ol>
+                       <li>  Watch the video displayed on the screen.</li>
+                       <li>  Select the most appropriate <strong>emotion the video is conveying.</strong></li>
+                       <li>  Click 'Save and Continue' to move on to the next video.</li>
+                       <li>  Click 'Save and Exit' to submit and end your session.</li>
+                       <li>  View and vote on as many videos as you like.</li>
+                       <li>  You may exit or log out at any time.</li>
+                       <li>  To reopen this helpful dialog, click green 'Help' button in the upper right at any time"</li>
+                    </ol>
                        </div>
 
                        <Dialog.Footer>
