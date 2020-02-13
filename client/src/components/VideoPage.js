@@ -44,7 +44,7 @@ class VideoPage extends Component{
 
   }
   loadVideosVoted(){
-    const self = this;
+
     fetch('/api/votes/count/' + this.props.globalUsername, {
       method: 'GET',
       headers: {
@@ -56,9 +56,7 @@ class VideoPage extends Component{
         }
         else if (response.ok) {
           console.log('success');
-
-    //      this.setState({videoCount:response.})
-    return response.json();
+          return response.json();
 
         }
       }).then((data) => {
