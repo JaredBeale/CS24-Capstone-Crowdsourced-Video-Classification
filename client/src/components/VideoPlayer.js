@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactPlayer from "react-player";
-import {LoadingMessage,LoadingIcon,Button} from 'lucid-ui';
+import {LoadingMessage,LoadingIcon} from 'lucid-ui';
 
 
 class VideoPlayer extends React.Component {
