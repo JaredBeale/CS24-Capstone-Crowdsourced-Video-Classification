@@ -28,7 +28,8 @@ class VideoPage extends Component{
       labels: [],
       playing: false,
       playpauseString: "Play",
-      player: null
+      player: null,
+      voteCount: 0,
     };
 
     this.handlePlayPause = this.handlePlayPause.bind(this);
@@ -37,10 +38,39 @@ class VideoPage extends Component{
     this.submitLabel = this.submitLabel.bind(this);
   }
   componentDidMount(){
+    this.loadVideosVoted();
     this.loadLabels();
     this.askForClip();
 
   }
+  loadVideosVoted(){
+    const self = this;
+    fetch('/api/votes/count/' + this.props.globalUsername, {
+      method: 'GET',
+      headers: {
+      'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+        if (response.status === 400) {
+          console.log('failure');
+        }
+        else if (response.ok) {
+          console.log('success');
+
+    //      this.setState({videoCount:response.})
+    return response.json();
+
+        }
+      }).then((data) => {
+      console.log(data);
+      this.setState({voteCount:data});
+      })
+      .catch((error) => {
+        console.log(error);
+
+      });
+  }
+
   onSelectChange(e){
     console.log(e)
     this.setState({
@@ -73,6 +103,7 @@ class VideoPage extends Component{
 
         {this.state.LabelIndex===-1 ? <Button id="submit-label-button" isDisabled={true} size="large"><CheckIcon />Save and Refresh</Button>: <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
 }
+        <h3>Videos Viewed and Classified: {this.state.voteCount}</h3>
       </div>
     )
   }
@@ -198,7 +229,7 @@ class VideoPage extends Component{
       }
       xhr.send(JSON.stringify(data));
     }
-
+this.loadVideosVoted();
   }
   handlePlayPause(){
     if(this.state.played!== 1){
