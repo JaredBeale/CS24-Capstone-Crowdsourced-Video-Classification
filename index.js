@@ -25,8 +25,45 @@ db.connect();
 // express is used to connect .css and .js files
 app.use(express.static(path.join(__dirname, '/client/build')));
 
-// Label max is the number of labels a video needs to be considered fully labeled
+
+/***** Helping Functions and Variables *****/
+// LABEL_MAX is the number of labels a video needs to be considered fully labeled
 const LABEL_MAX = 5;
+
+// TIMEOUT is how long a video may be checked out in milliseconds (first number is minutes, 60000 converts to ms)
+const TIMEOUT = 10 * 60000
+
+// Create flatMap function to use when processing videos
+const myConcat = (x, y) =>
+  x.concat(y);
+const myFlatMap = (f, xs) => 
+  xs.map(f).reduce(myConcat, []);
+Array.prototype.myFlatMap = function(f) {
+  return myFlatMap(f, this);
+}
+
+// Checked out videos used to prevent videos from exceeding LABEL_MAX by simultaneous viewing
+checkedOutVideos = [];
+
+// const google = `http://drive.google.com/uc?export=download&id=${DRIVE_FILE_ID}`;
+// maybe for performance we can host it as a CDN
+var VIDEO_SERVER_ID = -1; //intially its -1 becaus the very first call itbecomes 0;
+const NUMBER_SERVERS = 2;
+//to be honest i think the cctv link is the more reliable, i did a folder upload and it was
+// about and hour faster than uploading 1112 files
+const SERVERS=[
+  "https://quick-start-xandr-videohost.s3-us-west-2.amazonaws.com/",
+  "https://crowd-source-circuit-tv.s3-us-west-1.amazonaws.com/dev_splits_complete/"
+]
+
+// round robin load balancer
+function getServerIndex(){
+// global yes indeed
+  VIDEO_SERVER_ID = (VIDEO_SERVER_ID+1)%NUMBER_SERVERS;
+  return VIDEO_SERVER_ID;
+
+}
+
 
 /************ API Endpoints ****************/
 // Use prefix "/api/" on api endpoints
@@ -55,16 +92,36 @@ app.post('/api/create/user', (req, res) => {
 
 // Endpoint - Create new vote
 app.post('/api/create/vote', (req, res) => {
+  // Remove all videos that have been checked out for too long
+  var now = Date.now()
+  for (let i = checkedOutVideos.length - 1; i >= 0; i--) {
+    if (now - checkedOutVideos[i].timeStamp > TIMEOUT)
+      checkedOutVideos.splice(i, 1);
+  }
+    
+  // Grab body info
   const { user, video, label } = req.body;
+  
+  // If video is checked out
+  index = checkedOutVideos.map(entry => entry.video).indexOf(video);
+  if (index > -1){
+    //  Return the video
+    checkedOutVideos.splice(index, 1);
 
-  db.query("INSERT INTO Votes (labelId, userId, videoId) VALUES ((SELECT id FROM Labels WHERE labelTitle = $1), (SELECT id FROM Users WHERE username = $2), (SELECT id FROM Videos WHERE fileTitle = $3));", [label, user, video], (err, result) => {
-    if (err) {
-      res.status(500).json({content: "SQL Error while attempting to create vote in database."});
-      console.log(err);
-    }
-    else
-      res.status(200).json({success:`Vote added with username ${user} video title ${video} and label ${label}`});
-  });
+    // Create the vote
+    db.query("INSERT INTO Votes (labelId, userId, videoId) VALUES ((SELECT id FROM Labels WHERE labelTitle = $1), (SELECT id FROM Users WHERE username = $2), (SELECT id FROM Videos WHERE fileTitle = $3));", [label, user, video], (err, result) => {
+      if (err) {
+        res.status(500).json({content: "SQL Error while attempting to create vote in database."});
+        console.log(err);
+      }
+      else
+        res.status(200).json({success:`Vote added with username ${user} video title ${video} and label ${label}`});
+    });
+  }
+  // Otherwise video is overdue
+  else {
+    res.status(400).json({content: "Video timed out. Try again with another video."});
+  }
 });
 
 // Endpoint - Read users
@@ -91,44 +148,42 @@ app.get('/api/names/labels', (req, res) => {
   });
 });
 
-
-// const google = `http://drive.google.com/uc?export=download&id=${DRIVE_FILE_ID}`;
-// maybe for performance we can host it as a CDN
-var VIDEO_SERVER_ID = -1; //intially its -1 becaus the very first call itbecomes 0;
-const NUMBER_SERVERS = 2;
-//to be honest i think the cctv link is the more reliable, i did a folder upload and it was
-// about and hour faster than uploading 1112 files
-const SERVERS=[
-  "https://quick-start-xandr-videohost.s3-us-west-2.amazonaws.com/",
-  "https://crowd-source-circuit-tv.s3-us-west-1.amazonaws.com/dev_splits_complete/"
-]
-
-// round robin load balancer
-function getServerIndex(){
-// global yes indeed
-  VIDEO_SERVER_ID = (VIDEO_SERVER_ID+1)%NUMBER_SERVERS;
-  return VIDEO_SERVER_ID;
-
-}
 // Endpoint - Select next video
 app.get('/api/videos/select/username/:username', (req, res) => {
+  // Remove all videos that have been checked out for too long
+  var now = Date.now()
+  for (let i = checkedOutVideos.length - 1; i >= 0; i--) {
+    if (now - checkedOutVideos[i].timeStamp > TIMEOUT)
+      checkedOutVideos.splice(i, 1);
+  }
+
   // Declare helping variable
   var usableFileList = [];
 
-  // Find partially completed videos not seen be user
-  db.query("SELECT fileTitle FROM Videos WHERE id IN (SELECT videoid FROM Votes WHERE videoid NOT IN (SELECT videoid FROM Votes WHERE userid = (SELECT id FROM Users WHERE username = $1)) GROUP BY videoid HAVING COUNT(*) < $2);", [req.params.username, LABEL_MAX], (err, result) => {
+  // Find partially completed videos not seen be user of form {filetitle: X, count: Y}
+  db.query("SELECT V.fileTitle, COUNT(videoid) FROM Votes INNER JOIN Videos V ON V.id = videoid WHERE videoid NOT IN (SELECT videoid FROM Votes WHERE userid = (SELECT id FROM Users WHERE username = $1)) GROUP BY fileTitle HAVING COUNT(videoid) < $2 ORDER BY fileTitle;", [req.params.username, LABEL_MAX], (err, result) => {
     if (err) {
       res.status(500).json({content: `Error selecting partially voted video for user: ${req.params.username}`});
       console.log(err);
       return;
     }
     else {
-      usableFileList = result.rows.map(entry => entry.filetitle);
+      // Convert each entry from form {filetitle: X, count: Y} to form [X, X, X,... (LABEL_MAX - Y times)] and flatten the entries into a single array
+      //   this is done because Y is the number of votes in the database, and LABEL_MAX - Y is the number of times that video is allowed to be checked out without exceeding LABEL_MAX
+      usableFileList = result.rows.myFlatMap(entry => Array(LABEL_MAX - entry.count).fill(entry.filetitle));
+      // Take only the videos in usable file list which are not checked out
+      checkedOutVideos.map(entry => entry.video).forEach(video => {
+        index = usableFileList.indexOf(video);
+        if (index > -1)
+          usableFileList.splice(index, 1);
+      });
 
       // There are at least one partially complete videos unseen by the user, select one and send it
       if (usableFileList.length > 0) {
         const server = SERVERS[getServerIndex()];
         const fileid = usableFileList[Math.floor(100*Math.random() % usableFileList.length)];
+        checkedOutVideos.push({'video': fileid, 'timeStamp': now});
+        console.log(checkedOutVideos);
 
         const resp = {
           url: server + fileid,
@@ -148,13 +203,23 @@ app.get('/api/videos/select/username/:username', (req, res) => {
             return;
           }
           else {
-            usableFileList = result.rows.map(entry => entry.filetitle);
+            // Convert each entry from form {filetitle: X} to form [X, X, X,... (LABEL_MAX)] and flatten the entries into a single array
+            //   this is done because Y is the number of votes in the database, and LABEL_MAX is the number of times that an unvoted video is allowed to be checked out without exceeding LABEL_MAX
+            usableFileList = result.rows.myFlatMap(entry => Array(LABEL_MAX).fill(entry.filetitle));
+            // Take only the videos in usable file list which are not checked out
+            checkedOutVideos.map(entry => entry.video).forEach(video => {
+              index = usableFileList.indexOf(video);
+              if (index > -1)
+                usableFileList.splice(index, 1);
+            });
 
             // There are at least one unseen videos, select one and send it
             if (usableFileList.length > 0) {
 
               const server = SERVERS[getServerIndex()];
               const fileid = usableFileList[Math.floor(100*Math.random() % usableFileList.length)];
+              checkedOutVideos.push({'video': fileid, 'timeStamp': now});
+              console.log(checkedOutVideos);
 
               const resp = {
                 url: server + fileid,
@@ -175,16 +240,11 @@ app.get('/api/videos/select/username/:username', (req, res) => {
   });
 });
 
+
 // /************ Client Endpoints *************/
-// // Catch-all to serve React's public files.
-
-
-// if the client wanted to quickly go to one page they can.
-// but the app will redirect them to the index page. and then react Router will render
-// the correct page.
+// Catch-all to send index which has the React router and will redirect the user correctly
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/build/index.html'));
-  // res.status(304).send();
 });
 
 
