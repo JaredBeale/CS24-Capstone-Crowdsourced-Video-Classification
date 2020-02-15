@@ -36,7 +36,7 @@ const TIMEOUT = 10 * 60000
 // Create flatMap function to use when processing videos
 const myConcat = (x, y) =>
   x.concat(y);
-const myFlatMap = (f, xs) => 
+const myFlatMap = (f, xs) =>
   xs.map(f).reduce(myConcat, []);
 Array.prototype.myFlatMap = function(f) {
   return myFlatMap(f, this);
@@ -98,10 +98,10 @@ app.post('/api/create/vote', (req, res) => {
     if (now - checkedOutVideos[i].timeStamp > TIMEOUT)
       checkedOutVideos.splice(i, 1);
   }
-    
+
   // Grab body info
   const { user, video, label } = req.body;
-  
+
   // If video is checked out
   index = checkedOutVideos.map(entry => entry.video).indexOf(video);
   if (index > -1){
@@ -240,6 +240,20 @@ app.get('/api/videos/select/username/:username', (req, res) => {
   });
 });
 
+// Endpoint - Get video count per user
+app.get('/api/votes/count/:username', (req, res) => {
+
+  db.query("SELECT COUNT(userid) from VOTES where userid = (SELECT id from USERS where username = $1)",[req.params.username], (err, result) => {
+    if (err) {
+      res.status(400).json({content: `Error with username search.`});
+      console.log(err);
+    }
+    else{
+      console.log(result.rows[0]['count'])
+      res.status(200).json(result.rows[0]['count']);
+    }
+  });
+});
 
 // /************ Client Endpoints *************/
 // Catch-all to send index which has the React router and will redirect the user correctly

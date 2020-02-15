@@ -28,7 +28,8 @@ class VideoPage extends Component{
       labels: [],
       playing: false,
       playpauseString: "Play",
-      player: null
+      player: null,
+      voteCount: 0,
     };
 
     this.handlePlayPause = this.handlePlayPause.bind(this);
@@ -37,10 +38,37 @@ class VideoPage extends Component{
     this.submitLabel = this.submitLabel.bind(this);
   }
   componentDidMount(){
+    this.loadVideosVoted();
     this.loadLabels();
     this.askForClip();
 
   }
+  loadVideosVoted(){
+
+    fetch('/api/votes/count/' + this.props.globalUsername, {
+      method: 'GET',
+      headers: {
+      'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+        if (response.status === 400) {
+          console.log('failure');
+        }
+        else if (response.ok) {
+          console.log('success');
+          return response.json();
+
+        }
+      }).then((data) => {
+      console.log(data);
+      this.setState({voteCount:data});
+      })
+      .catch((error) => {
+        console.log(error);
+
+      });
+  }
+
   onSelectChange(e){
     console.log(e)
     this.setState({
@@ -73,6 +101,7 @@ class VideoPage extends Component{
 
         {this.state.LabelIndex===-1 ? <Button id="submit-label-button" isDisabled={true} size="large"><CheckIcon />Save and Refresh</Button>: <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
 }
+        <h3>Videos Viewed and Classified: {this.state.voteCount}</h3>
       </div>
     )
   }
@@ -102,18 +131,20 @@ class VideoPage extends Component{
                        onEscape={()=>this.props.handleShow()}
                        onBackgroundClick={()=>this.props.handleShow()}
                        handleClose={()=>this.props.handleShow()}
-                       Header='Tutorial'
+                       Header='Video Watching Page Instructions'
                        size='small'
                      >
                        <div key={'info'}>
-                          <h3>  Video Watching Page Instructions</h3>
-                          <li>  Click ‘save & refresh’ to submit
-                                  your answer and view another video.</li>
-                          <li>    You may exit or log out at any time.</li>
-                          <li>  Please select the most appropriate emotion label based
-                          on what you think the emotion
-                          the video is conveying and if you can’t decide select neutral.</li>
-                          <li>    View and vote on as many videos you desire.</li>
+
+                    <ol>
+                       <li>  Watch the video displayed on the screen.</li>
+                       <li>  Select the most appropriate <strong>emotion the video is conveying.</strong></li>
+                       <li>  Click 'Save and Continue' to move on to the next video.</li>
+                       <li>  Click 'Save and Exit' to submit and end your session.</li>
+                       <li>  View and vote on as many videos as you like.</li>
+                       <li>  You may exit or log out at any time.</li>
+                       <li>  To reopen this helpful dialog, click green 'Help' button in the upper right at any time"</li>
+                    </ol>
                        </div>
 
                        <Dialog.Footer>
@@ -196,7 +227,7 @@ class VideoPage extends Component{
       }
       xhr.send(JSON.stringify(data));
     }
-
+this.loadVideosVoted();
   }
   handlePlayPause(){
     if(this.state.played!== 1){

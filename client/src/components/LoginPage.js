@@ -52,16 +52,16 @@ class LoginPage extends Component{
     });
   }
   signUp(){
+    var lowerUsername = this.state.username.toLowerCase();
     var letters = /^[A-Za-z0-9]+$/;
 
-    if( !this.state.username.match(letters)|| this.state.username.length < 3||this.state.username.length >12 ){
+    if( !lowerUsername.match(letters)|| lowerUsername.length < 3){
     this.setState({ errorMessage: "Username does not meet requirements. Please try again!"})
       return
     }
 
     else{
-
-    var data = {name: this.state.username};
+    var data = {name: lowerUsername};
 
     fetch('/api/create/user', {
       method: 'POST',
@@ -96,7 +96,8 @@ class LoginPage extends Component{
   }
 }
   logIn(){
-    var currentUsername = this.state.username;
+    var lowerUsername = this.state.username.toLowerCase();
+    var currentUsername = lowerUsername;
     var listedUsernames = this.state.listUsername;
 console.log(listedUsernames);
     for(var i = 0; i < listedUsernames.length; i++){
@@ -129,8 +130,9 @@ console.log(listedUsernames);
     if(this.props.isNewUser===true){
       return (<ul style={{float:'left',textAlign:'left'}}> <strong>Username requirements:</strong>
         <li>Only use letters and numbers (No special characters or spaces eg: !@#$% etc...).</li>
-        <li>Minimum length of three characters and maximum of 12 characters.</li>
-        <li>No password needed but please remember your username as it will be used to remember who voted for what video.</li>
+        <li>Usernames will be case unsensitive.</li>
+        <li>Minimum length of three characters.</li>
+        <li>No password needed but please remember your username as you will need it to log back into the webste.</li>
       </ul>
 
     )
