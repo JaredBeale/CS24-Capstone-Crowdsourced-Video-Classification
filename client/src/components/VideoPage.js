@@ -17,6 +17,14 @@ const {
 
 class VideoPage extends Component{
   constructor(props){
+    var sessionVoteCount = sessionStorage.getItem("sessionVoteCount");
+
+    if (sessionVoteCount === null) {
+      sessionVoteCount = "0";
+      sessionStorage.setItem("sessionVoteCount", sessionVoteCount);
+    }
+    var numSessionVoteCount = parseInt(sessionVoteCount,10);
+
 
     super(props);
 
@@ -30,6 +38,8 @@ class VideoPage extends Component{
       playpauseString: "Play",
       player: null,
       voteCount: 0,
+      sessionVoteCount: numSessionVoteCount,
+
     };
 
     this.handlePlayPause = this.handlePlayPause.bind(this);
@@ -101,7 +111,8 @@ class VideoPage extends Component{
 
         {this.state.LabelIndex===-1 ? <Button id="submit-label-button" isDisabled={true} size="large"><CheckIcon />Save and Refresh</Button>: <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
 }
-        <h3>Videos Viewed and Classified: {this.state.voteCount}</h3>
+        <h4>Videos classified this session: {this.state.sessionVoteCount}</h4>
+
       </div>
     )
   }
@@ -138,7 +149,7 @@ class VideoPage extends Component{
 
                     <ol>
                        <li>  Watch the video displayed on the screen.</li>
-                       <li>  Select the most appropriate <strong>emotion the video is conveying.</strong></li>
+                       <li>  Select the most appropriate <strong>emotion the video is conveying.</strong> If you are unsure select "Neutral".</li>
                        <li>  Click 'Save and Continue' to move on to the next video.</li>
                        <li>  Click 'Save and Exit' to submit and end your session.</li>
                        <li>  View and vote on as many videos as you like.</li>
@@ -205,6 +216,19 @@ class VideoPage extends Component{
                 video: null,
                 LabelIndex: -1,
               })
+              var sessionVoteCount = sessionStorage.getItem("sessionVoteCount");
+
+              if (sessionVoteCount === null) {
+                sessionVoteCount = "0";
+                sessionStorage.setItem("sessionVoteCount", sessionVoteCount);
+              }
+
+              var numSessionVoteCount = parseInt(sessionVoteCount,10);
+              console.log(numSessionVoteCount);
+              numSessionVoteCount++;
+              self.setState({sessionVoteCount:numSessionVoteCount})
+              sessionStorage.setItem("sessionVoteCount", numSessionVoteCount);
+
               self.askForClip();
           }
           else if (this.readyState === XMLHttpRequest.DONE) {
@@ -228,6 +252,7 @@ class VideoPage extends Component{
       xhr.send(JSON.stringify(data));
     }
 this.loadVideosVoted();
+
   }
   handlePlayPause(){
     if(this.state.played!== 1){

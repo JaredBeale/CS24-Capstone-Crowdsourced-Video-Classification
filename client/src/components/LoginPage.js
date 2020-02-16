@@ -130,7 +130,7 @@ console.log(listedUsernames);
     if(this.props.isNewUser===true){
       return (<ul style={{float:'left',textAlign:'left'}}> <strong>Username requirements:</strong>
         <li>Only use letters and numbers (No special characters or spaces eg: !@#$% etc...).</li>
-        <li>Usernames will be case unsensitive.</li>
+        <li>Usernames are not case sensitive.</li>
         <li>Minimum length of three characters.</li>
         <li>No password needed but please remember your username as you will need it to log back into the webste.</li>
       </ul>

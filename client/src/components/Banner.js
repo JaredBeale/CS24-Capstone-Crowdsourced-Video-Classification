@@ -47,6 +47,8 @@ function Banner(props){
           {checkWatchPage()}
         <Button  className="text-cell" kind='danger' onClick={()=>{
                                                       localStorage.setItem("username", "");
+                                                      sessionStorage.setItem("sessionVoteCount", "0");
+
                                                       props.setGlobalUsername("");
                                                      }}>
             Sign Out
