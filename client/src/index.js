@@ -12,6 +12,7 @@ import { Button, Panel} from 'lucid-ui';
 import './index.css';
 import './lucid-ui.css';
 
+import GoodbyePage from "./components/ExitPage"
 import VideoPage from './components/VideoPage';
 import LoginPage from './components/LoginPage';
 import Banner from "./components/Banner"
@@ -72,6 +73,8 @@ class CCTV extends React.Component {
 
                   setGlobalUsername={this.setGlobalUsername}
                   user={this.state.globalUsername} />
+
+          <Route path="/goodbye" component={GoodbyePage} />
 
           <Route path="/watch">
             <VideoPage

@@ -249,7 +249,6 @@ app.get('/api/votes/count/:username', (req, res) => {
       console.log(err);
     }
     else{
-      console.log(result.rows[0]['count'])
       res.status(200).json(result.rows[0]['count']);
     }
   });
