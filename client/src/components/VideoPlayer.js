@@ -106,7 +106,7 @@ class VideoPlayer extends React.Component {
 
 
               />
-            
+
 
             </div>
 

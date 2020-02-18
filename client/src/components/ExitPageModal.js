@@ -1,7 +1,6 @@
-import _ from 'lodash';
 import React, { Component} from 'react';
 import { Button, Dialog,CheckIcon } from 'lucid-ui';
-import { withRouter, Redirect } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 
  class ExitPageModal extends Component{
@@ -24,6 +23,7 @@ import { withRouter, Redirect } from 'react-router-dom'
   }
   handleConfirm() {
     this.props.setGlobalUsername("");
+    this.props.setBannerExit(false);
     this.props.history.push('/login');
   }
   render() {

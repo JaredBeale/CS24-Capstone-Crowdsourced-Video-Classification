@@ -45,7 +45,7 @@ class CCTV extends React.Component {
 
       isShown: JSON.parse(storedTutorial),
       globalUsername: storedUsername,
-
+      bannerExit: false,
     }
   }
 
@@ -60,6 +60,10 @@ class CCTV extends React.Component {
      console.log(this.state.isShown)
     this.setState({isShown: !this.state.isShown})
   }
+  setBannerExit=(banner)=>{
+    this.setState({bannerExit:banner});
+
+  }
 
   render(){
     if(localStorage.getItem("username")!== "" ){
@@ -70,14 +74,17 @@ class CCTV extends React.Component {
         <div>
           <Banner isShown={this.state.isShown}
           handleShow={this.handleShow}
-
+          bannerExit={this.state.bannerExit}
+          setBannerExit={this.setBannerExit}
                   setGlobalUsername={this.setGlobalUsername}
                   user={this.state.globalUsername} />
 
           <Route path="/goodbye"  >
           <GoodbyePage
-            onLogout={this.setGlobalUsername} 
+            onLogout={this.setGlobalUsername}
             setGlobalUsername={this.setGlobalUsername}
+            bannerExit={this.state.bannerExit}
+            setBannerExit={this.setBannerExit}
             user={this.state.globalUsername} />
           </Route>
 

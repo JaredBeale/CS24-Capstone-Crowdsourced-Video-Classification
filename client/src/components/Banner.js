@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button} from 'lucid-ui';
-import { withRouter } from 'react-router-dom';
+import { withRouter,Redirect } from 'react-router-dom';
 
 
 
@@ -34,6 +34,7 @@ function Banner(props){
   return (
     <div id="banner">
 
+    {props.bannerExit && <Redirect to="/goodbye" />}
 
       <div className="text-cell" id="banner-app-name">
     Crowdsource Video Classification
@@ -45,12 +46,10 @@ function Banner(props){
 
         <div className="text-cell" >Welcome, {props.user}</div>
           {checkWatchPage()}
-        <Button  className="text-cell" kind='danger' onClick={()=>{
-                                                      localStorage.setItem("username", "");
-                                                      sessionStorage.setItem("sessionVoteCount", "0");
+        <Button  className="text-cell" kind='danger' onClick={()=>
+      props.setBannerExit(true)
 
-                                                      props.setGlobalUsername("");
-                                                     }}>
+                                                     }>
             Sign Out
           </Button>
 

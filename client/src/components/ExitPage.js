@@ -45,7 +45,7 @@ function ExitPage(props){
         ignore = true;
       };
     }
-  }, [ totalCount ]);
+  }, [ totalCount,username ]);
 
   if(!username){
     return <Redirect to="/login" />
@@ -54,7 +54,8 @@ function ExitPage(props){
   return (
         <div id="GoodbyePage">
         {isLoading && <div class="spinner"><div class="dot1"></div><div class="dot2"></div></div> }
-        {!isLoading && <Modal setGlobalUsername={props.setGlobalUsername} totalCount={totalCount}/>}
+        {!isLoading && <Modal setGlobalUsername={props.setGlobalUsername}   bannerExit={props.bannerExit}
+          setBannerExit={props.setBannerExit} totalCount={totalCount}/>}
         <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 123 94.09">
         <defs>
          <mask id="squiggle-mask" maskunits="userSpaceOnUse"
