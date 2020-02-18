@@ -2,7 +2,7 @@ import React, { Component} from 'react';
 import Player from "./VideoPlayer";
 import { LoadingIndicator, LoadingIcon,RadioGroup  } from 'lucid-ui';
 import {Dialog,Button, CheckIcon } from 'lucid-ui';
-import { withRouter } from 'react-router-dom'
+import { withRouter, Redirect } from 'react-router-dom'
 
 const style = {
   marginRight: '13px',
@@ -39,6 +39,7 @@ class VideoPage extends Component{
       player: null,
       voteCount: 0,
       sessionVoteCount: numSessionVoteCount,
+      time2exit: false,
 
     };
 
@@ -46,6 +47,7 @@ class VideoPage extends Component{
     this.handleProgress = this.handleProgress.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.submitLabel = this.submitLabel.bind(this);
+
   }
   componentDidMount(){
     this.loadVideosVoted();
@@ -54,7 +56,6 @@ class VideoPage extends Component{
 
   }
   loadVideosVoted(){
-
     fetch('/api/votes/count/' + this.props.globalUsername, {
       method: 'GET',
       headers: {
@@ -109,8 +110,20 @@ class VideoPage extends Component{
 
         </RadioGroup>
 
-        {this.state.LabelIndex===-1 ? <Button id="submit-label-button" isDisabled={true} size="large"><CheckIcon />Save and Refresh</Button>: <Button id="submit-label-button" onClick={this.submitLabel} size="large"><CheckIcon />Save and Refresh</Button>
-}
+        <Button id="submit-label-button" onClick={this.submitLabel}
+          isDisabled={this.state.LabelIndex===-1} size="large">
+            <CheckIcon />Save and Continue
+        </Button>
+        <Button id="submit-label-button" isDisabled={this.state.LabelIndex===-1}
+          onClick={()=>{
+            this.submitLabel();
+            this.setState({
+              time2exit: true
+            })
+          }} size="large">
+            <CheckIcon />Save and Exit
+        </Button>
+
         <h4>Videos classified this session: {this.state.sessionVoteCount}</h4>
 
       </div>
@@ -124,6 +137,7 @@ class VideoPage extends Component{
 
     return (
     <div className="outer">
+    {this.state.time2exit && <Redirect to="/goodbye" />}
       <div className="middle">
             <div id="video-page-container" className="inner">
 
@@ -201,7 +215,6 @@ class VideoPage extends Component{
     const self=this;
 
     if(this.state.labels[self.state.LabelIndex]){
-      console.log(self.state.labels[self.state.LabelIndex]);
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `/api/create/vote`, true);
       xhr.setRequestHeader("Content-Type", "application/json");
@@ -224,7 +237,6 @@ class VideoPage extends Component{
               }
 
               var numSessionVoteCount = parseInt(sessionVoteCount,10);
-              console.log(numSessionVoteCount);
               numSessionVoteCount++;
               self.setState({sessionVoteCount:numSessionVoteCount})
               sessionStorage.setItem("sessionVoteCount", numSessionVoteCount);
@@ -238,7 +250,6 @@ class VideoPage extends Component{
               LabelIndex: -1
             });
             self.askForClip();
-            console.log("Asking for clip after something went wrong");
           }
       }
 
