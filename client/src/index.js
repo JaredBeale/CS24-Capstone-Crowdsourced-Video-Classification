@@ -74,7 +74,10 @@ class CCTV extends React.Component {
                   setGlobalUsername={this.setGlobalUsername}
                   user={this.state.globalUsername} />
 
-          <Route path="/goodbye" component={GoodbyePage} />
+          <Route path="/goodbye"  >
+          <GoodbyePage
+            onLogout={this.setGlobalUsername} />
+          </Route>
 
           <Route path="/watch">
             <VideoPage

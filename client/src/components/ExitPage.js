@@ -21,7 +21,6 @@ function ExitPage(props){
           );
           responseBody = await response.json();
 
-          console.log(responseBody);
         } catch (e) {
           if (e instanceof DOMException) {
             console.log("== HTTP request aborted");
@@ -34,6 +33,8 @@ function ExitPage(props){
           setLoading(false);
           setCount(responseBody)
           sessionStorage.setItem("sessionVoteCount", "0");
+          localStorage.setItem("username","");
+          // props.onLogout("");
 
         }
       }
