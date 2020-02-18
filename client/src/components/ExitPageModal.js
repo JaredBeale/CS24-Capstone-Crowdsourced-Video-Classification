@@ -1,20 +1,31 @@
 import _ from 'lodash';
-import React from 'react';
-import createClass from 'create-react-class';
+import React, { Component} from 'react';
 import { Button, Dialog,CheckIcon } from 'lucid-ui';
+import { withRouter, Redirect } from 'react-router-dom'
 
 
-export default createClass({
-  getInitialState() {
-    return {
-      isShown: true,
-    };
-  },
+ class ExitPageModal extends Component{
+
+   constructor(props){
+
+     super(props);
+
+
+     this.state = {
+       isShown: true,
+
+     };
+
+
+   }
 
   handleShow(isShown) {
-    this.setState({ isShown });
-  },
-
+    this.setState({ isShown:isShown });
+  }
+  handleConfirm() {
+    this.props.setGlobalUsername("");
+    this.props.history.push('/login');
+  }
   render() {
     const totalLabels = this.props.totalCount;
     const username = localStorage.getItem("username");
@@ -22,13 +33,11 @@ export default createClass({
 
     return (
       <div style={{fontSize: "2em", font: "menu"}}>
-        <Button onClick={_.partial(this.handleShow, !this.state.isShown)}>
-          O
-        </Button>
+
 
         <Dialog
           isShown={this.state.isShown}
-          handleClose={_.partial(this.handleShow, !this.state.isShown)}
+          onClick={ ()=>{this.handleShow(!this.state.isShown)}}
           Header='See you Later!'
           size="medium"
 
@@ -47,14 +56,15 @@ export default createClass({
           <Dialog.Footer>
             <Button
               kind='primary'
-              onClick={_.partial(this.handleShow, false)}
+              onClick={ ()=>{this.handleConfirm()}}
               style={{ marginRight: '9px' }}
             >
-              <CheckIcon />OK
+              <CheckIcon />OK, Return to Login Page
             </Button>
           </Dialog.Footer>
         </Dialog>
       </div>
     );
-  },
-});
+  }
+}export default withRouter(ExitPageModal);
+
