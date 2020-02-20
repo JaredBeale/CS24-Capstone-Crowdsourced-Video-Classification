@@ -2,7 +2,7 @@ import React, { Component} from 'react';
 import { Button, Dialog,CheckIcon } from 'lucid-ui';
 import { withRouter } from 'react-router-dom'
 
-
+// with an increase of <span style={{fontSize: "1.8em"}}>{Number(seshCount/(totalLabels-seshCount)*100).toFixed(1)}%</span>
  class ExitPageModal extends Component{
 
    constructor(props){
@@ -47,9 +47,8 @@ import { withRouter } from 'react-router-dom'
               Glad you could work on some of these videos, {username}.
             </p>
             <p style={{fontSize: "1.5em",lineHeight: "1.6"}}>
-              During this past session you reviewed <span style={{fontSize: "1.8em"}}>+{seshCount}</span> clip(s).
-              You now have a total of <span style={{fontSize: "1.8em"}}>{totalLabels}</span> submissions with an
-              increase of <span style={{fontSize: "1.8em"}}>{Number(seshCount/(totalLabels-seshCount)*100).toFixed(1)}%</span>
+              During this past session you reviewed <span style={{fontSize: "1.5em"}}>+{seshCount}</span> clip(s).
+              You now have a total of <span style={{fontSize: "1.5em"}}>{totalLabels}</span> submissions.
             </p>
           </div>
 
@@ -67,4 +66,3 @@ import { withRouter } from 'react-router-dom'
     );
   }
 }export default withRouter(ExitPageModal);
-

@@ -121,10 +121,11 @@ class CCTV extends React.Component {
 
 function Dashboard(props){
   return (
-      <div id="dashboard">
+      <div >
 
         <div>
-          <Panel>
+        <div id="dashboard-container">
+          <Panel id="dashboard">
             <Panel.Header>
               <strong>Welcome! Are you a New or Returning user?</strong>
             </Panel.Header>
@@ -133,6 +134,22 @@ function Dashboard(props){
               <Link to='/login'><Button >Returning</Button></Link>
             </Panel.Footer>
           </Panel>
+          </div>
+          <article id="faq">
+          <h3>FAQ:</h3>
+          <h5>What is this for?</h5>
+          <p>
+            We are trying to train a computer program to recognize emotion in video so that we can better match ads to the content.
+            </p>
+          <h5>How does my participation help?</h5>
+          <p>
+            We need to have a set of videos that are already labeled to train with. By voting on the labels, your contribution will help select the proper emotion for each video in our set so that the computer can learn.
+            </p>
+          <h5>How long will this take?</h5>
+          <p>
+            Each video is short, usually under five seconds. Some are even under 0.10 seconds! Do as many as you’d like and you can exit whenever you choose.”
+            </p>
+          </article>
         </div>
 
       </div>
