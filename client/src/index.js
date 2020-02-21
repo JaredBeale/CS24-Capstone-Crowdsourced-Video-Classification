@@ -121,10 +121,11 @@ class CCTV extends React.Component {
 
 function Dashboard(props){
   return (
-      <div id="dashboard">
+      <div >
 
         <div>
-          <Panel>
+        <div id="dashboard-container">
+          <Panel id="dashboard">
             <Panel.Header>
               <strong>Welcome! Are you a New or Returning user?</strong>
             </Panel.Header>
@@ -133,8 +134,9 @@ function Dashboard(props){
               <Link to='/login'><Button >Returning</Button></Link>
             </Panel.Footer>
           </Panel>
+          </div>
           <article id="faq">
-          <h3>FAQs</h3>
+          <h3>FAQ:</h3>
           <h5>What is this for?</h5>
           <p>
             We are trying to train a computer program to recognize emotion in video so that we can better match ads to the content.

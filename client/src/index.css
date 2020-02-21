@@ -88,17 +88,16 @@ button {
   display: flex;
 
 }
-
+#dashboard-container{
+  text-align: center;
+}
 #dashboard{
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+display:inline-block;
+  width: 300px;
 }
 
-#dashboard-welcome{
 
-
-}
 
 a{
   text-decoration: none;
