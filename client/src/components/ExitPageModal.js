@@ -44,7 +44,7 @@ import { withRouter } from 'react-router-dom'
         >
           <div key={'info'} >
             <p style={{fontSize: "1.5em",lineHeight: "1.6"}}>
-              Glad you could work on some of these videos, {username}.
+              Glad you could work on some of these videos, {username}. We really appreciate your help. Come visit us again!
             </p>
             <p style={{fontSize: "1.5em",lineHeight: "1.6"}}>
               During this past session you reviewed <span style={{fontSize: "1.5em"}}>+{seshCount}</span> clip(s).
