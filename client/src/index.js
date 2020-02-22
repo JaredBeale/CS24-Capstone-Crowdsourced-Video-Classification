@@ -147,7 +147,7 @@ function Dashboard(props){
             </p>
           <h5>How long will this take?</h5>
           <p>
-            Each video is short, usually under five seconds. Some are even under 0.10 seconds! Do as many as you’d like and you can exit whenever you choose.”
+            Each video is short, usually under five seconds. Some are even under 0.10 seconds! Do as many as you’d like and you can exit whenever you choose.
             </p>
           </article>
         </div>
