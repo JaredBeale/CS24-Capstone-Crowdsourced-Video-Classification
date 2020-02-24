@@ -44,7 +44,7 @@ function Banner(props){
       {props.user && (
       <div id="user-pane-banner">
 
-        <div className="text-cell" >Welcome, {props.user}</div>
+        <div id="welcome-name"  >Welcome, {props.user}</div>
           {checkWatchPage()}
         <Button  className="text-cell" kind='danger' onClick={()=>
       props.setBannerExit(true)

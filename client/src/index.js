@@ -23,7 +23,7 @@ const history = createBrowserHistory();
 
 
 
-class CCTV extends React.Component {
+class App extends React.Component {
    constructor(props){
     var storedUsername = localStorage.getItem("username");
     var storedTutorial = localStorage.getItem("seenTutorial");
@@ -127,7 +127,7 @@ function Dashboard(props){
         <div id="dashboard-container">
           <Panel id="dashboard">
             <Panel.Header>
-              <strong>Welcome! Are you a New or Returning user?</strong>
+              <strong style={{textAlign: "left"}}>Welcome! Are you a New or Returning user?</strong>
             </Panel.Header>
             <Panel.Footer>
               <Link to='/signup'><Button >New</Button></Link>
@@ -157,9 +157,9 @@ function Dashboard(props){
 }
 
 
-export default withRouter(CCTV)
+export default withRouter(App)
 
-ReactDOM.render(<CCTV />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
