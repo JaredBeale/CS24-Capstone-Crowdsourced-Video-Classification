@@ -110,8 +110,11 @@ class VideoPage extends Component{
 
         </RadioGroup>
 
-        <Button id="submit-label-button" onClick={this.submitLabel}
-          isDisabled={this.state.LabelIndex===-1} size="large">
+        <Button id="submit-label-button" isDisabled={this.state.LabelIndex===-1}
+          onClick={()=>{
+            this.submitLabel();
+            this.askForClip();
+          }} size="large">
             <CheckIcon />Save and Continue
         </Button>
         <Button id="submit-label-button" isDisabled={this.state.LabelIndex===-1}
@@ -240,8 +243,6 @@ class VideoPage extends Component{
               numSessionVoteCount++;
               self.setState({sessionVoteCount:numSessionVoteCount})
               sessionStorage.setItem("sessionVoteCount", numSessionVoteCount);
-
-              self.askForClip();
           }
           else if (this.readyState === XMLHttpRequest.DONE) {
             self.setState({
@@ -249,7 +250,6 @@ class VideoPage extends Component{
               video: null,
               LabelIndex: -1
             });
-            self.askForClip();
           }
       }
 

@@ -120,7 +120,30 @@ app.post('/api/create/vote', (req, res) => {
   }
   // Otherwise video is overdue
   else {
-    res.status(400).json({content: "Video timed out. Try again with another video."});
+    db.query("SELECT Count(*) FROM Votes WHERE videoid = (SELECT id FROM Videos WHERE fileTitle = $1)", [video], (err, result) => {
+      if (err) {
+        res.status(500).json({content: "SQL Error while attempting to create vote in database."});
+        console.log(err);
+      }
+      else {
+        // If the video still needs votes
+        if (result.rows[0].count < 5) {
+          // Create the vote
+          db.query("INSERT INTO Votes (labelId, userId, videoId) VALUES ((SELECT id FROM Labels WHERE labelTitle = $1), (SELECT id FROM Users WHERE username = $2), (SELECT id FROM Videos WHERE fileTitle = $3));", [label, user, video], (err, result) => {
+            if (err) {
+              res.status(500).json({content: "SQL Error while attempting to create vote in database."});
+              console.log(err);
+            }
+            else
+              res.status(200).json({success:`Vote added with username ${user} video title ${video} and label ${label}`});
+          });
+        }
+        // Otherwise the video is no good. Send the 400 error message
+        else {
+          res.status(400).json({content: "Video timed out. Try again with another video."});
+        }
+      }
+    })
   }
 });
 
