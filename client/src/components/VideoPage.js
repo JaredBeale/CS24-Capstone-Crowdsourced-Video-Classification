@@ -222,7 +222,7 @@ errormessage(){
         return (
             <Dialog
               isShown='true'
-              Header='Finished'
+              Header='No more videos to vote on, please log out'
               size='small'
             >
               {this.state.errorMessage}
@@ -237,7 +237,7 @@ errormessage(){
     return (
         <Dialog
           isShown='true'
-          Header='Error'
+          Header='Server Error'
           size='small'
         >
           {this.state.errorMessage}
@@ -373,7 +373,7 @@ this.loadVideosVoted();
         videoid: null,
         videoChosen: false
       });
-      this.setState({ errorMessage: error.toString()+". Please refresh and try again."});
+      this.setState({ errorMessage: "Server had an error: [" + error.toString() +"]. Please refresh and try again."});
     });
   }
 
