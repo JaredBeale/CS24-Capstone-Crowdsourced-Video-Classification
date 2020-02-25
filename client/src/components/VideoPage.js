@@ -172,7 +172,6 @@ class VideoPage extends Component{
                        </div>
 
                        <Dialog.Footer>
-
                          <Button
                             onClick={()=>this.props.handleShow()}
                             kind='primary'>Got it!</Button>
@@ -219,7 +218,7 @@ class VideoPage extends Component{
 
 errormessage(){
   if(this.state.errorMessage !== ''){
-      if(this.state.errorMessage === "This labeling task has no more videos to watch."){
+      if(this.state.errorMessage === "This labeling task has no more videos to watch. There are no more videos to vote on, please log out."){
         return (
             <Dialog
               isShown='true'
@@ -238,7 +237,6 @@ errormessage(){
     return (
         <Dialog
           isShown='true'
-          handleClose={this.clearErrorMessage}
           Header='Error'
           size='small'
         >
@@ -354,7 +352,7 @@ this.loadVideosVoted();
       },
     }).then((response) => {
       if (!response.ok) {
-        response.json().then(info => this.setState({ errorMessage: info.content}));
+        response.json().then(info => this.setState({ errorMessage: info.content+" There are no more videos to vote on, please log out."}));
 
 
       }
@@ -375,6 +373,7 @@ this.loadVideosVoted();
         videoid: null,
         videoChosen: false
       });
+      this.setState({ errorMessage: error.toString()+". Please refresh and try again."});
     });
   }
 
