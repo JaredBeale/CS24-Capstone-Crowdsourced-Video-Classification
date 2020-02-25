@@ -127,7 +127,7 @@ app.post('/api/create/vote', (req, res) => {
       }
       else {
         // If the video still needs votes
-        if (result.rows[0].count < 5) {
+        if (result.rows[0].count < LABEL_MAX) {
           // Create the vote
           db.query("INSERT INTO Votes (labelId, userId, videoId) VALUES ((SELECT id FROM Labels WHERE labelTitle = $1), (SELECT id FROM Users WHERE username = $2), (SELECT id FROM Videos WHERE fileTitle = $3));", [label, user, video], (err, result) => {
             if (err) {
