@@ -40,6 +40,8 @@ class VideoPage extends Component{
       voteCount: 0,
       sessionVoteCount: numSessionVoteCount,
       time2exit: false,
+      errorMessage:'',
+
 
     };
 
@@ -187,6 +189,17 @@ class VideoPage extends Component{
 
 
     </LoadingMessage>}
+    {this.state.errorMessage &&
+      <Dialog
+        isShown='true'
+        onEscape={this.clearErrorMessage}
+        handleClose={this.clearErrorMessage}
+        Header='Error'
+        size='small'
+      >
+        {this.state.errorMessage}
+      </Dialog>
+    }
                     {this.state.videoChosen && <Player
                       playpauseString={this.state.playpauseString}
                       handlePlayPause={this.handlePlayPause}
@@ -306,7 +319,9 @@ this.loadVideosVoted();
   }
 
 
-
+  clearErrorMessage = () => {
+    this.setState({ errorMessage: '' });
+  }
   askForClip(){
     const self = this;
     fetch('/api/videos/select/username/' + this.props.globalUsername, {
@@ -316,11 +331,9 @@ this.loadVideosVoted();
       },
     }).then((response) => {
       if (!response.ok) {
-        self.setState({
-          video: "https://www.youtube.com/watch?v=G7RgN9ijwE4&list=PLysK5kM8r78sJFo--opGDHCdTgNJTIb-o",
-          videoid: null,
-          videoChosen: true
-        });
+        response.json().then(info => this.setState({ errorMessage: info.content}));
+        self.askForClip();
+
       }
       return response.json();
     }).then((data) => {
@@ -335,9 +348,9 @@ this.loadVideosVoted();
       console.error('Error:', error);
       // default video
       self.setState({
-        video: "https://www.youtube.com/watch?v=G7RgN9ijwE4&list=PLysK5kM8r78sJFo--opGDHCdTgNJTIb-o",
+        video: null,
         videoid: null,
-        videoChosen: true
+        videoChosen: false
       });
     });
   }
