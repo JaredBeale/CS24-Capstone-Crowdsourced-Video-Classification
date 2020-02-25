@@ -90,6 +90,8 @@ class App extends React.Component {
 
           <Route path="/watch">
             <VideoPage
+            setBannerExit={this.setBannerExit}
+
             handleShow={this.handleShow}
                       isShown={this.state.isShown}
                         setGlobalUsername={this.setGlobalUsername}

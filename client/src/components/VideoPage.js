@@ -40,6 +40,8 @@ class VideoPage extends Component{
       voteCount: 0,
       sessionVoteCount: numSessionVoteCount,
       time2exit: false,
+      errorMessage:'',
+
 
     };
 
@@ -120,6 +122,8 @@ class VideoPage extends Component{
         <Button id="submit-label-button" isDisabled={this.state.LabelIndex===-1}
           onClick={()=>{
             this.submitLabel();
+            this.props.setGlobalUsername("");
+            this.props.setBannerExit(false);
             this.setState({
               time2exit: true
             })
@@ -168,7 +172,6 @@ class VideoPage extends Component{
                        </div>
 
                        <Dialog.Footer>
-
                          <Button
                             onClick={()=>this.props.handleShow()}
                             kind='primary'>Got it!</Button>
@@ -187,6 +190,7 @@ class VideoPage extends Component{
 
 
     </LoadingMessage>}
+
                     {this.state.videoChosen && <Player
                       playpauseString={this.state.playpauseString}
                       handlePlayPause={this.handlePlayPause}
@@ -198,6 +202,7 @@ class VideoPage extends Component{
                     {this.state.videoChosen &&
                       this.state.labelsLoaded &&
                         this.state.labels && this.renderSelect()}
+                        {this.errormessage()}
 
 </div>
               <div>
@@ -211,7 +216,36 @@ class VideoPage extends Component{
       )
   }
 
+errormessage(){
+  if(this.state.errorMessage !== ''){
+      if(this.state.errorMessage === "This labeling task has no more videos to watch. There are no more videos to vote on, please log out."){
+        return (
+            <Dialog
+              isShown='true'
+              Header='No more videos to vote on, please log out'
+              size='small'
+            >
+              {this.state.errorMessage}
+              <Dialog.Footer>
+              <Button onClick={this.props.setBannerExit} kind='primary'>Logout</Button>
+              </Dialog.Footer>
 
+            </Dialog>
+          )
+      }
+      else{
+    return (
+        <Dialog
+          isShown='true'
+          Header='Server Error'
+          size='small'
+        >
+          {this.state.errorMessage}
+        </Dialog>
+      )
+    }
+  }
+}
 
 
 
@@ -306,7 +340,9 @@ this.loadVideosVoted();
   }
 
 
-
+  clearErrorMessage = () => {
+    this.setState({ errorMessage: '' });
+  }
   askForClip(){
     const self = this;
     fetch('/api/videos/select/username/' + this.props.globalUsername, {
@@ -316,11 +352,9 @@ this.loadVideosVoted();
       },
     }).then((response) => {
       if (!response.ok) {
-        self.setState({
-          video: "https://www.youtube.com/watch?v=G7RgN9ijwE4&list=PLysK5kM8r78sJFo--opGDHCdTgNJTIb-o",
-          videoid: null,
-          videoChosen: true
-        });
+        response.json().then(info => this.setState({ errorMessage: info.content+" There are no more videos to vote on, please log out."}));
+
+
       }
       return response.json();
     }).then((data) => {
@@ -335,10 +369,11 @@ this.loadVideosVoted();
       console.error('Error:', error);
       // default video
       self.setState({
-        video: "https://www.youtube.com/watch?v=G7RgN9ijwE4&list=PLysK5kM8r78sJFo--opGDHCdTgNJTIb-o",
+        video: null,
         videoid: null,
-        videoChosen: true
+        videoChosen: false
       });
+      this.setState({ errorMessage: "Server had an error: [" + error.toString() +"]. Please refresh and try again."});
     });
   }
 

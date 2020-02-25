@@ -46,9 +46,11 @@ function Banner(props){
 
         <div id="welcome-name"  >Welcome, {props.user}</div>
           {checkWatchPage()}
-        <Button  className="text-cell" kind='danger' onClick={()=>
+        <Button  className="text-cell" kind='danger' onClick={()=>{
+          props.setGlobalUsername("");
+          props.setBannerExit(false);
       props.setBannerExit(true)
-
+}
                                                      }>
             Sign Out
           </Button>
