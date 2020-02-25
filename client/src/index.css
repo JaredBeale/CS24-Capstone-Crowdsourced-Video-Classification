@@ -19,14 +19,7 @@ body {
   background-color: green;
   border: green;
 }
-#video-controls{
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-around;
 
-  background-color: #83a7e1;
-  padding: 10px;
-}
 
 #submit-label-button{
   display: flex;
@@ -35,49 +28,91 @@ body {
 
 
 #video-page-container{
-  width:80%;
-  display:flex;
-  padding:50px;
-}
 
-#video-player-widget{
- margin:50px;
-
- margin-top: -59px;
+margin-left: 20px;
 
 }
 
+
+#video-form{
+display: flex;
+}
 #select-div{
-  margin-top: 35px;
-  margin-left: -30px;
-
+margin-left: 10px;
+margin-top: 85px;
 }
 video::-webkit-media-controls-fullscreen-button{
    display:none !important;
 }
+@media only screen and (max-width: 720px) {
 
-.playpause{
-  width:100%;
-  height: 100%;
+#welcome-name{
+display: none;
+}
+#video-form{
+display: inherit;
+}
+#select-div{
+margin-left: inherit;
+margin-top: inherit;
+}
 
+#video-page-container{
+
+margin-left: inherit;
+
+}
+#container-selction{
+display: flex;
+
+}
+#submit-label-button{
+  margin-top:0px !important;
+  margin-bottom: 10px;
+}
+
+#sessioncount{
+  margin-top:0px !important;
+  margin-bottom: 10px !important;
+
+  margin: auto;
+  font-size: 15px;
+}
+}
+#sessioncount{
+  
+  font-size: 15px;
 }
 button {
   margin: 20px;
 }
 #banner-app-name{
-  font-size: 30px;
+  font-size: 100%;
   font-style: italic;
   font-family: cursive;
-  margin:auto;
+  margin-right:auto;
+  margin-top:auto;
+  margin-bottom:auto;
+}
+#welcome-name{
+overflow: hidden;
+text-overflow: ellipsis;
+width: 448px;
+font-size: 100%;
+margin-right:auto;
+margin-left:auto;
+margin-top:auto;
+margin-bottom:auto;
+white-space: nowrap;
 }
 #banner{
 
+  display: inline-flex;
   background-color: #587eba;
   height:15%;
   font-size: 1.25em;
   width: 100%;
-  display: flex;
-  justify-content: space-around;
+vertical-align: top;
 }
 .text-cell{
   padding: 10px;
@@ -85,9 +120,11 @@ button {
 }
 
 #user-pane-banner{
-  display: flex;
+  display: inline-flex;
+  vertical-align: top;
 
 }
+
 #dashboard-container{
   text-align: center;
 }
@@ -98,6 +135,14 @@ display:inline-block;
 }
 
 
+
+
+.react-player {
+  max-width: 832px !important;
+  max-height: 468px !important;
+  width: 100%;
+  height: auto;
+}
 
 a{
   text-decoration: none;

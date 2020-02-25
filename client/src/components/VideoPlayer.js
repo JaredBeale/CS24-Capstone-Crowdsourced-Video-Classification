@@ -87,26 +87,26 @@ class VideoPlayer extends React.Component {
                   />
 
                 : this.state.duration.toFixed(2)} {this.state.duration === Infinity ? "": "sec"}</h1></span>
-
               <ReactPlayer
+                className="react-player"
                 ref={this.ref}
                 onProgress={this.props.handleProgress}
                 onStart={() => console.log('onStart')}
                 playing={this.props.playing}
                 url={url}
                 controls
-                width	={832}
-                height	={468}
+                width	='100%'
+                height	='100%'
                 config={{file:{
                   attributes:{
                     controlsList: "nodownload",
                     disablePictureInPicture: true,
+
                   }
                 }}}
 
 
               />
-
 
             </div>
 

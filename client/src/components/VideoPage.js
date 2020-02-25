@@ -96,6 +96,7 @@ class VideoPage extends Component{
    )
     return(
       <div id="select-div">
+      <span id="container-selction">
       <RadioGroup
              name='name'
              selectedIndex={this.state.LabelIndex}
@@ -109,6 +110,8 @@ class VideoPage extends Component{
         {listLabels}
 
         </RadioGroup>
+<span>
+<h4 id="sessioncount">Videos classified this session: {this.state.sessionVoteCount}</h4>
 
         <Button id="submit-label-button" onClick={this.submitLabel}
           isDisabled={this.state.LabelIndex===-1} size="large">
@@ -124,8 +127,8 @@ class VideoPage extends Component{
             <CheckIcon />Save and Exit
         </Button>
 
-        <h4>Videos classified this session: {this.state.sessionVoteCount}</h4>
-
+</span>
+</span>
       </div>
     )
   }
@@ -141,15 +144,7 @@ class VideoPage extends Component{
       <div className="middle">
             <div id="video-page-container" className="inner">
 
-              {!this.state.videoChosen && <LoadingIndicator style={{marginLeft:"150px"}} isLoading={!this.state.videoChosen}>
-                  <LoadingMessage
-                  style={{marginLeft:"150px"}}
-                      Icon={<LoadingIcon speed='fast' />}
-                      Title='Selecting data from DB...'
-                      Body='Please wait'
-                    />
 
-                  </LoadingIndicator>}
 
                      <Dialog
                        isShown={this.props.isShown}
@@ -157,7 +152,7 @@ class VideoPage extends Component{
                        onBackgroundClick={()=>this.props.handleShow()}
                        handleClose={()=>this.props.handleShow()}
                        Header='Video Watching Page Instructions'
-                       size='small'
+                       size='medium'
                      >
                        <div key={'info'}>
 
@@ -182,7 +177,16 @@ class VideoPage extends Component{
 
 
 
+<div id="video-form">
+{!this.state.videoChosen &&  <LoadingMessage  Icon={<LoadingIcon speed='fast' />}
+  Title='Selecting data from DB...'
+  Body='Please wait' isLoading={!this.state.videoChosen}>
 
+
+
+
+
+    </LoadingMessage>}
                     {this.state.videoChosen && <Player
                       playpauseString={this.state.playpauseString}
                       handlePlayPause={this.handlePlayPause}
@@ -195,6 +199,7 @@ class VideoPage extends Component{
                       this.state.labelsLoaded &&
                         this.state.labels && this.renderSelect()}
 
+</div>
               <div>
 
 
