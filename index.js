@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, '/client/build')));
 
 /***** Helping Functions and Variables *****/
 // LABEL_MAX is the number of labels a video needs to be considered fully labeled
-const LABEL_MAX = 5;
+const LABEL_MAX = 0;
 
 // TIMEOUT is how long a video may be checked out in milliseconds (first number is minutes, 60000 converts to ms)
 const TIMEOUT = 10 * 60000

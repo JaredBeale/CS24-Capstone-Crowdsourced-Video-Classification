@@ -189,17 +189,7 @@ class VideoPage extends Component{
 
 
     </LoadingMessage>}
-    {this.state.errorMessage &&
-      <Dialog
-        isShown='true'
-        onEscape={this.clearErrorMessage}
-        handleClose={this.clearErrorMessage}
-        Header='Error'
-        size='small'
-      >
-        {this.state.errorMessage}
-      </Dialog>
-    }
+
                     {this.state.videoChosen && <Player
                       playpauseString={this.state.playpauseString}
                       handlePlayPause={this.handlePlayPause}
@@ -211,6 +201,7 @@ class VideoPage extends Component{
                     {this.state.videoChosen &&
                       this.state.labelsLoaded &&
                         this.state.labels && this.renderSelect()}
+                        {this.errormessage()}
 
 </div>
               <div>
@@ -224,7 +215,35 @@ class VideoPage extends Component{
       )
   }
 
+errormessage(){
+  if(this.state.errorMessage !== ''){
+      if(this.state.errorMessage === "This labeling task has no more videos to watch."){
+        return (
+            <Dialog
+              isShown='true'
+              Header='Error'
+              size='small'
+            >
+              {this.state.errorMessage}
+              <Button onClick={this.props.setBannerExit} kind='primary'>Logout</Button>
 
+            </Dialog>
+          )
+      }
+      else{
+    return (
+        <Dialog
+          isShown='true'
+          handleClose={this.clearErrorMessage}
+          Header='Error'
+          size='small'
+        >
+          {this.state.errorMessage}
+        </Dialog>
+      )
+    }
+  }
+}
 
 
 
@@ -332,7 +351,7 @@ this.loadVideosVoted();
     }).then((response) => {
       if (!response.ok) {
         response.json().then(info => this.setState({ errorMessage: info.content}));
-        self.askForClip();
+
 
       }
       return response.json();
