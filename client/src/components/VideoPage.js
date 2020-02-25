@@ -122,6 +122,8 @@ class VideoPage extends Component{
         <Button id="submit-label-button" isDisabled={this.state.LabelIndex===-1}
           onClick={()=>{
             this.submitLabel();
+            this.props.setGlobalUsername("");
+            this.props.setBannerExit(false);
             this.setState({
               time2exit: true
             })
@@ -221,11 +223,13 @@ errormessage(){
         return (
             <Dialog
               isShown='true'
-              Header='Error'
+              Header='Finished'
               size='small'
             >
               {this.state.errorMessage}
+              <Dialog.Footer>
               <Button onClick={this.props.setBannerExit} kind='primary'>Logout</Button>
+              </Dialog.Footer>
 
             </Dialog>
           )
