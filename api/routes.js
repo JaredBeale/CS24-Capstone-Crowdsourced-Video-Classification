@@ -1,84 +1,43 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const { Client } = require('pg');
-const path = require('path');
-
-// Start express
-const app = express();
-
-// Start body parser
-app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
-);
-
-// Connect to db
-const db = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true
-});
-db.connect();
-
-
-// express is used to connect .css and .js files
-app.use(express.static(path.join(__dirname, '/client/build')));
-
+const router = express.Router();
+const db = require('./dbcon');
 
 /***** Helping Functions and Variables *****/
 // LABEL_MAX is the number of labels a video needs to be considered fully labeled
 const LABEL_MAX = 5;
 
 // TIMEOUT is how long a video may be checked out in milliseconds (first number is minutes, 60000 converts to ms)
-const TIMEOUT = 10 * 60000
+const TIMEOUT = 10 * 60000;
 
-// Create flatMap function to use when processing videos
+// Checked out videos used to prevent videos from exceeding LABEL_MAX in db by simultaneous viewing
+var checkedOutVideos = [];
+
+// Create flatMap function to use in array processing for videos
 const myConcat = (x, y) =>
   x.concat(y);
 const myFlatMap = (f, xs) =>
   xs.map(f).reduce(myConcat, []);
 Array.prototype.myFlatMap = function(f) {
-  return myFlatMap(f, this);
+  return myFlatMap(f, this)
 }
 
-// Checked out videos used to prevent videos from exceeding LABEL_MAX by simultaneous viewing
-checkedOutVideos = [];
-
-// const google = `http://drive.google.com/uc?export=download&id=${DRIVE_FILE_ID}`;
-// maybe for performance we can host it as a CDN
-var VIDEO_SERVER_ID = -1; //intially its -1 becaus the very first call itbecomes 0;
+// Servers and load balancing
+var VIDEO_SERVER_ID = -1; // initially -1 because it's incremented to 0 on first call
 const NUMBER_SERVERS = 2;
-//to be honest i think the cctv link is the more reliable, i did a folder upload and it was
-// about and hour faster than uploading 1112 files
-const SERVERS=[
+const SERVERS = [
   "https://quick-start-xandr-videohost.s3-us-west-2.amazonaws.com/",
   "https://crowd-source-circuit-tv.s3-us-west-1.amazonaws.com/dev_splits_complete/"
 ]
-
-// round robin load balancer
-function getServerIndex(){
-// global yes indeed
-  VIDEO_SERVER_ID = (VIDEO_SERVER_ID+1)%NUMBER_SERVERS;
+//  round robin load balancer
+function getServerIndex() {
+  VIDEO_SERVER_ID = (VIDEO_SERVER_ID + 1) % NUMBER_SERVERS;
   return VIDEO_SERVER_ID;
-
 }
 
 
 /************ API Endpoints ****************/
-// Use prefix "/api/" on api endpoints
-  // Hello World example endpoint
-app.get('/api/helloworld', (req, res) => {
-  var message = "Hello World!";
-
-  res.json(message);
-});
-
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '/client/build')));
-
 // Endpoint - Create new user
-app.post('/api/create/user', (req, res) => {
+router.post('/create/user', (req, res) => {
   const { name } = req.body;
   db.query("INSERT INTO Users (username) VALUES ($1)", [name], (err, result) => {
     if (err) {
@@ -91,7 +50,7 @@ app.post('/api/create/user', (req, res) => {
 });
 
 // Endpoint - Create new vote
-app.post('/api/create/vote', (req, res) => {
+router.post('/create/vote', (req, res) => {
   // Remove all videos that have been checked out for too long
   var now = Date.now()
   for (let i = checkedOutVideos.length - 1; i >= 0; i--) {
@@ -148,7 +107,7 @@ app.post('/api/create/vote', (req, res) => {
 });
 
 // Endpoint - Read users
-app.get('/api/names/users', (req, res) => {
+router.get('/names/users', (req, res) => {
   db.query('SELECT username FROM Users;', (err, result) => {
     if (err) {
       res.status(400).json({content: `User does not exist with username: ${name}`});
@@ -160,7 +119,7 @@ app.get('/api/names/users', (req, res) => {
 });
 
 // Endpoint - Read labels
-app.get('/api/names/labels', (req, res) => {
+router.get('/names/labels', (req, res) => {
   db.query('SELECT labelTitle FROM Labels;', (err, result) => {
     if (err) {
       res.status(500).json({content: 'Internal Server error while fetching labels.'});
@@ -172,7 +131,7 @@ app.get('/api/names/labels', (req, res) => {
 });
 
 // Endpoint - Select next video
-app.get('/api/videos/select/username/:username', (req, res) => {
+router.get('/videos/select/username/:username', (req, res) => {
   // Remove all videos that have been checked out for too long
   var now = Date.now()
   for (let i = checkedOutVideos.length - 1; i >= 0; i--) {
@@ -264,7 +223,7 @@ app.get('/api/videos/select/username/:username', (req, res) => {
 });
 
 // Endpoint - Get video count per user
-app.get('/api/votes/count/:username', (req, res) => {
+router.get('/votes/count/:username', (req, res) => {
 
   db.query("SELECT COUNT(userid) from VOTES where userid = (SELECT id from USERS where username = $1)",[req.params.username], (err, result) => {
     if (err) {
@@ -277,14 +236,4 @@ app.get('/api/votes/count/:username', (req, res) => {
   });
 });
 
-// /************ Client Endpoints *************/
-// Catch-all to send index which has the React router and will redirect the user correctly
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
-
-
-// Listen
-const port = process.env.PORT || 9000;
-app.listen(port);
-console.log(`App listening on ${port}`);
+module.exports = router;

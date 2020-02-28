@@ -13,7 +13,7 @@
     "nodemon": "^2.0.2"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "heroku-postbuild": "cd client && npm install && npm run build",
     "test": "npm start --prefix client & && npm start"
   },
