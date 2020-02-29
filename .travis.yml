@@ -1,0 +1,16 @@
+language: node_js
+
+node_js:
+  - "10.15.3"
+
+services:
+  - postgresql
+
+addons:
+  postgresql: "11.6"
+
+before_script:
+  - npm install
+  - psql -c 'create database testdb;' -U postgres
+script:
+  - npm run test

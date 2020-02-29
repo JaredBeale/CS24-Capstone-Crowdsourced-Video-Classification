@@ -236,4 +236,7 @@ router.get('/votes/count/:username', (req, res) => {
   });
 });
 
-module.exports = router;
+module.exports = {
+  router,
+  LABEL_MAX
+};
