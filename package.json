@@ -21,7 +21,7 @@
   "scripts": {
     "start": "node server.js",
     "heroku-postbuild": "cd client && npm install && npm run build",
-    "test": "./node_modules/.bin/jest"
+    "test": "./node_modules/.bin/jest --coverage"
   },
   "jest": {
     "testEnvironment": "node"
