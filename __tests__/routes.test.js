@@ -54,7 +54,7 @@ describe("POST /api/create/user endpoint", () => {
       .send({name: "testUser"})
       .expect(200);
     
-    expect(response.text).toContain("success");
+    expect(response.body).toHaveProperty("success");
   });
 
   it("fails creating duplicate username", async () => {
@@ -63,7 +63,7 @@ describe("POST /api/create/user endpoint", () => {
       .send({name: "testUser"})
       .expect(400);
     
-    expect(response.text).toContain("content");
+    expect(response.body).toHaveProperty("content");
   });
 });
 
@@ -86,10 +86,10 @@ describe("POST /api/create/vote endpoint", () => {
   });
 
   afterAll(async () => {
-    await db.query("DELETE FROM Votes");
-    await db.query("DELETE FROM Users");
-    await db.query("DELETE FROM Videos");
-    await db.query("DELETE FROM Labels");
+    await db.query("DELETE FROM Votes;");
+    await db.query("DELETE FROM Users;");
+    await db.query("DELETE FROM Videos;");
+    await db.query("DELETE FROM Labels;");
   });
 
   it("succeeds creating new vote while video is not checked out", async () => {
@@ -98,7 +98,8 @@ describe("POST /api/create/vote endpoint", () => {
       .send({user: `testUser${LABEL_MAX}`, video: "testVideo1", label: "testLabel"})
       .expect(200);
 
-    expect(response.text).toContain("success");
+    expect(response.body).toHaveProperty("success");
+    expect(typeof response.body.success).toBe("string");
   });
 
   it("succeeds creating new vote while video is checked out", async () => {
@@ -108,7 +109,8 @@ describe("POST /api/create/vote endpoint", () => {
       .send({user: `testUser${LABEL_MAX}`, video: "testVideo2", label: "testLabel"})
       .expect(200);
 
-    expect(response.text).toContain("success");
+    expect(response.body).toHaveProperty("success");
+    expect(typeof response.body.success).toBe("string");
   });
 
   it("fails creating vote while video is not checked out and does not need votes", async () => {
@@ -117,7 +119,8 @@ describe("POST /api/create/vote endpoint", () => {
       .send({user: `testUser${LABEL_MAX + 1}`, video: "testVideo1", label: "testLabel"})
       .expect(400);
 
-    expect(response.text).toContain("content");
+    expect(response.body).toHaveProperty("content");
+    expect(typeof response.body.content).toBe("string");
   });
 
   it("fails creating duplicate vote", async () => {
@@ -126,6 +129,25 @@ describe("POST /api/create/vote endpoint", () => {
       .send({user: `testUser${LABEL_MAX}`, video: "testVideo2", label: "testLabel"})
       .expect(500);
 
-    expect(response.text).toContain("content");
+    expect(response.body).toHaveProperty("content");
+    expect(typeof response.body.content).toBe("string");
+  });
+});
+
+describe("GET /api/names/users", async () => {
+  beforeAll(async () => {
+    await db.query("INSERT INTO Users (username) VALUES ('testUser1'), ('testUser2'), ('testUser3');");
+  });
+
+  afterAll(async () => {
+    await db.query("DELETE FROM Users;");
+  })
+
+  it("succeeds in generating a list of users", async () => {
+    const response = await request(app)
+      .get("/api/names/users")
+      .expect(200);
+
+    expect(response.body).toEqual(expect.arrayContaining(['testUser1', 'testUser2', 'testUser3']));
   });
 });
