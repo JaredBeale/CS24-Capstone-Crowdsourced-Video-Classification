@@ -15,7 +15,7 @@ function Banner(props){
     if(props.location.pathname === "/signup"||props.location.pathname === "/login"){
     return(
       <div id="user-pane-banner">
-      <Button className="text-cell" kind='danger' onClick={()=>returnHome()}>Return to Home</Button>
+      <Button className="text-cell" kind='danger' style={{ padding: "15px" ,fontSize:"15px"}} onClick={()=>returnHome()}>Return to Home</Button>
       </div>)
 
     }

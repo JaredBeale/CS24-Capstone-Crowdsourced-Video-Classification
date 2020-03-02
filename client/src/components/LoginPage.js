@@ -3,9 +3,7 @@ import { Button, Panel, TextField, Dialog } from 'lucid-ui';
 import { withRouter } from 'react-router-dom'
 
 
-const style = {
-  marginBottom: '10px',
-};
+
 
 
 class LoginPage extends Component{
@@ -152,11 +150,11 @@ console.log(listedUsernames);
 
   checkNewUserButton(){
     if(this.props.isNewUser===true){
-      return   <Button kind='primary'  onClick={()=>this.signUp()}>Sign Up</Button>
+      return   <Button kind='primary'  style={{ padding: "20px" ,fontSize:"20px"}} onClick={()=>this.signUp()}>Sign Up</Button>
 
     }
     else{
-      return    <Button kind='primary'  onClick={()=>this.logIn()}>Log In</Button>
+      return    <Button kind='primary'  style={{ padding: "20px" ,fontSize:"20px"}} onClick={()=>this.logIn()}>Log In</Button>
 
     }
   }
@@ -170,10 +168,11 @@ console.log(listedUsernames);
 
         <Panel>
           <Panel.Header>
-            <strong>{this.checkNewUserHeader()}</strong>
+            <strong style={{ fontSize: "20px"}}>{this.checkNewUserHeader()}</strong>
           </Panel.Header>
           <TextField
-            style={style}
+
+            style={{marginBottom: '10px',fontSize: "15px"}}
             placeholder='Username...'
             value={this.state.username}
             onSubmit={()=>this.checkNewUserEnter()}
