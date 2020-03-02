@@ -24,7 +24,7 @@ function Banner(props){
   function checkWatchPage(){
     if(props.location.pathname === "/watch"){
     return(
-      <Button id="color-button" style={{marginRight:'5px' }} onClick={()=>{localStorage.setItem("seenTutorial",false);props.handleShow()}}>
+      <Button id="color-button" style={{marginRight:'5px',padding: "16px" ,fontSize:"15px" }} onClick={()=>{localStorage.setItem("seenTutorial",false);props.handleShow()}}>
                Help
              </Button>)
 
@@ -46,7 +46,7 @@ function Banner(props){
 
         <div id="welcome-name"  >Welcome, {props.user}</div>
           {checkWatchPage()}
-        <Button  className="text-cell" kind='danger' onClick={()=>{
+        <Button style={{ padding: "15px" ,fontSize:"15px"}}  className="text-cell" kind='danger' onClick={()=>{
           props.setGlobalUsername("");
           props.setBannerExit(false);
       props.setBannerExit(true)
