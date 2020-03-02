@@ -134,7 +134,7 @@ describe("POST /api/create/vote endpoint", () => {
   });
 });
 
-describe("GET /api/names/users", async () => {
+describe("GET /api/names/users", () => {
   beforeAll(async () => {
     await db.query("INSERT INTO Users (username) VALUES ('testUser1'), ('testUser2'), ('testUser3');");
   });
@@ -149,5 +149,96 @@ describe("GET /api/names/users", async () => {
       .expect(200);
 
     expect(response.body).toEqual(expect.arrayContaining(['testUser1', 'testUser2', 'testUser3']));
+  });
+});
+
+describe("GET /api/names/labels", () => {
+  beforeAll(async () => {
+    await db.query("INSERT INTO Labels (labelTitle) VALUES ('testLabel1'), ('testLabel2'), ('testLabel3');");
+  });
+
+  afterAll(async () => {
+    await db.query("DELETE FROM Labels;");
+  })
+
+  it("succeeds in generating a list of labels", async () => {
+    const response = await request(app)
+      .get("/api/names/labels")
+      .expect(200);
+
+    expect(response.body).toEqual(expect.arrayContaining(['testLabel1', 'testLabel2', 'testLabel3']));
+  });
+});
+
+describe("GET /api/videos/select/username/:username", () => {
+  beforeAll(async () => {
+    await db.query("INSERT INTO Videos (fileTitle) VALUES ('testVideo1'), ('testVideo2');");
+    await db.query("INSERT INTO Labels (labelTitle) VALUES ('testLabel');");
+    
+    let userString = "INSERT INTO Users (username) VALUES ";
+    for (let i = 1; i <= LABEL_MAX + 1; i++)
+      userString += `('testUser${i}'), `;
+    userString = userString.substring(0, userString.length - 2).concat(";");
+    await db.query(userString);
+    
+    let voteString = "INSERT INTO Votes (userid, labelid, videoid) VALUES ";
+    for (let i = 1; i < LABEL_MAX; i++)
+      voteString += `((SELECT id FROM Users WHERE username = 'testUser${i}'), (SELECT id FROM Labels WHERE labelTitle = 'testLabel'), (SELECT id FROM Videos WHERE fileTitle = 'testVideo1')), `;
+    voteString = voteString.substring(0, voteString.length - 2).concat(";");
+    await db.query(voteString);
+  });
+
+  afterAll(async () => {
+    await db.query("DELETE FROM Votes;");
+    await db.query("DELETE FROM Users;");
+    await db.query("DELETE FROM Videos;");
+    await db.query("DELETE FROM Labels;");
+  });
+
+  it("succeeds selecting partially labeled video first", async () => {
+    const response = await request(app)
+      .get(`/api/videos/select/username/testUser${LABEL_MAX}`)
+      .expect(200);
+
+    expect(response.body).toHaveProperty("url");
+    expect(response.body).toHaveProperty("fileid");
+    expect(typeof response.body.url).toBe("string");
+    expect(typeof response.body.fileid).toBe("string");
+    expect(response.body.fileid).toBe("testVideo1");
+  });
+
+  it("succeeds in not selecting checked out video", async () => {
+    const response = await request(app)
+      .get(`/api/videos/select/username/testUser${LABEL_MAX + 1}`)
+      .expect(200);
+
+    expect(response.body).toHaveProperty("url");
+    expect(response.body).toHaveProperty("fileid");
+    expect(typeof response.body.url).toBe("string");
+    expect(typeof response.body.fileid).toBe("string");
+    expect(response.body.fileid).toBe("testVideo2");
+  });
+
+  it("succeeds selecting unseen video next", async () => {
+    await db.query(`INSERT INTO Votes (userid, labelid, videoid) VALUES ((SELECT id FROM Users WHERE username = 'testUser${LABEL_MAX}'), (SELECT id FROM Labels WHERE labelTitle = 'testLabel'), (SELECT id FROM Videos WHERE fileTitle = 'testVideo1'));`)
+    const response = await request(app)
+      .get(`/api/videos/select/username/testUser${LABEL_MAX}`)
+      .expect(200);
+
+    expect(response.body).toHaveProperty("url");
+    expect(response.body).toHaveProperty("fileid");
+    expect(typeof response.body.url).toBe("string");
+    expect(typeof response.body.fileid).toBe("string");
+    expect(response.body.fileid).toBe("testVideo2");
+  });
+
+  it("fails with label task over when no valid videos exist", async () => {
+    await db.query(`INSERT INTO Votes (userid, labelid, videoid) VALUES ((SELECT id FROM Users WHERE username = 'testUser${LABEL_MAX}'), (SELECT id FROM Labels WHERE labelTitle = 'testLabel'), (SELECT id FROM Videos WHERE fileTitle = 'testVideo2'));`)
+    const response = await request(app)
+      .get(`/api/videos/select/username/testUser${LABEL_MAX}`)
+      .expect(500);
+
+    expect(response.body).toHaveProperty("content");
+    expect(typeof response.body.content).toBe("string");
   });
 });
