@@ -242,3 +242,27 @@ describe("GET /api/videos/select/username/:username", () => {
     expect(typeof response.body.content).toBe("string");
   });
 });
+
+describe("GET /api/votes/count/:username", () => {
+  beforeAll(async () => {
+    await db.query("INSERT INTO Users (username) VALUES ('testUser');");
+    await db.query("INSERT INTO Labels (labelTitle) VALUES ('testLabel');");
+    await db.query("INSERT INTO Videos (fileTitle) VALUES ('testVideo');");
+    await db.query("INSERT INTO Votes (userid, labelid, videoid) VALUES ((SELECT id FROM Users WHERE username = 'testUser'), (SELECT id FROM Labels WHERE labelTitle = 'testLabel'), (SELECT id FROM Videos WHERE fileTitle = 'testVideo'));");
+  });
+
+  afterAll(async () => {
+    await db.query("DELETE FROM Votes;");
+    await db.query("DELETE FROM Users;");
+    await db.query("DELETE FROM Videos;");
+    await db.query("DELETE FROM Labels;");
+  });
+
+  it("succeeds in getting vote count for username", async () => {
+    const response = await request(app)
+      .get("/api/votes/count/testUser")
+      .expect(200);
+
+    expect(response.body).toBe("1");
+  });
+});

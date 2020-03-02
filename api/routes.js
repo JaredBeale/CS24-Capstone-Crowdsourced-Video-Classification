@@ -110,7 +110,7 @@ router.post('/create/vote', (req, res) => {
 router.get('/names/users', (req, res) => {
   db.query('SELECT username FROM Users;', (err, result) => {
     if (err) {
-      res.status(400).json({content: `User does not exist with username: ${name}`});
+      res.status(500).json({content: "Internal server error while fetching usernames."});
       console.log(err);
     }
     else
