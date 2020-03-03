@@ -129,11 +129,11 @@ function Dashboard(props){
         <div id="dashboard-container">
           <Panel id="dashboard">
             <Panel.Header>
-              <strong style={{textAlign: "left"}}>Welcome! Are you a New or Returning user?</strong>
+              <strong style={{ fontSize: "20px",textAlign: "left"}}>Welcome! Are you a New or Returning user?</strong>
             </Panel.Header>
-            <Panel.Footer>
-              <Link to='/signup'><Button >New</Button></Link>
-              <Link to='/login'><Button >Returning</Button></Link>
+            <Panel.Footer style={{textAlign: "center"}}>
+              <Link style={{ marginRight: "7px"}} to='/signup'><Button style={{ width:"123px" ,padding: "20px" ,fontSize:"20px"}}  kind='primary' >New</Button></Link>
+              <Link to='/login'><Button style={{width:"123px", padding: "20px" ,fontSize:"20px"}}  kind='danger' >Returning</Button></Link>
             </Panel.Footer>
           </Panel>
           </div>
