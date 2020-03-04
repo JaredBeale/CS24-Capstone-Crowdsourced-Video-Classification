@@ -10,12 +10,21 @@
     "pg": "^7.17.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2",
+    "supertest": "^4.0.2"
+  },
+  "engines": {
+    "npm": "^6.4.1",
+    "node": "^10.15.3"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "heroku-postbuild": "cd client && npm install && npm run build",
-    "test": "npm start --prefix client & && npm start"
+    "test": "./node_modules/.bin/jest --coverage"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "repository": {
     "type": "git",
