@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Panel, TextField, Dialog } from 'lucid-ui';
-import { withRouter } from 'react-router-dom'
+import { withRouter ,Redirect} from 'react-router-dom'
 
 
 
@@ -9,6 +9,8 @@ import { withRouter } from 'react-router-dom'
 class LoginPage extends Component{
   constructor(props){
     super(props);
+    this.logIn = this.logIn.bind(this);
+
     this.state = {
       username: '',
       createdUsername: '',
@@ -150,28 +152,26 @@ console.log(listedUsernames);
 
   checkNewUserButton(){
     if(this.props.isNewUser===true){
-      return   <Button kind='primary'  style={{ padding: "20px" ,fontSize:"20px"}} onClick={()=>this.signUp()}>Sign Up</Button>
+      return   <Button id="signupButton" kind='primary'  style={{ padding: "20px" ,fontSize:"20px"}} onClick={()=>this.signUp()}>Sign Up</Button>
 
     }
     else{
-      return    <Button kind='primary'  style={{ padding: "20px" ,fontSize:"20px"}} onClick={()=>this.logIn()}>Log In</Button>
+      return    <Button className="loginb" id="loginButton" kind='primary'  style={{ padding: "20px" ,fontSize:"20px"}} onClick={()=>this.logIn()}>Log In</Button>
 
     }
   }
   render() {
-    if(localStorage.getItem("username")!== "" ){
-        this.props.history.push('/watch')
-    }
+
 
     return (
-      <div>
+      (<div>
+        {(localStorage.getItem("username")!== "") && (<Redirect to="/watch" />)}
 
         <Panel>
           <Panel.Header>
             <strong style={{ fontSize: "20px"}}>{this.checkNewUserHeader()}</strong>
           </Panel.Header>
           <TextField
-
             style={{marginBottom: '10px',fontSize: "15px"}}
             placeholder='Username...'
             value={this.state.username}
@@ -187,7 +187,7 @@ console.log(listedUsernames);
 
         {this.state.errorMessage &&
           <Dialog
-            isShown='true'
+            isShown={true}
             onEscape={this.clearErrorMessage}
             handleClose={this.clearErrorMessage}
             Header='Error'
@@ -197,8 +197,9 @@ console.log(listedUsernames);
           </Dialog>
         }
       </div>
-    )
-  }
+  )  )
+}
+
 }
 
 export default withRouter(LoginPage)
