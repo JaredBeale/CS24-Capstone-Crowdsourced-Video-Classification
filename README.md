@@ -1,10 +1,17 @@
 # Crowdsourced Video Classification
-This is a web application designed to be deployed to Heroku. It allows users to view videos from a library of clips and classify them by given labels.
+This is a web application designed to be deployed to Heroku. It allows users to view videos from a library of clips and classify them by given labels. Here is a link to the live deployed code: https://crowd-video-classification.herokuapp.com/
 
 ## How to run files in a dev server and develop live
 1. Clone the repo.
 2. In terminal, make sure to set the ENV varible found in the heroku website to connect to the database. Command: ```export DATABASE_URL=<value from Heroku>``` or in windows ```set DATABASE_URL=<value from Heroku>``` (You only need to do this once).
-3. In terminal, go to file path and run ```npm install``` in the root folder.
-4. In the same terminal, run ```npm start``` to get the server running.
-5. Then open another terminal window and go to the client folder by doing ```cd client``` and then run ```npm install``` 
-6. Then run ```npm start``` and go to http://localhost:3000 to open the website.
+3. Run `npm install` in the root folder.
+4. Go to the client folder: `cd client`.
+5. Run `npm install`, then `npm run build`.
+6. Go back to the root folder `cd ..`.
+7. Run `npm start` to run the node server, which also delivers the front end.
+8. Navigate to `localhost:9000` in the web browser to use the application.
+
+## How to run the tests
+1. From the root folder, `npm run test` to run backend tests. Note that the front end tests will also run, but will fail.
+2. Go to the client folder `cd client`.
+3. `npm run test` to run frontend tests. Note that this will open an application, you must press `a` to run all tests in the suite, then `q` to exit the application.
