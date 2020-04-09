@@ -12,6 +12,7 @@ This is a web application designed to be deployed to Heroku. It allows users to 
 8. Navigate to `localhost:9000` in the web browser to use the application.
 
 ## How to run the tests
-1. From the root folder, `npm run test` to run backend tests. Note that the front end tests will also run, but will fail.
-2. Go to the client folder `cd client`.
-3. `npm run test` to run frontend tests. Note that this will open an application, you must press `a` to run all tests in the suite, then `q` to exit the application.
+1. Set up PostgreSQL to work in your shell, with a database named `testdb` owned by user postgres with blank password. This may be a complicated process and will differ based on your operating system and your shell. The back end tests require this, but the front end tests do not.
+2. From the root folder of the project, `npm run test` to run backend tests. Note that the front end tests will also run, but will fail.
+3. Go to the client folder `cd client`.
+4. `npm run test` to run frontend tests. Note that this will open an application, you must press `a` to run all tests in the suite, then `q` to exit the application.
