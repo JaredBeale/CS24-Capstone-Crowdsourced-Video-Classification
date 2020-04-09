@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render Home page  correctly with given strings 1`] = `ShallowWrapper {}`;
+
+exports[`should render Home page correctly with no props 1`] = `ShallowWrapper {}`;

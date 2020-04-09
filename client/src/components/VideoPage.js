@@ -138,12 +138,12 @@ class VideoPage extends Component{
   }
 
   render(){
-    if(localStorage.getItem("username")=== "" ){
-        this.props.history.push('/login')
-    }
+  
 
     return (
     <div className="outer">
+    {(localStorage.getItem("username")=== "") && (<Redirect to="/login" />)}
+
     {this.state.time2exit && <Redirect to="/goodbye" />}
       <div className="middle">
             <div id="video-page-container" className="inner">
