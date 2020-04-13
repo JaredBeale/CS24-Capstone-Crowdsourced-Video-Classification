@@ -1,10 +1,27 @@
-# Crowdsourced Video Classification
-This is a web application designed to be deployed to Heroku. It allows users to view videos from a library of clips and classify them by given labels.
+# CS24-Crowdsourced-Video-Classification
+Web application to crowdsource the effort to associate emotion labels with video clips.
 
-## How to run files in a dev server and develop live
-1. Clone the repo.
-2. In terminal, make sure to set the ENV varible found in the heroku website to connect to the database. Command: ```export DATABASE_URL=<value from Heroku>``` or in windows ```set DATABASE_URL=<value from Heroku>``` (You only need to do this once).
-3. In terminal, go to file path and run ```npm install``` in the root folder.
-4. In the same terminal, run ```npm start``` to get the server running.
-5. Then open another terminal window and go to the client folder by doing ```cd client``` and then run ```npm install``` 
-6. Then run ```npm start``` and go to http://localhost:3000 to open the website.
+Xandr, an AT&T company, wants to build a machine learning algorithm to identify emotion in video content. The first step is the collection of a large set of labeled data. This application is designed to facilitate gathering such information by allowing users to view and label video clips.
+
+## Install
+This module requires use of a PostgreSQL database. Create a local one or use an external one.
+```
+export DATABASE_URL=<your PostgreSQL database URL>
+npm install
+cd client
+npm install
+npm run build
+cd ..
+```
+
+## Usage
+```
+npm start
+```
+Note: This will start a Node server, navigate to http://localhost:9000 to use the application.
+
+## Contributing
+This repository is no longer accepting contributors.
+
+## License
+UNLICENSED
