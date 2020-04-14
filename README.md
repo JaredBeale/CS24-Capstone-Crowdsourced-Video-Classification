@@ -40,4 +40,4 @@ This repository is no longer accepting contributors.
 
 ## License
 
-(ISC (c) Jared Beale, Sam Young, and Conner Maddalozzo)[./LICENSCE]
+[ISC (c) Jared Beale, Sam Young, and Conner Maddalozzo](./LICENSE)
