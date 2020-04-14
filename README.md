@@ -1,18 +1,43 @@
-# Crowdsourced Video Classification
-This is a web application designed to be deployed to Heroku. It allows users to view videos from a library of clips and classify them by given labels. Here is a link to the live deployed code: https://crowd-video-classification.herokuapp.com/
+# CS24-Crowdsourced-Video-Classification
 
-## How to run files in a dev server and develop live
-1. Clone the repo.
-2. In terminal, make sure to set the ENV varible found in the heroku website to connect to the database. Command: ```export DATABASE_URL=<value from Heroku>``` or in windows ```set DATABASE_URL=<value from Heroku>``` (You only need to do this once).
-3. Run `npm install` in the root folder.
-4. Go to the client folder: `cd client`.
-5. Run `npm install`, then `npm run build`.
-6. Go back to the root folder `cd ..`.
-7. Run `npm start` to run the node server, which also delivers the front end.
-8. Navigate to `localhost:9000` in the web browser to use the application.
+Web application to crowdsource the effort to associate emotion labels with video clips.
 
-## How to run the tests
-1. Set up PostgreSQL to work in your shell, with a database named `testdb` owned by user postgres with blank password. This may be a complicated process and will differ based on your operating system and your shell. The back end tests require this, but the front end tests do not.
-2. From the root folder of the project, `npm run test` to run backend tests. Note that the front end tests will also run, but will fail.
-3. Go to the client folder `cd client`.
-4. `npm run test` to run frontend tests. Note that this will open an application, you must press `a` to run all tests in the suite, then `q` to exit the application.
+This application was developed for the 2019-2020 Oregon State University Computer Science Capstone.
+Xandr, an AT&T company, wants to build a machine learning algorithm to identify emotion in video content.
+The first step is the collection of a large set of labeled data.
+This application is designed to facilitate gathering such information by allowing users to view and label video clips.
+
+## Install
+```
+npm install
+cd client
+npm install
+npm run build
+cd ..
+```
+
+## Usage
+
+This module requires use of a PostgreSQL database.
+Create a local one or use an external one.
+This process will vary depending on your operating system and terminal.
+Before the application will function correctly, the database must be set up with the proper schema.
+This may be done with a command of a form like `psql <database name> -f db/dbSetUp.sql`.
+The exact command will vary depending on your postgres set up.
+If you are a member of the above-mentioned Capstone class, you may instead contact the repository owner to receive the working database URL.
+Once this is complete, execute the following code:
+
+```
+export DATABASE_URL=<your PostgreSQL database URL>
+npm start
+```
+
+Note: This will start a Node server, navigate to http://localhost:9000 to use the application.
+
+## Contributing
+
+This repository is no longer accepting contributors.
+
+## License
+
+[ISC © Jared Beale, Sam Young, and Conner Maddalozzo](./LICENSE)

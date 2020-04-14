@@ -2,7 +2,7 @@
   "name": "cs24-capstone-crowdsourced-video-classification",
   "version": "1.0.0",
   "author": "Jared Beale, Sam Young, Conner Maddalozzo",
-  "description": "",
+  "description": "Web application to crowdsource the effort to associate emotion labels with video clips.",
   "main": "index.js",
   "license": "ISC",
   "dependencies": {
