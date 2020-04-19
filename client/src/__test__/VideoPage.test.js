@@ -4,7 +4,7 @@ import { MemoryRouter as Router, withRouter } from 'react-router-dom' // 4.0.0
 import VideoPage from "../components/VideoPage.js"
 
 
-describe('Video paged not logged int.', () => {
+describe('Not logged in while on video page', () => {
   it('should redirect to login page', () => {
     const wrapper = mount(<Router initialEntries={[ '/watch' ]}><VideoPage
                               setBannerExit={()=>{}}
@@ -13,11 +13,19 @@ describe('Video paged not logged int.', () => {
                               setGlobalUsername={false}
                               globalUsername={false}/></Router>);
 
-    expect(wrapper.find('Router').prop('history').location.pathname)
+    expect(wrapper.find('Router')
+    .prop('history').location.pathname)
     .toEqual("/login")
-
-
-
     wrapper.unmount();
   });
 });
+
+describe("Submit buttons before Label cast ",()=>{
+
+
+
+  expect("button")
+  .toEqual("disabled")
+
+
+})

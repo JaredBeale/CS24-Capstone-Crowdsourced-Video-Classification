@@ -14,7 +14,6 @@ const {
 
 
 
-
 class VideoPage extends Component{
   constructor(props){
     var sessionVoteCount = sessionStorage.getItem("sessionVoteCount");
@@ -138,11 +137,11 @@ class VideoPage extends Component{
   }
 
   render(){
-  
+
 
     return (
     <div className="outer">
-    {(localStorage.getItem("username")=== "") && (<Redirect to="/login" />)}
+    { ((localStorage.getItem("username")=== "") || !this.props.globalUsername) && (<Redirect to="/login" />)}
 
     {this.state.time2exit && <Redirect to="/goodbye" />}
       <div className="middle">
@@ -181,9 +180,11 @@ class VideoPage extends Component{
 
 
 <div id="video-form">
-{!this.state.videoChosen &&  <LoadingMessage  Icon={<LoadingIcon speed='fast' />}
-  Title='Selecting data from DB...'
-  Body='Please wait' isLoading={!this.state.videoChosen}>
+{!this.state.videoChosen &&  <LoadingMessage
+                                Icon={<LoadingIcon speed='fast' />}
+                                Title='Selecting data from DB...'
+                                Body='Please wait'
+                                isLoading={!this.state.videoChosen}>
 
 
 
