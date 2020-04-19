@@ -137,13 +137,21 @@ class VideoPage extends Component{
   }
 
   render(){
-
+    var redirect = false;
+    //There are multiple redirects, to prevent them
+    // from both being rendered, we will use if else.
+    // on the singout button on the top right it gets bugged with the  !this.props.usernamethign
+    if(this.state.time2exit || !this.props.globalUsername){
+      redirect = (<Redirect to="/goodbye" />);
+    }
+    else if((localStorage.getItem("username")=== "")){
+      redirect =  (<Redirect to="/login" />);
+    }
 
     return (
     <div className="outer">
-    { ((localStorage.getItem("username")=== "") || !this.props.globalUsername) && (<Redirect to="/login" />)}
+      {redirect!==false && redirect}
 
-    {this.state.time2exit && <Redirect to="/goodbye" />}
       <div className="middle">
             <div id="video-page-container" className="inner">
 
