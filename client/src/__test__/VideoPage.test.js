@@ -23,9 +23,21 @@ describe('Not logged in while on video page', () => {
 describe("Submit buttons before Label cast ",()=>{
 
 
+  it('should redirect to login page', () => {
+    const wrapper = mount(<Router initialEntries={[ '/watch' ]}><VideoPage
+                              setBannerExit={()=>{}}
+                              handleShow={false}
+                              isShown={false}
+                              setGlobalUsername={(e)=>{console.log(e)}}
+                              globalUsername={"lozzoc"}/></Router>);
 
-  expect("button")
-  .toEqual("disabled")
+    expect(wrapper.find('Router')
+    .prop('history').location.pathname)
+    .toEqual("/login")
+    wrapper.unmount();
+  });
+  // expect("button")
+  // .toEqual("disabled")
 
 
 })
