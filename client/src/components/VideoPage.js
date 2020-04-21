@@ -88,7 +88,8 @@ class VideoPage extends Component{
     });
   }
 
-
+  // Ties the value of the form to the state of the class, and not
+  // the radio group component. good job.
   renderSelect(){
     const listLabels = this.state.labels.map((label)=>
     <RadioGroup.RadioButton  key={"label-"+label} style={style}>
@@ -114,11 +115,11 @@ class VideoPage extends Component{
 <span>
 <h4 id="sessioncount">Videos classified this session: {this.state.sessionVoteCount}</h4>
 
-        <Button id="submit-label-button" onClick={this.submitLabel}
+        <Button id="submit-continue-label-button" onClick={this.submitLabel}
           isDisabled={this.state.LabelIndex===-1} size="large">
             <CheckIcon />Save and Continue
         </Button>
-        <Button id="submit-label-button" isDisabled={this.state.LabelIndex===-1}
+        <Button id="submit-exit-label-button" isDisabled={this.state.LabelIndex===-1}
           onClick={()=>{
             this.submitLabel();
             this.props.setGlobalUsername("");
