@@ -127,10 +127,15 @@ describe("Submit/continue buttons before Label cast ",()=>{
 
     // by checking the buttons props of disabled we can verify this.
     // this is before labeling but after the video loads
-    const arr = sh.find("button").filter(function(button){
-      return button.prop("disabled") === true;
-    });
-    expect(arr.length).toEqual(sh.find("button").length);
+
+    const buttons = sh.find("button")
+    var isvalid = true;
+    buttons.forEach(function(btn){
+      isvalid = isvalid && btn.prop("disabled");
+    })
+
+
+    expect(isvalid).toEqual(true);
     // sh.unmount();
 
   });
