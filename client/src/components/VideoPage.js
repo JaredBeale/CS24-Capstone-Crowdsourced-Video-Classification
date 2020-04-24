@@ -14,7 +14,6 @@ const {
 
 
 
-
 class VideoPage extends Component{
   constructor(props){
     var sessionVoteCount = sessionStorage.getItem("sessionVoteCount");
@@ -83,23 +82,26 @@ class VideoPage extends Component{
   }
 
   onSelectChange(e){
-    console.log(e)
     this.setState({
       LabelIndex: e
     });
   }
 
-
+  // Ties the value of the form to the state of the class, and not
+  // the radio group component. good job.
   renderSelect(){
-    const listLabels = this.state.labels.map((label)=>
-    <RadioGroup.RadioButton  key={"label-"+label} style={style}>
-   <RadioGroup.Label>{label}</RadioGroup.Label>
-   </RadioGroup.RadioButton>
-   )
+    const listLabels = this.state.labels.map(
+      (label)=>
+        (
+          <RadioGroup.RadioButton  key={"label-"+label} style={style}>
+            <RadioGroup.Label>{label}</RadioGroup.Label>
+          </RadioGroup.RadioButton>
+        )
+      );
     return(
       <div id="select-div">
-      <span id="container-selction">
-      <RadioGroup
+        <span id="container-selction">
+          <RadioGroup
              name='name'
              selectedIndex={this.state.LabelIndex}
              onSelect={this.onSelectChange}
@@ -108,43 +110,47 @@ class VideoPage extends Component{
                flexDirection: 'column',
              }}
            >
-
-        {listLabels}
-
-        </RadioGroup>
-<span>
-<h4 id="sessioncount">Videos classified this session: {this.state.sessionVoteCount}</h4>
-
-        <Button id="submit-label-button" onClick={this.submitLabel}
-          isDisabled={this.state.LabelIndex===-1} size="large">
-            <CheckIcon />Save and Continue
-        </Button>
-        <Button id="submit-label-button" isDisabled={this.state.LabelIndex===-1}
-          onClick={()=>{
-            this.submitLabel();
-            this.props.setGlobalUsername("");
-            this.props.setBannerExit(false);
-            this.setState({
-              time2exit: true
-            })
-          }} size="large">
-            <CheckIcon />Save and Exit
-        </Button>
-
-</span>
-</span>
+           {listLabels}
+          </RadioGroup>
+          <span>
+            <h4 id="sessioncount">Videos classified this session: {this.state.sessionVoteCount}</h4>
+            <Button id="submit-continue-label-button" onClick={this.submitLabel}
+              isDisabled={this.state.LabelIndex===-1} size="large">
+              <CheckIcon />Save and Continue
+            </Button>
+            <Button id="submit-exit-label-button" isDisabled={this.state.LabelIndex===-1}
+              onClick={()=>{
+                this.submitLabel();
+                this.props.setGlobalUsername("");
+                this.props.setBannerExit(false);
+                this.setState({
+                  time2exit: true
+                })
+              }} size="large">
+              <CheckIcon />Save and Exit
+            </Button>
+          </span>
+        </span>
       </div>
     )
   }
 
   render(){
-  
+    var redirect = false;
+    //There are multiple redirects, to prevent them
+    // from both being rendered, we will use if else.
+    // on the singout button on the top right it gets bugged with the  !this.props.usernamethign
+    if(this.state.time2exit || !this.props.globalUsername){
+      redirect = (<Redirect to="/goodbye" />);
+    }
+    else if((localStorage.getItem("username")=== "")){
+      redirect =  (<Redirect to="/login" />);
+    }
 
     return (
     <div className="outer">
-    {(localStorage.getItem("username")=== "") && (<Redirect to="/login" />)}
+      {redirect!==false && redirect}
 
-    {this.state.time2exit && <Redirect to="/goodbye" />}
       <div className="middle">
             <div id="video-page-container" className="inner">
 
@@ -181,9 +187,11 @@ class VideoPage extends Component{
 
 
 <div id="video-form">
-{!this.state.videoChosen &&  <LoadingMessage  Icon={<LoadingIcon speed='fast' />}
-  Title='Selecting data from DB...'
-  Body='Please wait' isLoading={!this.state.videoChosen}>
+{!this.state.videoChosen &&  <LoadingMessage
+                                Icon={<LoadingIcon speed='fast' />}
+                                Title='Selecting data from DB...'
+                                Body='Please wait'
+                                isLoading={!this.state.videoChosen}>
 
 
 
@@ -199,6 +207,10 @@ class VideoPage extends Component{
                       handleProgress={this.handleProgress}
                       playing={this.state.playing}/>}
 
+                  {/* In the html, the select component is not even there
+                    until the videoID/ videoURL is  chosen. which prevents malicious use
+                    of cross-site scripting i think.
+                  */}
                     {this.state.videoChosen &&
                       this.state.labelsLoaded &&
                         this.state.labels && this.renderSelect()}
@@ -324,7 +336,6 @@ this.loadVideosVoted();
     }
   }
   handleProgress(stuff){
-    console.log(stuff.played);
     if(stuff.played === 1 ){
       this.setState({
         played: stuff.played,
