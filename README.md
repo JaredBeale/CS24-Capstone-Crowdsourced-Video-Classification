@@ -9,6 +9,8 @@ This application is designed to facilitate gathering such information by allowin
 
 ## Install
 ```
+git clone https://github.com/JaredBeale/CS24-Capstone-Crowdsourced-Video-Classification.git
+cd CS24-Capstone-Crowdsourced-Video-Classification
 npm install
 cd client
 npm install
