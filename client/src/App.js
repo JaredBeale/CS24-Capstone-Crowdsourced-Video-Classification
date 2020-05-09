@@ -2,24 +2,15 @@ import React from 'react';
 import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
 import {withRouter} from 'react-router-dom';
 import { createBrowserHistory } from "history";
-
-
-
 import { Button, Panel} from 'lucid-ui';
-
 import './index.css';
 import './lucid-ui.css';
-
 import GoodbyePage from "./components/ExitPage"
 import VideoPage from './components/VideoPage';
 import LoginPage from './components/LoginPage';
 import Banner from "./components/Banner"
 
-
 const history = createBrowserHistory();
-
-
-
 
 class App extends React.Component {
    constructor(props){
@@ -50,14 +41,15 @@ class App extends React.Component {
   setGlobalUsername = (username) => {
     this.setState({globalUsername:username});
   }
-  setIsShown=(shown)=>{
 
+  setIsShown=(shown)=>{
    this.setState({isShown: shown})
  }
+
    handleShow=()=>{
-     console.log(this.state.isShown)
     this.setState({isShown: !this.state.isShown})
   }
+
   setBannerExit=(banner)=>{
     this.setState({bannerExit:banner});
 
@@ -74,9 +66,8 @@ class App extends React.Component {
           handleShow={this.handleShow}
           bannerExit={this.state.bannerExit}
           setBannerExit={this.setBannerExit}
-                  setGlobalUsername={this.setGlobalUsername}
-                  user={this.state.globalUsername} />
-
+          setGlobalUsername={this.setGlobalUsername}
+          user={this.state.globalUsername} />
           <Route path="/goodbye"  >
           <GoodbyePage
             onLogout={this.setGlobalUsername}
@@ -85,15 +76,13 @@ class App extends React.Component {
             setBannerExit={this.setBannerExit}
             user={this.state.globalUsername} />
           </Route>
-
           <Route path="/watch">
             <VideoPage
             setBannerExit={this.setBannerExit}
-
             handleShow={this.handleShow}
-                      isShown={this.state.isShown}
-                        setGlobalUsername={this.setGlobalUsername}
-                        globalUsername={this.state.globalUsername}/>
+            isShown={this.state.isShown}
+            setGlobalUsername={this.setGlobalUsername}
+            globalUsername={this.state.globalUsername}/>
           </Route>
           <Route path="/login">
             <LoginPage
@@ -117,7 +106,6 @@ class App extends React.Component {
     );
   }
 }
-
 
 function Dashboard(props){
   return (
