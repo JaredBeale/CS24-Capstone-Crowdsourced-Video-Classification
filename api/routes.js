@@ -107,8 +107,8 @@ router.post('/create/vote', (req, res) => {
 });
 
 // Endpoint - Read users
-router.get('/names/users', (req, res) => {
-  db.query('SELECT username FROM Users;', (err, result) => {
+router.get('/names/user/:username', (req, res) => {
+  db.query('SELECT username FROM Users WHERE username = $1;', [username] (err, result) => {
     if (err) {
       res.status(500).json({content: "Internal server error while fetching usernames."});
       console.log(err);
