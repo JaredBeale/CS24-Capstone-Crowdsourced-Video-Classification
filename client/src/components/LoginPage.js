@@ -20,16 +20,13 @@ class LoginPage extends Component{
     }
   }
 
-  componentDidMount(){
-    this.getUsernames();
-  }
 
   clearErrorMessage = () => {
     this.setState({ errorMessage: '' });
   }
 
   getUsernames(){
-    fetch('/api/names/users', {
+    fetch('/api/names/user/' +this.state.username.toLowerCase(), {
       method: 'GET',
       headers: {
       'Content-Type': 'application/json',
@@ -77,14 +74,11 @@ class LoginPage extends Component{
         else if (response.ok) {
           console.log('success');
           this.setState({status:data.success})
-          this.getUsernames();
-
           this.props.setGlobalUsername(data.name);
-              localStorage.setItem("username", data.name);
-            console.log("did we get here")
-            localStorage.setItem("seenTutorial", true);
-            this.props.setIsShown(true);
-
+          localStorage.setItem("username", data.name);
+          console.log("did we get here")
+          localStorage.setItem("seenTutorial", true);
+          this.props.setIsShown(true);
           this.props.history.push('/watch')
         }
       })
@@ -96,24 +90,37 @@ class LoginPage extends Component{
   }
 }
   logIn(){
-    var lowerUsername = this.state.username.toLowerCase();
-    var currentUsername = lowerUsername;
-    var listedUsernames = this.state.listUsername;
-console.log(listedUsernames);
-    for(var i = 0; i < listedUsernames.length; i++){
-      if(currentUsername===listedUsernames[i].username){
+    fetch('/api/names/user/' +this.state.username.toLowerCase(), {
+      method: 'GET',
+      headers: {
+      'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      if (!response.ok) {
+          this.setErrorMessage(response.json().content);
+      }
+      return response.json();
+    }).then((data) => {
+      var currentUsername = this.state.username.toLowerCase();
+      if(data.length){
         console.log("Name Found! Logging in...")
         this.props.setGlobalUsername(currentUsername);
-            localStorage.setItem("username", currentUsername);
-            localStorage.setItem("seenTutorial", false);
-            this.props.setIsShown(false);
-
+        localStorage.setItem("username", currentUsername);
+        localStorage.setItem("seenTutorial", false);
+        this.props.setIsShown(false);
         this.props.history.push('/watch')
       }
+      else{
+        console.log("name not found")
+        this.setState({ errorMessage: "Username "+currentUsername +" does not exist in the Database."});
+      }
 
-    }
-    console.log("name not found")
- this.setState({ errorMessage: "Username "+currentUsername +" does not exist in the Database."});
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      this.setState({status:error})
+    });
+
 
   }
 

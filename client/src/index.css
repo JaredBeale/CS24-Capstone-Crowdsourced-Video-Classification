@@ -80,7 +80,7 @@ display: flex;
 }
 }
 #sessioncount{
-  
+
   font-size: 15px;
 }
 button {
@@ -88,8 +88,6 @@ button {
 }
 #banner-app-name{
   font-size: 100%;
-  font-style: italic;
-  font-family: cursive;
   margin-right:auto;
   margin-top:auto;
   margin-bottom:auto;
