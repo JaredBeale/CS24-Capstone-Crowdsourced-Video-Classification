@@ -16,7 +16,7 @@ class App extends React.Component {
    constructor(props){
     var storedUsername = localStorage.getItem("username");
     var storedTutorial = localStorage.getItem("seenTutorial");
-
+    //this stores useful information into the local storage
     if (storedUsername === null) {
       storedUsername = "";
       localStorage.setItem("username", storedUsername);
@@ -31,25 +31,40 @@ class App extends React.Component {
     }
     super(props);
     this.state = {
-
       isShown: JSON.parse(storedTutorial),
       globalUsername: storedUsername,
       bannerExit: false,
     }
   }
-
+  /*
+  * Function Name: setGlobalUsername(username)
+  * Description: This sets the state of the global username.
+  * Output:  State globalUsername is set
+  */
   setGlobalUsername = (username) => {
     this.setState({globalUsername:username});
   }
-
+  /*
+  * Function Name: setIsShown(shown)
+  * Description: This sets the state of isShown.
+  * Output:  State isShown is set
+  */
   setIsShown=(shown)=>{
    this.setState({isShown: shown})
  }
-
+ /*
+ * Function Name: handleShow()
+ * Description: this handles the shown state.
+ * Output: Set to opposite state of current state.
+ */
    handleShow=()=>{
     this.setState({isShown: !this.state.isShown})
   }
-
+  /*
+  * Function Name: setBannerExit(banner)
+  * Description: This sets the state of exit banner.
+  * Output:  State bannerExit is set
+  */
   setBannerExit=(banner)=>{
     this.setState({bannerExit:banner});
 

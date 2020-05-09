@@ -19,34 +19,15 @@ class LoginPage extends Component{
   clearErrorMessage = () => {
     this.setState({ errorMessage: '' });
   }
-
-  getUsernames(){
-    fetch('/api/names/user/' +this.state.username.toLowerCase(), {
-      method: 'GET',
-      headers: {
-      'Content-Type': 'application/json',
-      },
-    }).then((response) => {
-      if (!response.ok) {
-          this.setErrorMessage(response.json().content);
-      }
-      return response.json();
-    }).then((data) => {
-      var listedUsernames = []
-      for(var i = 0; i < data.length; i++){
-        listedUsernames.push({"username":data[i]});
-      }
-      this.setState({listUsername:listedUsernames.reverse()});
-    })
-    .catch((error) => {
-      this.setState({status:error})
-    });
-  }
-
+/*
+* Function Name: SignUp()
+* Description: This function lets the user sign up while using regEX to make sure they use correct characters.
+* Output:  Puts name into database and sends them to the video page.
+*/
   signUp(){
     var lowerUsername = this.state.username.toLowerCase();
-    var letters = /^[A-Za-z0-9]+$/;
-    if( !lowerUsername.match(letters)|| lowerUsername.length < 3){
+    var validLetters = /^[A-Za-z0-9]+$/;
+    if( !lowerUsername.match(validLetters)|| lowerUsername.length < 3){
       this.setState({ errorMessage: "Username does not meet requirements. Please try again!"})
       return
     }
@@ -76,7 +57,11 @@ class LoginPage extends Component{
         });
       }
     }
-
+    /*
+    * Function Name: logIn()
+    * Description: This function lets the user log in and access the video page.
+    * Output:  Stores the name into the local storage.
+    */
   logIn(){
     fetch('/api/names/user/' +this.state.username.toLowerCase(), {
       method: 'GET',
@@ -106,7 +91,11 @@ class LoginPage extends Component{
       this.setState({status:error})
     });
   }
-
+  /*
+  * Function Name: checkNewUserHeader()
+  * Description: This checks if the user is new or returning to tell them if they are supposed to sign in.
+  * Output:  create new user or enter user name.
+  */
   checkNewUserHeader(){
     if(this.props.isNewUser===true){
       return "Please Create a Username";
@@ -115,7 +104,11 @@ class LoginPage extends Component{
       return "Please Enter your Username Below to Log In"
     }
   }
-
+  /*
+  * Function Name: checkNewUserHelper()
+  * Description: This checks if the user is new or returning to tell them if they are supposed to sign in.
+  * Output:  empty or a description on how to sign in.
+  */
   checkNewUserHelper(){
     if(this.props.isNewUser===true){
       return (<ul style={{float:'left',textAlign:'left'}}> <strong>Username requirements:</strong>
@@ -131,7 +124,11 @@ class LoginPage extends Component{
       return
     }
   }
-
+  /*
+  * Function Name: checkNewUserEnter()
+  * Description: This checks if the user is new or returning to tell them if they are supposed to sign in.
+  * Output:  signup or login function
+  */
   checkNewUserEnter(){
     if(this.props.isNewUser===true){
       return this.signUp()
@@ -140,7 +137,11 @@ class LoginPage extends Component{
       return this.logIn()
     }
   }
-
+  /*
+  * Function Name: checkNewUserButton()
+  * Description: This checks if the user is new or returning to tell them if they are supposed to sign in.
+  * Output:   signup or login button
+  */
   checkNewUserButton(){
     if(this.props.isNewUser===true){
       return   <Button id="signupButton" kind='primary'  style={{ padding: "20px" ,fontSize:"20px"}} onClick={()=>this.signUp()}>Sign Up</Button>
