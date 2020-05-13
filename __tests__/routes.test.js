@@ -110,7 +110,7 @@ describe("POST /api/create/vote endpoint", () => {
   });
 });
 
-describe("GET /api/names/users", () => {
+describe("GET /api/names/user", () => {
   beforeAll(async () => {
     await db.query("INSERT INTO Users (username) VALUES ('testUser1'), ('testUser2'), ('testUser3');");
   });
@@ -119,12 +119,20 @@ describe("GET /api/names/users", () => {
     await db.query("DELETE FROM Users;");
   })
 
-  it("succeeds in generating a list of users", async () => {
+  it("succeeds in fetching singleton list of existing user", async () => {
     const response = await request(app)
-      .get("/api/names/users")
+      .get("/api/names/user/testUser2")
       .expect(200);
 
-    expect(response.body).toEqual(expect.arrayContaining(['testUser1', 'testUser2', 'testUser3']));
+    expect(response.body).toEqual(expect.arrayContaining(['testUser2']));
+  });
+
+  it("succeeds in fetching empty list of missing user", async () => {
+    const response = await request(app)
+      .get("/api/names/user/testUser4")
+      .expect(200);
+
+    expect(response.body).toEqual([]);
   });
 });
 
