@@ -86,7 +86,7 @@ class App extends React.Component {
           setBannerExit={this.setBannerExit}
           setGlobalUsername={this.setGlobalUsername}
           user={this.state.globalUsername} />
-          {/*SAM WHy*/}
+          {/*SAM WHy is bannerexit is in every page, is that needed? not a huge deal.*/}
           <Route path="/goodbye"  >
           <GoodbyePage
             onLogout={this.setGlobalUsername}
@@ -118,6 +118,7 @@ class App extends React.Component {
               globalUsername={this.state.globalUsername} />
           </Route>
           <Route exact path="/">
+            {/* the dashboard lets the user read the FAQs, and sign in/sign up*/}
             <Dashboard />
           </Route>
         </div>
