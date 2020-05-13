@@ -2,15 +2,21 @@ import React from 'react';
 import ReactPlayer from "react-player";
 import {LoadingMessage,LoadingIcon} from 'lucid-ui';
 
-
+/*
+*
+* The video player wiget has two pieces: the player itself and the duration text.
+* the player has native controls enabled in this component, but really
+* the only button that is used is the replay button.
+*/
 class VideoPlayer extends React.Component {
 
   constructor(props){
     super(props);
+    this.url = props.url;
     this.state = {
+      playing: props.isPlaying,
       url: null,
       pip: false,
-      playing: props.isPlaying,
       controls: false,
       light: false,
       volume: 0.8,
@@ -23,7 +29,6 @@ class VideoPlayer extends React.Component {
       playpauseString: "Play",
 
     }
-    this.url = props.url;
   }
 
 
@@ -47,18 +52,22 @@ class VideoPlayer extends React.Component {
 
 
 
+  /*The duration element is away for users to ge a sense
+  * of how long the videos are. and to prepare the labeling task.
+  * inputs: none
+  * outputs: recursive function that pings the filesize every 1 second
+  *         until the size is availible.
+  */
   setDurration(){
-
     const self = this;
     if(this.player !== null){
-
     const time = this.player.getDuration();
-
     if(!time){
      window.setTimeout(function(){
-      self.setDurration();
-
-     },999)
+        self.setDurration();
+        return;
+      },
+      999);
     }
     else{
       self.setState({
@@ -71,22 +80,18 @@ class VideoPlayer extends React.Component {
 
   render(){
     var {  url} = this.state
-
-
-
       return (
         <div id="video-player-widget">
-
             <div id="video" >
-
-              <span><h1>Duration: {this.state.duration === Infinity ?  <LoadingMessage
-
-                    Icon={<LoadingIcon speed='slow' />}
-                    Title='Loading...'
-
-                  />
-
-                : this.state.duration.toFixed(2)} {this.state.duration === Infinity ? "": "sec"}</h1></span>
+              <span>
+                <h1>Duration:
+                  {this.state.duration === Infinity ?
+                    <LoadingMessage
+                      Icon={<LoadingIcon speed='slow' />}
+                      Title='Loading...'
+                    />  : `${this.state.duration.toFixed(2)} sec`}
+                </h1>
+              </span>
               <ReactPlayer
                 className="react-player"
                 ref={this.ref}
@@ -104,8 +109,6 @@ class VideoPlayer extends React.Component {
 
                   }
                 }}}
-
-
               />
 
             </div>
