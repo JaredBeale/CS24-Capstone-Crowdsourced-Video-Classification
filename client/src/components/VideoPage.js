@@ -97,11 +97,12 @@ class VideoPage extends Component{
       );
     return(
       <div id="select-div">
-        <span id="container-selction">
           <RadioGroup
+              size="large"
              name='name'
              selectedIndex={this.state.LabelIndex}
              onSelect={this.onSelectChange}
+
              style={{
                display: 'inline-flex',
                flexDirection: 'column',
@@ -127,7 +128,6 @@ class VideoPage extends Component{
               <CheckIcon />Save and Exit
             </Button>
           </div>
-        </span>
       </div>
     )
   }
@@ -145,7 +145,7 @@ class VideoPage extends Component{
     }
 
     return (
-      <div id="video-page-container" className="inner">
+      <div id="video-page-container">
             {redirect!==false && redirect}
                      <Dialog
                        isShown={this.props.isShown}
@@ -193,7 +193,7 @@ class VideoPage extends Component{
                       playpauseString={this.state.playpauseString}
                       handlePlayPause={this.handlePlayPause}
                       url={this.state.video}
-                      liftUpRef={(val) => {console.log(val);this.setState({player: val});}}
+                      liftUpRef={(val) => {this.setState({player: val});}}
                       handleProgress={this.handleProgress}
                       playing={this.state.playing}/>}
 

@@ -38,50 +38,68 @@ margin-left: 20px;
 display: flex;
 }
 #select-div{
+font-size: 125%;
 margin-left: 10px;
 margin-top: 85px;
 }
 video::-webkit-media-controls-fullscreen-button{
    display:none !important;
 }
+
+.lucid-RadioButtonLabeled-label{
+  line-height: 32px;
+  font-size:150%;
+}
+.lucid-Button{
+  display: block;
+  margin-top: 20px;
+}
+#submit-continue-label-button{
+  margin: 20px 0 20px 0;
+}
+
 @media only screen and (max-width: 720px) {
 
-#welcome-name{
-display: none;
-}
-#video-form{
-display: inherit;
-}
-#select-div{
-margin-left: inherit;
-margin-top: inherit;
+    #welcome-name{
+    display: none;
+    }
+    #video-form{
+    display: inherit;
+    }
+    #select-div{
+      padding: 30px;
+    margin-left: inherit;
+    margin-top: inherit;
+    }
+
+    #video-page-container{
+
+    margin-left: inherit;
+
+    }
+    #container-selction{
+    display: flex;
+
+    }
+    #submit-label-button{
+      margin-top:0px !important;
+      margin-bottom: 10px;
+    }
+
+    #sessioncount{
+      margin-top:0px !important;
+      margin-bottom: 10px !important;
+
+      margin: auto;
+      font-size: 15px;
+    }
 }
 
-#video-page-container{
 
-margin-left: inherit;
-
-}
-#container-selction{
-display: flex;
-
-}
-#submit-label-button{
-  margin-top:0px !important;
-  margin-bottom: 10px;
-}
 
 #sessioncount{
-  margin-top:0px !important;
-  margin-bottom: 10px !important;
 
-  margin: auto;
-  font-size: 15px;
-}
-}
-#sessioncount{
-
-  font-size: 15px;
+  font-size: 20px;
 }
 button {
   margin: 20px;
@@ -138,6 +156,7 @@ display:inline-block;
 .react-player {
   max-width: 832px !important;
   max-height: 468px !important;
+
   width: 100%;
   height: auto;
 }
