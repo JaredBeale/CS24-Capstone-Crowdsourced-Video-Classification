@@ -39,9 +39,6 @@ class VideoPage extends Component{
 
 
     };
-    // 
-    // this.handlePlayPause = this.handlePlayPause.bind(this);
-    // this.handleProgress = this.handleProgress.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.submitLabel = this.submitLabel.bind(this);
 
@@ -191,7 +188,9 @@ class VideoPage extends Component{
                           Body='Please wait'
                           isLoading={!this.state.videoChosen}>
                     </LoadingMessage>}
-
+                  {/*
+                    this contains the duration indicator and the video player
+                  */}
                     {this.state.videoChosen && <Player
                       playpauseString={this.state.playpauseString}
                       handlePlayPause={this.handlePlayPause}
@@ -202,7 +201,7 @@ class VideoPage extends Component{
 
                   {/* In the html, the select component is not even there
                     until the videoID/ videoURL is  chosen. which prevents malicious use
-                    of cross-site scripting i think. -- lozzoc
+                    of cross-site scripting... i think. -- lozzoc
                   */}
                     {this.state.videoChosen &&
                       this.state.labelsLoaded &&
@@ -251,30 +250,29 @@ class VideoPage extends Component{
   submitLabel(){
     // in this case we need self.
     const self=this;
-
     if(this.state.labels[self.state.LabelIndex]){
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `/api/create/vote`, true);
       xhr.setRequestHeader("Content-Type", "application/json");
-
-
       xhr.onreadystatechange = function() { // Call a function when the state changes.
           if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-              // Request finished. Do processing here.
-              // this is not THIS in t
               self.setState({
                 videoChosen: false,
                 video: null,
                 LabelIndex: -1,
               })
-              var sessionVoteCount = sessionStorage.getItem("sessionVoteCount");
 
+              // this code is reused elsewhere i think on page load as well. if it happens in the constructor-super
+              // then all we can assume its at least "0" or greater.
+              var sessionVoteCount = sessionStorage.getItem("sessionVoteCount");
+              ////////
               if (sessionVoteCount === null) {
                 sessionVoteCount = "0";
                 sessionStorage.setItem("sessionVoteCount", sessionVoteCount);
               }
-
+              ///////
               var numSessionVoteCount = parseInt(sessionVoteCount,10);
+              // var numSessionVoteCount = parseInt(sessionStorage.getItem("sessionVoteCount"),10)
               numSessionVoteCount++;
               self.setState({sessionVoteCount:numSessionVoteCount})
               sessionStorage.setItem("sessionVoteCount", numSessionVoteCount);
@@ -319,10 +317,11 @@ class VideoPage extends Component{
       if (!response.ok) {
         response.json().then(info => this.setState({ errorMessage: info.content+" There are no more videos to vote on, please log out."}));
 
-
       }
       return response.json();
     }).then((data) => {
+
+      /* at this point we change the video and the video player updates as well */
       self.setState({
         video: data.url,
         videoid: data.fileid,
