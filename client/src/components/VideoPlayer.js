@@ -71,22 +71,18 @@ class VideoPlayer extends React.Component {
 
   render(){
     var {  url} = this.state
-
-
-
       return (
         <div id="video-player-widget">
-
             <div id="video" >
-
-              <span><h1>Duration: {this.state.duration === Infinity ?  <LoadingMessage
-
-                    Icon={<LoadingIcon speed='slow' />}
-                    Title='Loading...'
-
-                  />
-
-                : this.state.duration.toFixed(2)} {this.state.duration === Infinity ? "": "sec"}</h1></span>
+              <span>
+                <h1>Duration:
+                  {this.state.duration === Infinity ?
+                    <LoadingMessage
+                      Icon={<LoadingIcon speed='slow' />}
+                      Title='Loading...'
+                    />  : `${this.state.duration.toFixed(2)} sec`}
+                </h1>
+              </span>
               <ReactPlayer
                 className="react-player"
                 ref={this.ref}
@@ -104,8 +100,6 @@ class VideoPlayer extends React.Component {
 
                   }
                 }}}
-
-
               />
 
             </div>

@@ -63,7 +63,9 @@ class App extends React.Component {
   /*
   * Function Name: setBannerExit(banner)
   * Description: This sets the state of exit banner.
-  * Output:  State bannerExit is set
+  * Output:  State bannerExit is set,
+
+  what does banner exit doe that video page and goodbye page both need?
   */
   setBannerExit=(banner)=>{
     this.setState({bannerExit:banner});
@@ -77,12 +79,14 @@ class App extends React.Component {
     return(
       <Router history={history}>
         <div>
+        {/* Banner is always shown reguardless of what route it is*/}
           <Banner isShown={this.state.isShown}
           handleShow={this.handleShow}
           bannerExit={this.state.bannerExit}
           setBannerExit={this.setBannerExit}
           setGlobalUsername={this.setGlobalUsername}
           user={this.state.globalUsername} />
+          {/*SAM WHy*/}
           <Route path="/goodbye"  >
           <GoodbyePage
             onLogout={this.setGlobalUsername}
