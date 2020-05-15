@@ -8,6 +8,7 @@ The first step is the collection of a large set of labeled data.
 This application is designed to facilitate gathering such information by allowing users to view and label video clips.
 
 ## Install
+Note that this project uses Node version 10.15.3 and NPM version 6.4.1; it is not guaranteed to work with other versions.
 ```
 git clone https://github.com/JaredBeale/CS24-Capstone-Crowdsourced-Video-Classification.git
 cd CS24-Capstone-Crowdsourced-Video-Classification
