@@ -61,22 +61,21 @@ class VideoPlayer extends React.Component {
   setDurration(){
     const self = this;
     if(this.player !== null){
-    const time = this.player.getDuration();
-    if(!time){
-     window.setTimeout(function(){
-        self.setDurration();
-        return;
-      },
-      999);
-    }
-    else{
-      self.setState({
-        duration: time
-      })
+      const time = this.player.getDuration();
+      if(!time){
+        window.setTimeout(function(){
+          self.setDurration();
+          return;
+        },
+        999);
+      }
+      else {
+        self.setState({
+          duration: time
+        })
+      }
     }
   }
-
-}
 
   render(){
     var {  url} = this.state
