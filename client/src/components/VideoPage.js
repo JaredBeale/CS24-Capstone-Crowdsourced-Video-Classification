@@ -8,26 +8,20 @@ const style = {
   marginRight: '13px',
 };
 
-const {
-  LoadingMessage,
-} = LoadingIndicator;
+const { LoadingMessage} = LoadingIndicator;
 
 
 
 class VideoPage extends Component{
   constructor(props){
-    var sessionVoteCount = sessionStorage.getItem("sessionVoteCount");
-
+    let sessionVoteCount = sessionStorage.getItem("sessionVoteCount");
     if (sessionVoteCount === null) {
       sessionVoteCount = "0";
       sessionStorage.setItem("sessionVoteCount", sessionVoteCount);
     }
-    var numSessionVoteCount = parseInt(sessionVoteCount,10);
 
 
     super(props);
-
-
     this.state = {
       videoChosen: false,
       labelsLoaded: false,
@@ -37,15 +31,12 @@ class VideoPage extends Component{
       playpauseString: "Play",
       player: null,
       voteCount: 0,
-      sessionVoteCount: numSessionVoteCount,
+      sessionVoteCount: parseInt(sessionVoteCount,10),
       time2exit: false,
       errorMessage:'',
 
 
     };
-
-    this.handlePlayPause = this.handlePlayPause.bind(this);
-    this.handleProgress = this.handleProgress.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.submitLabel = this.submitLabel.bind(this);
 
@@ -62,22 +53,21 @@ class VideoPage extends Component{
       headers: {
       'Content-Type': 'application/json',
       },
-    }).then((response) => {
+    })
+    .then((response) => {
         if (response.status === 400) {
-          console.log('failure');
+          console.log('failure loading user count data');
         }
         else if (response.ok) {
-          console.log('success');
           return response.json();
 
         }
-      }).then((data) => {
-      console.log(data);
-      this.setState({voteCount:data});
+      })
+      .then((data) => {
+        this.setState({voteCount:data});
       })
       .catch((error) => {
         console.log(error);
-
       });
   }
 
@@ -88,8 +78,15 @@ class VideoPage extends Component{
   }
 
   // Ties the value of the form to the state of the class, and not
-  // the radio group component. good job.
-  renderSelect(){
+  // the radio group component.
+
+  /* the renderSelect is actually the entire form with the submit buttons. i changed it to the name.
+  * includes:
+  * radio button group of labelsLoaded
+  * save and continue Button
+  * save and exit button
+  */
+  renderLabelForm(){
     const listLabels = this.state.labels.map(
       (label)=>
         (
@@ -100,11 +97,12 @@ class VideoPage extends Component{
       );
     return(
       <div id="select-div">
-        <span id="container-selction">
           <RadioGroup
+              size="large"
              name='name'
              selectedIndex={this.state.LabelIndex}
              onSelect={this.onSelectChange}
+
              style={{
                display: 'inline-flex',
                flexDirection: 'column',
@@ -112,7 +110,7 @@ class VideoPage extends Component{
            >
            {listLabels}
           </RadioGroup>
-          <span>
+          <div>
             <h4 id="sessioncount">Videos classified this session: {this.state.sessionVoteCount}</h4>
             <Button id="submit-continue-label-button" onClick={this.submitLabel}
               isDisabled={this.state.LabelIndex===-1} size="large">
@@ -129,8 +127,7 @@ class VideoPage extends Component{
               }} size="large">
               <CheckIcon />Save and Exit
             </Button>
-          </span>
-        </span>
+          </div>
       </div>
     )
   }
@@ -148,14 +145,8 @@ class VideoPage extends Component{
     }
 
     return (
-    <div className="outer">
-      {redirect!==false && redirect}
-
-      <div className="middle">
-            <div id="video-page-container" className="inner">
-
-
-
+      <div id="video-page-container">
+            {redirect!==false && redirect}
                      <Dialog
                        isShown={this.props.isShown}
                        onEscape={()=>this.props.handleShow()}
@@ -164,130 +155,122 @@ class VideoPage extends Component{
                        Header='Video Watching Page Instructions'
                        size='medium'
                      >
-                       <div key={'info'}>
+                    <div key={'info'}>
+                      <ol>
+                         <li>  Watch the video displayed on the screen.</li>
+                         <li>  Select the most appropriate <strong>emotion the video is conveying.</strong> If you are unsure select "Neutral".</li>
+                         <li>  Click 'Save and Continue' to move on to the next video.</li>
+                         <li>  Click 'Save and Exit' to submit and end your session.</li>
+                         <li>  View and vote on as many videos as you like.</li>
+                         <li>  You may exit or log out at any time.</li>
+                         <li>  To reopen this helpful dialog, click green 'Help' button in the upper right at any time"</li>
+                      </ol>
+                     </div>
 
-                    <ol>
-                       <li>  Watch the video displayed on the screen.</li>
-                       <li>  Select the most appropriate <strong>emotion the video is conveying.</strong> If you are unsure select "Neutral".</li>
-                       <li>  Click 'Save and Continue' to move on to the next video.</li>
-                       <li>  Click 'Save and Exit' to submit and end your session.</li>
-                       <li>  View and vote on as many videos as you like.</li>
-                       <li>  You may exit or log out at any time.</li>
-                       <li>  To reopen this helpful dialog, click green 'Help' button in the upper right at any time"</li>
-                    </ol>
-                       </div>
+                     <Dialog.Footer>
+                       <Button
+                          onClick={()=>this.props.handleShow()}
+                          kind='primary'>Got it!</Button>
+                     </Dialog.Footer>
+                   </Dialog>
 
-                       <Dialog.Footer>
-                         <Button
-                            onClick={()=>this.props.handleShow()}
-                            kind='primary'>Got it!</Button>
-                       </Dialog.Footer>
-                     </Dialog>
+                  <div id="video-form">
 
-
-
-<div id="video-form">
-{!this.state.videoChosen &&  <LoadingMessage
-                                Icon={<LoadingIcon speed='fast' />}
-                                Title='Selecting data from DB...'
-                                Body='Please wait'
-                                isLoading={!this.state.videoChosen}>
-
-
-
-
-
-    </LoadingMessage>}
-
+                  {/* This is the loading spinner that replaces the
+                  video player widget. it is replaced with videoChosen==true
+                  -- lozzoc*/}
+                  {!this.state.videoChosen
+                    &&  <LoadingMessage
+                          Icon={<LoadingIcon speed='fast' />}
+                          Title='Selecting data from DB...'
+                          Body='Please wait'
+                          isLoading={!this.state.videoChosen}>
+                    </LoadingMessage>}
+                  {/*
+                    this contains the duration indicator and the video player
+                  */}
                     {this.state.videoChosen && <Player
                       playpauseString={this.state.playpauseString}
                       handlePlayPause={this.handlePlayPause}
                       url={this.state.video}
-                      liftUpRef={(val) => {console.log(val);this.setState({player: val});}}
+                      liftUpRef={(val) => {this.setState({player: val});}}
                       handleProgress={this.handleProgress}
                       playing={this.state.playing}/>}
 
                   {/* In the html, the select component is not even there
                     until the videoID/ videoURL is  chosen. which prevents malicious use
-                    of cross-site scripting i think.
+                    of cross-site scripting... i think. -- lozzoc
                   */}
                     {this.state.videoChosen &&
                       this.state.labelsLoaded &&
-                        this.state.labels && this.renderSelect()}
+                        this.state.labels && this.renderLabelForm()}
                         {this.errormessage()}
+                  </div>  {/* end video form*/}
+            {/* end video page*/}
+            </div>
+          );
 
-</div>
-              <div>
+    }
 
+    errormessage(){
+      if(this.state.errorMessage !== ''){
+          if(this.state.errorMessage === "This labeling task has no more videos to watch. There are no more videos to vote on, please log out."){
+            return (
+                <Dialog
+                  isShown='true'
+                  Header='No more videos to vote on, please log out'
+                  size='small'
+                >
+                  {this.state.errorMessage}
+                  <Dialog.Footer>
+                  <Button onClick={this.props.setBannerExit} kind='primary'>Logout</Button>
+                  </Dialog.Footer>
 
-
-                </div>
-              </div>
-        </div>
-      </div>
-      )
-  }
-
-errormessage(){
-  if(this.state.errorMessage !== ''){
-      if(this.state.errorMessage === "This labeling task has no more videos to watch. There are no more videos to vote on, please log out."){
+                </Dialog>
+              )
+          }
+          else{
         return (
             <Dialog
               isShown='true'
-              Header='No more videos to vote on, please log out'
+              Header='Server Error'
               size='small'
             >
               {this.state.errorMessage}
-              <Dialog.Footer>
-              <Button onClick={this.props.setBannerExit} kind='primary'>Logout</Button>
-              </Dialog.Footer>
-
             </Dialog>
           )
+        }
       }
-      else{
-    return (
-        <Dialog
-          isShown='true'
-          Header='Server Error'
-          size='small'
-        >
-          {this.state.errorMessage}
-        </Dialog>
-      )
     }
-  }
-}
 
 
 
   submitLabel(){
     // in this case we need self.
     const self=this;
-
     if(this.state.labels[self.state.LabelIndex]){
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `/api/create/vote`, true);
       xhr.setRequestHeader("Content-Type", "application/json");
-
-
       xhr.onreadystatechange = function() { // Call a function when the state changes.
           if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-              // Request finished. Do processing here.
-              // this is not THIS in t
               self.setState({
                 videoChosen: false,
                 video: null,
                 LabelIndex: -1,
               })
-              var sessionVoteCount = sessionStorage.getItem("sessionVoteCount");
 
+              // this code is reused elsewhere i think on page load as well. if it happens in the constructor-super
+              // then all we can assume its at least "0" or greater.
+              var sessionVoteCount = sessionStorage.getItem("sessionVoteCount");
+              ////////
               if (sessionVoteCount === null) {
                 sessionVoteCount = "0";
                 sessionStorage.setItem("sessionVoteCount", sessionVoteCount);
               }
-
+              ///////
               var numSessionVoteCount = parseInt(sessionVoteCount,10);
+              // var numSessionVoteCount = parseInt(sessionStorage.getItem("sessionVoteCount"),10)
               numSessionVoteCount++;
               self.setState({sessionVoteCount:numSessionVoteCount})
               sessionStorage.setItem("sessionVoteCount", numSessionVoteCount);
@@ -313,43 +296,10 @@ errormessage(){
       }
       xhr.send(JSON.stringify(data));
     }
-this.loadVideosVoted();
+
+    this.loadVideosVoted();
 
   }
-  handlePlayPause(){
-    if(this.state.played!== 1){
-      const nextStr = this.state.playing ? "Play" : "Pause";
-      this.setState(function(prev){
-        return {
-          playing: !prev.playing,
-          playpauseString: nextStr
-        }
-      })
-    }
-    else{
-      this.setState({
-        playing: true,
-        playpauseString: "Pause"
-      });
-      this.state.player.seekTo(0)
-
-    }
-  }
-  handleProgress(stuff){
-    if(stuff.played === 1 ){
-      this.setState({
-        played: stuff.played,
-        playpauseString: "Restart"
-      })
-    }
-    else{
-      this.setState({
-        played: stuff.played,
-      })
-
-    }
-  }
-
 
   clearErrorMessage = () => {
     this.setState({ errorMessage: '' });
@@ -365,10 +315,11 @@ this.loadVideosVoted();
       if (!response.ok) {
         response.json().then(info => this.setState({ errorMessage: info.content+" There are no more videos to vote on, please log out."}));
 
-
       }
       return response.json();
     }).then((data) => {
+
+      /* at this point we change the video and the video player updates as well */
       self.setState({
         video: data.url,
         videoid: data.fileid,

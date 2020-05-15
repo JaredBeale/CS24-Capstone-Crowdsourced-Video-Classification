@@ -2,30 +2,21 @@ import React from 'react';
 import { BrowserRouter as Router,Route, Link} from 'react-router-dom';
 import {withRouter} from 'react-router-dom';
 import { createBrowserHistory } from "history";
-
-
-
 import { Button, Panel} from 'lucid-ui';
-
 import './index.css';
 import './lucid-ui.css';
-
 import GoodbyePage from "./components/ExitPage"
 import VideoPage from './components/VideoPage';
 import LoginPage from './components/LoginPage';
 import Banner from "./components/Banner"
 
-
 const history = createBrowserHistory();
-
-
-
 
 class App extends React.Component {
    constructor(props){
     var storedUsername = localStorage.getItem("username");
     var storedTutorial = localStorage.getItem("seenTutorial");
-
+    //this stores useful information into the local storage
     if (storedUsername === null) {
       storedUsername = "";
       localStorage.setItem("username", storedUsername);
@@ -40,24 +31,42 @@ class App extends React.Component {
     }
     super(props);
     this.state = {
-
       isShown: JSON.parse(storedTutorial),
       globalUsername: storedUsername,
       bannerExit: false,
     }
   }
-
+  /*
+  * Function Name: setGlobalUsername(username)
+  * Description: This sets the state of the global username.
+  * Output:  State globalUsername is set
+  */
   setGlobalUsername = (username) => {
     this.setState({globalUsername:username});
   }
+  /*
+  * Function Name: setIsShown(shown)
+  * Description: This sets the state of isShown.
+  * Output:  State isShown is set
+  */
   setIsShown=(shown)=>{
-
    this.setState({isShown: shown})
  }
+ /*
+ * Function Name: handleShow()
+ * Description: this handles the shown state.
+ * Output: Set to opposite state of current state.
+ */
    handleShow=()=>{
-     console.log(this.state.isShown)
     this.setState({isShown: !this.state.isShown})
   }
+  /*
+  * Function Name: setBannerExit(banner)
+  * Description: This sets the state of exit banner.
+  * Output:  State bannerExit is set,
+
+  what does banner exit doe that video page and goodbye page both need?
+  */
   setBannerExit=(banner)=>{
     this.setState({bannerExit:banner});
 
@@ -70,13 +79,14 @@ class App extends React.Component {
     return(
       <Router history={history}>
         <div>
+        {/* Banner is always shown reguardless of what route it is*/}
           <Banner isShown={this.state.isShown}
           handleShow={this.handleShow}
           bannerExit={this.state.bannerExit}
           setBannerExit={this.setBannerExit}
-                  setGlobalUsername={this.setGlobalUsername}
-                  user={this.state.globalUsername} />
-
+          setGlobalUsername={this.setGlobalUsername}
+          user={this.state.globalUsername} />
+          {/*SAM WHy is bannerexit is in every page, is that needed? not a huge deal.*/}
           <Route path="/goodbye"  >
           <GoodbyePage
             onLogout={this.setGlobalUsername}
@@ -85,15 +95,13 @@ class App extends React.Component {
             setBannerExit={this.setBannerExit}
             user={this.state.globalUsername} />
           </Route>
-
           <Route path="/watch">
             <VideoPage
             setBannerExit={this.setBannerExit}
-
             handleShow={this.handleShow}
-                      isShown={this.state.isShown}
-                        setGlobalUsername={this.setGlobalUsername}
-                        globalUsername={this.state.globalUsername}/>
+            isShown={this.state.isShown}
+            setGlobalUsername={this.setGlobalUsername}
+            globalUsername={this.state.globalUsername}/>
           </Route>
           <Route path="/login">
             <LoginPage
@@ -110,6 +118,7 @@ class App extends React.Component {
               globalUsername={this.state.globalUsername} />
           </Route>
           <Route exact path="/">
+            {/* the dashboard lets the user read the FAQs, and sign in/sign up*/}
             <Dashboard />
           </Route>
         </div>
@@ -117,7 +126,6 @@ class App extends React.Component {
     );
   }
 }
-
 
 function Dashboard(props){
   return (

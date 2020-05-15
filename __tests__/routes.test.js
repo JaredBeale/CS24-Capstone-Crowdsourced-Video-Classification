@@ -10,31 +10,7 @@ beforeAll(async () => {
   await db.query("CREATE TABLE Labels (id SERIAL PRIMARY KEY, labelTitle TEXT NOT NULL)");
   await db.query("CREATE TABLE Votes (id SERIAL PRIMARY KEY, userid INTEGER REFERENCES Users (id) ON DELETE CASCADE, videoid INTEGER REFERENCES Videos (id) ON DELETE CASCADE , labelid INTEGER REFERENCES Labels (id) ON DELETE CASCADE, UNIQUE (userid, videoid, labelid));");
 });
-/*
-beforeEach(async () => {
-  await db.query("INSERT INTO Videos (fileTitle) VALUES ('testVideo1'), ('testVideo2');");
-  await db.query("INSERT INTO Labels (labelTitle) VALUES ('testLabel');");
-  
-  let userString = "INSERT INTO Users (username) VALUES ";
-  for (let i = 1; i <= LABEL_MAX; i++)
-    userString += `('testUser${i}'), `;
-  userString = userString.substring(0, userString.length - 2).concat(";");
-  await db.query(userString);
-  
-  let voteString = "INSERT INTO Votes (userid, labelid, videoid) VALUES ";
-  for (let i = 1; i < LABEL_MAX; i++)
-    voteString += `(${i}, 1, 1), `;
-  voteString = voteString.substring(0, voteString.length - 2).concat(";");
-  await db.query(voteString);
-});
 
-afterEach(async () => {
-  await db.query("DELETE FROM Votes");
-  await db.query("DELETE FROM Users");
-  await db.query("DELETE FROM Videos");
-  await db.query("DELETE FROM Labels");
-});
-*/
 afterAll(async () => {
   await db.query("DROP TABLE IF EXISTS Votes");
   await db.query("DROP TABLE IF EXISTS Users");
@@ -134,7 +110,7 @@ describe("POST /api/create/vote endpoint", () => {
   });
 });
 
-describe("GET /api/names/users", () => {
+describe("GET /api/names/user", () => {
   beforeAll(async () => {
     await db.query("INSERT INTO Users (username) VALUES ('testUser1'), ('testUser2'), ('testUser3');");
   });
@@ -143,12 +119,20 @@ describe("GET /api/names/users", () => {
     await db.query("DELETE FROM Users;");
   })
 
-  it("succeeds in generating a list of users", async () => {
+  it("succeeds in fetching singleton list of existing user", async () => {
     const response = await request(app)
-      .get("/api/names/users")
+      .get("/api/names/user/testUser2")
       .expect(200);
 
-    expect(response.body).toEqual(expect.arrayContaining(['testUser1', 'testUser2', 'testUser3']));
+    expect(response.body).toEqual(expect.arrayContaining(['testUser2']));
+  });
+
+  it("succeeds in fetching empty list of missing user", async () => {
+    const response = await request(app)
+      .get("/api/names/user/testUser4")
+      .expect(200);
+
+    expect(response.body).toEqual([]);
   });
 });
 
