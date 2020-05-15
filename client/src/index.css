@@ -50,12 +50,9 @@ video::-webkit-media-controls-fullscreen-button{
   line-height: 32px;
   font-size:150%;
 }
-.lucid-Button{
-  display: block;
-  margin-top: 20px;
-}
-#submit-continue-label-button{
-  margin: 20px 0 20px 0;
+#submit-continue-label-button, #submit-exit-label-button{
+ display: block;
+ margin: 20px 0 20px 0;
 }
 
 @media only screen and (max-width: 720px) {
